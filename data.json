@@ -2,22 +2,6 @@
   "date": "02-03-2026",
   "cases": [
     {
-      "id": "1772474249581-lq355",
-      "courtName": "Sub Judge Srinagar",
-      "caseNum": "Civil Suit/5014333/2019",
-      "parties": "Hajira Vs Akhter Abdul Malik",
-      "stage": "Arguments",
-      "dateStr": "27-02-2026",
-      "status": "completed",
-      "assignedTo": [
-        "Adv. 3"
-      ],
-      "note": "by tyb",
-      "urgent": false,
-      "_ts": 1772475238588,
-      "statusTime": 1772475131063
-    },
-    {
       "id": "1772474249582-nma3l",
       "courtName": "Special Mobile Magistrate (PT & E), Srinagar",
       "caseNum": "OS/2787/2024",
