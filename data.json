@@ -144,22 +144,6 @@
       "urgent": false,
       "_ts": 1772474857587,
       "statusTime": 1772474857587
-    },
-    {
-      "id": "1772474497054-6c62u",
-      "courtName": "CJI",
-      "caseNum": "01/2024",
-      "parties": "ABC vs CDE",
-      "stage": "NBW",
-      "dateStr": "1 March",
-      "status": "arguments",
-      "assignedTo": [
-        "Adv. Sibtain"
-      ],
-      "note": "sr 31 - civil",
-      "urgent": true,
-      "_ts": 1772474949598,
-      "statusTime": 1772474949598
     }
   ]
 }
