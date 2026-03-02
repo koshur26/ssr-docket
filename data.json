@@ -152,14 +152,14 @@
       "parties": "ABC vs CDE",
       "stage": "NBW",
       "dateStr": "1 March",
-      "status": "arguments",
+      "status": "attended",
       "assignedTo": [
         "Adv. Sibtain"
       ],
       "note": "sr 31 - civil",
       "urgent": true,
-      "_ts": 1772474944103,
-      "statusTime": 1772474944103
+      "_ts": 1772474946415,
+      "statusTime": 1772474946415
     }
   ]
 }
