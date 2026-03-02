@@ -9,10 +9,12 @@
       "stage": "Arguments",
       "dateStr": "27-02-2026",
       "status": "pending",
-      "assignedTo": [],
+      "assignedTo": [
+        "Adv. 3"
+      ],
       "note": "",
       "urgent": true,
-      "_ts": 1772474937068,
+      "_ts": 1772474937648,
       "statusTime": null
     },
     {
@@ -92,12 +94,12 @@
       "parties": "Neelofar Banoo Vs Bilquees",
       "stage": "Seeks Time",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "arguments",
       "assignedTo": [],
       "note": "",
       "urgent": true,
-      "_ts": 1772474387910,
-      "statusTime": null
+      "_ts": 1772474940552,
+      "statusTime": 1772474940552
     },
     {
       "id": "1772474249582-l3eiq",
