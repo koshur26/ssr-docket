@@ -149,10 +149,12 @@
       "stage": "NBW",
       "dateStr": "1 March",
       "status": "pending",
-      "assignedTo": [],
+      "assignedTo": [
+        "Adv. Sibtain"
+      ],
       "note": "",
       "urgent": false,
-      "_ts": 1772474497055,
+      "_ts": 1772474583938,
       "statusTime": null
     }
   ]
