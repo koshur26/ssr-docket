@@ -154,6 +154,20 @@
       "urgent": false,
       "_ts": 0,
       "statusTime": null
+    },
+    {
+      "id": "1772474497054-6c62u",
+      "courtName": "CJI",
+      "caseNum": "01/2024",
+      "parties": "ABC vs CDE",
+      "stage": "NBW",
+      "dateStr": "1 March",
+      "status": "pending",
+      "assignedTo": [],
+      "note": "",
+      "urgent": false,
+      "_ts": 1772474497055,
+      "statusTime": null
     }
   ]
 }
