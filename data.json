@@ -120,12 +120,12 @@
       "parties": "Shareen Vs Sajad Hussain Zargar",
       "stage": "Awaited",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "arguments",
       "assignedTo": [],
       "note": "",
       "urgent": false,
-      "_ts": 0,
-      "statusTime": null
+      "_ts": 1772474383792,
+      "statusTime": 1772474383792
     },
     {
       "id": "1772474249582-mlc6h",
