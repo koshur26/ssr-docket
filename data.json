@@ -8,12 +8,12 @@
       "parties": "Rahat Readymade Garments through its proprietor Ibrahim Fayaz Bhat Vs Danish Ahmad Khanday",
       "stage": "Appearance",
       "dateStr": "16-03-2026",
-      "status": "pending",
+      "status": "completed",
       "assignedTo": [],
       "note": "",
       "urgent": true,
-      "_ts": 1772476536763,
-      "statusTime": null
+      "_ts": 1772476567282,
+      "statusTime": 1772476567282
     }
   ]
 }
