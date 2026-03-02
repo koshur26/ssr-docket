@@ -8,14 +8,14 @@
       "parties": "Hajira Vs Akhter Abdul Malik",
       "stage": "Arguments",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "completed",
       "assignedTo": [
         "Adv. 3"
       ],
       "note": "",
       "urgent": true,
-      "_ts": 1772474937648,
-      "statusTime": null
+      "_ts": 1772475131063,
+      "statusTime": 1772475131063
     },
     {
       "id": "1772474249582-nma3l",
