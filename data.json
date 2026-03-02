@@ -8,12 +8,12 @@
       "parties": "Rahat Readymade Garments",
       "stage": "Appearance",
       "dateStr": "16-03-2026",
-      "status": "pending",
+      "status": "attended",
       "assignedTo": [],
       "note": "",
       "urgent": false,
-      "_ts": 1772477233453,
-      "statusTime": null
+      "_ts": 1772477259235,
+      "statusTime": 1772477259235
     }
   ]
 }
