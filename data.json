@@ -121,10 +121,12 @@
       "stage": "Awaited",
       "dateStr": "27-02-2026",
       "status": "pending",
-      "assignedTo": [],
+      "assignedTo": [
+        "Adv. 4"
+      ],
       "note": "",
       "urgent": false,
-      "_ts": 0,
+      "_ts": 1772474853749,
       "statusTime": null
     },
     {
