@@ -120,14 +120,14 @@
       "parties": "Amina Mudasir (Minor) through mother Bisma Hamid Vs Mudasir Nazir",
       "stage": "Awaited",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "completed",
       "assignedTo": [
         "Adv. 4"
       ],
       "note": "",
       "urgent": false,
-      "_ts": 1772474853749,
-      "statusTime": null
+      "_ts": 1772474856652,
+      "statusTime": 1772474856652
     },
     {
       "id": "1772474249582-27irq",
