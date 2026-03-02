@@ -1,4 +1,19 @@
 {
   "date": "03-03-2026",
-  "cases": []
+  "cases": [
+    {
+      "id": "1772477156697-k4prr",
+      "courtName": "1st Additional District & Sessions Judge, Srinagar",
+      "caseNum": "Summary Suit/51/2026",
+      "parties": "Rahat Readymade Garments  Vs Danish Ahmad Khanday",
+      "stage": "Appearance",
+      "dateStr": "16-03-2026",
+      "status": "pending",
+      "assignedTo": [],
+      "note": "",
+      "urgent": false,
+      "_ts": 0,
+      "statusTime": null
+    }
+  ]
 }
