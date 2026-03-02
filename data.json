@@ -106,12 +106,12 @@
       "parties": "State Vs Mohammad Ayoub Wani",
       "stage": "Witness",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "completed",
       "assignedTo": [],
       "note": "",
       "urgent": false,
-      "_ts": 0,
-      "statusTime": null
+      "_ts": 1772474376964,
+      "statusTime": 1772474376964
     },
     {
       "id": "1772474249582-a3xza",
