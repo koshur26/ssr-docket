@@ -64,12 +64,12 @@
       "parties": "Shabnam Vs Mir Maria Fayaz",
       "stage": "Arguments",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "arguments",
       "assignedTo": [],
       "note": "",
       "urgent": false,
-      "_ts": 0,
-      "statusTime": null
+      "_ts": 1772474632483,
+      "statusTime": 1772474632483
     },
     {
       "id": "1772474249582-kwt9u",
