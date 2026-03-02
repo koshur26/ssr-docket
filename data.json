@@ -9,14 +9,10 @@
       "stage": "Arguments",
       "dateStr": "27-02-2026",
       "status": "pending",
-      "assignedTo": [
-        "Adv. Sibtain",
-        "Adv. 2",
-        "Adv. 3"
-      ],
+      "assignedTo": [],
       "note": "",
       "urgent": true,
-      "_ts": 1772474933105,
+      "_ts": 1772474934486,
       "statusTime": null
     },
     {
