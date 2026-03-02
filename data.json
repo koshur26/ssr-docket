@@ -1,21 +1,19 @@
 {
-  "date": "03-03-2026",
+  "date": "02-03-2026",
   "cases": [
     {
-      "id": "1772476497836-i8ag6",
-      "courtName": "1st Additional District & Sessions Judge, Srinagar",
-      "caseNum": "Summary Suit/51/2026",
-      "parties": "Rahat Readymade Garments through its proprietor Ibrahim Fayaz Bhat Vs Danish Ahmad Khanday",
-      "stage": "Appearance",
-      "dateStr": "16-03-2026",
-      "status": "completed",
-      "assignedTo": [
-        "Adv. Rizwan"
-      ],
+      "id": "1772390551469-h1hte",
+      "courtName": "Court Name",
+      "caseNum": "Case Number",
+      "parties": "Parties",
+      "stage": "Stage",
+      "dateStr": "Date",
+      "status": "pending",
+      "assignedTo": [],
       "note": "",
-      "urgent": true,
-      "_ts": 1772476625680,
-      "statusTime": 1772476567282
+      "urgent": false,
+      "_ts": 0,
+      "statusTime": null
     }
   ]
 }
