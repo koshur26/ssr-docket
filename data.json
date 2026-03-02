@@ -136,12 +136,12 @@
       "parties": "Aayat Tanveer through mother Saima Jan Vs Tanveer Ahmad Kumar",
       "stage": "Awaited",
       "dateStr": "27-02-2026",
-      "status": "pending",
+      "status": "completed",
       "assignedTo": [],
       "note": "",
       "urgent": false,
-      "_ts": 0,
-      "statusTime": null
+      "_ts": 1772474857587,
+      "statusTime": 1772474857587
     },
     {
       "id": "1772474497054-6c62u",
