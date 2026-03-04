@@ -23,10 +23,12 @@
       "stage": "Summon",
       "dateStr": "27-02-2026",
       "status": "pending",
-      "assignedTo": [],
+      "assignedTo": [
+        "Adv. Tehjud"
+      ],
       "note": "",
       "urgent": false,
-      "_ts": 0,
+      "_ts": 1772636641512,
       "statusTime": null
     },
     {
@@ -153,20 +155,6 @@
       "note": "",
       "urgent": false,
       "_ts": 0,
-      "statusTime": null
-    },
-    {
-      "id": "1772636643001-8v7cv",
-      "courtName": "abc",
-      "caseNum": "fqwe",
-      "parties": "wegvwgv",
-      "stage": "wegv",
-      "dateStr": "gwv",
-      "status": "pending",
-      "assignedTo": [],
-      "note": "",
-      "urgent": false,
-      "_ts": 1772636643001,
       "statusTime": null
     }
   ]
