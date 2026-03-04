@@ -983,6 +983,7 @@ body::before {
     </div>
     <div class="filter-actions">
       <button class="btn-ghost" onclick="openEOD()">EOD Report</button>
+      <button class="btn-ghost" style="color:var(--red);border-color:var(--red-line);" onclick="requestReset()">↺ Reset Day</button>
       <button class="btn-solid" onclick="openAdd()">+ Case</button>
     </div>
   </div>
@@ -1373,6 +1374,21 @@ function toggleUrg(id){
   const c=cases.find(x=>x.id===id);if(!c)return;
   c.urgent=!c.urgent;c._ts=Date.now();render();queueSave();
 }
+function requestReset(){
+  showPw(()=>resetDay(),"Reset Today's Docket","This will clear all cases for today. Enter the password to confirm.");
+}
+async function resetDay(){
+  cases=[];
+  render();
+  isSaving=true;setSaveBtn('saving');
+  try{
+    const res=await fetch(SB_REST,{method:'PATCH',headers:SB_HDR,body:JSON.stringify({date:'',cases:[]})});
+    if(!res.ok) throw new Error(await res.text());
+    setSaveBtn('saved');
+  } catch(e){ showSync('Reset failed: '+e.message,'err'); }
+  isSaving=false;
+}
+
 function reqDel(id){showPw(()=>{cases=cases.filter(x=>x.id!==id);render();saveToSupabase();},'Confirm Deletion','Enter the access password to remove this case.');}
 
 function openAdd(){editId=null;clearM();document.getElementById('mTitle').textContent='Add Case';document.getElementById('caseOverlay').classList.add('on');}
