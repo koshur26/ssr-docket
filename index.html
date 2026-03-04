@@ -758,22 +758,176 @@ body::before {
 }
 
 /* EOD */
-.eod-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.eod-modal {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  width: 96%;
+  max-width: 820px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  animation: rise .2s ease;
+  overflow: hidden;
+}
+.eod-modal-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.eod-modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.eod-modal-body {
+  overflow-y: auto;
+  padding: 1.4rem;
+  flex: 1;
+}
+
+/* A4 PRINT DOCUMENT */
+.eod-doc {
+  background: white;
+  width: 100%;
+  font-family: 'Georgia', serif;
+  font-size: 11px;
+  color: #1a1814;
+  line-height: 1.5;
+}
+.eod-doc-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1a1814;
+  margin-bottom: 14px;
+}
+.eod-firm-name {
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: .03em;
+  color: #1a1814;
+  margin-bottom: 2px;
+}
+.eod-firm-sub {
+  font-size: 9.5px;
+  color: #6b6660;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.eod-report-meta {
+  text-align: right;
+  font-size: 9.5px;
+  color: #6b6660;
+  line-height: 1.7;
+}
+.eod-report-meta strong {
+  display: block;
+  font-size: 11px;
+  color: #1a1814;
+  margin-bottom: 2px;
+}
+.eod-summary-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.eod-sum-cell {
+  flex: 1;
+  border: 1px solid #d8d4c8;
+  border-radius: 5px;
+  padding: 7px 6px 6px;
+  text-align: center;
+}
+.eod-sum-n {
+  font-size: 20px;
+  font-family: 'Georgia', serif;
+  line-height: 1;
+  color: #1a1814;
+}
+.eod-sum-n.g { color: #1e4d35; }
+.eod-sum-n.a { color: #7a4f10; }
+.eod-sum-n.b { color: #1e3d5c; }
+.eod-sum-n.p { color: #3d1a5c; }
+.eod-sum-n.r { color: #7a1c1c; }
+.eod-sum-l {
+  font-size: 7.5px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #8a8478;
+  margin-top: 3px;
+}
+.eod-section-title {
+  font-size: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #8a8478;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #e8e4da;
+}
+.eod-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  margin-bottom: 14px;
+}
 .eod-table th {
-  background: var(--faint2);
-  padding: .5rem .7rem;
+  background: #f4f1eb;
+  padding: 5px 7px;
   text-align: left;
-  font-size: .65rem;
+  font-size: 8px;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--muted);
-  border-bottom: 1px solid var(--line);
-  font-weight: 600;
+  color: #6b6660;
+  border: 1px solid #d8d4c8;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
 }
-.eod-table td { padding: .55rem .7rem; border-bottom: 1px solid var(--faint); vertical-align: middle; }
-.eod-table tr:last-child td { border-bottom: none; }
-.eod-pill { display: inline-block; padding: .08rem .5rem; border-radius: 20px; font-size: .68rem; font-weight: 600; }
-.eod-foot { margin-top: 1rem; font-size: .75rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: .75rem; }
+.eod-table td {
+  padding: 6px 7px;
+  border: 1px solid #e8e4da;
+  vertical-align: top;
+  line-height: 1.45;
+}
+.eod-table tr:nth-child(even) td { background: #faf8f3; }
+.eod-table .td-case { font-weight: bold; font-size: 10px; }
+.eod-table .td-court { font-size: 8.5px; color: #6b6660; margin-top: 1px; font-style: italic; }
+.eod-table .td-parties { font-size: 10.5px; font-weight: bold; }
+.eod-table .td-stage { font-size: 8px; color: #7a4f10; text-transform: uppercase; letter-spacing: .04em; }
+.eod-status-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.eod-adv-summary {
+  background: #f4f1eb;
+  border: 1px solid #d8d4c8;
+  border-radius: 4px;
+  padding: 6px 9px;
+  font-size: 9px;
+  margin-bottom: 14px;
+  line-height: 1.8;
+}
+.eod-adv-summary strong { font-size: 8px; text-transform: uppercase; letter-spacing: .08em; color: #6b6660; display: block; margin-bottom: 2px; }
+.eod-footer-line {
+  border-top: 1px solid #d8d4c8;
+  padding-top: 7px;
+  font-size: 8.5px;
+  color: #8a8478;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
 
 @keyframes rise { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
 
@@ -1064,18 +1218,20 @@ body::before {
 
 <!-- EOD -->
 <div class="overlay" id="eodOverlay">
-  <div class="modal" style="max-width:700px">
-    <div class="modal-hdr">
-      <h3>End-of-Day Report</h3>
-      <button class="modal-x" onclick="document.getElementById('eodOverlay').classList.remove('on')">✕</button>
+  <div class="eod-modal">
+    <div class="eod-modal-hdr">
+      <span class="eod-modal-title">End-of-Day Report</span>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <button class="btn-solid" onclick="printEOD()">🖨 Print</button>
+        <button class="mc" onclick="document.getElementById('eodOverlay').classList.remove('on')">Close</button>
+      </div>
     </div>
-    <div id="eodContent"></div>
-    <div style="display:flex;gap:.6rem;margin-top:1.2rem">
-      <button class="btn-solid" onclick="window.print()">🖨 Print</button>
-      <button class="mc" onclick="document.getElementById('eodOverlay').classList.remove('on')">Close</button>
-    </div>
+    <div class="eod-modal-body" id="eodContent"></div>
   </div>
 </div>
+
+<!-- PRINT FRAME (hidden) -->
+<iframe id="printFrame" style="display:none"></iframe>
 
 <script>
 const SB_URL  = 'https://ddqlncebxfuairwsajsp.supabase.co';
@@ -1461,39 +1617,134 @@ function saveModal(){
 document.getElementById('caseOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 function openEOD(){
-  const dateStr=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const cnt={};SS.forEach(s=>cnt[s.k]=0);
-  cases.forEach(c=>{if(cnt[c.status]!==undefined)cnt[c.status]++;});
-  const urg=cases.filter(c=>c.urgent).length;
-  const advCount={};
-  cases.forEach(c=>{c.assignedTo.forEach(a=>{advCount[a]=(advCount[a]||0)+1;});});
-  const advSummary=Object.entries(advCount).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`${a}: ${n}`).join(' · ');
-  const rows=cases.map(c=>{
-    const st=SS2[c.status]||{bg:'#eee',c:'#666',b:'#ccc'};
-    const ts=c.statusTime&&c.status!=='pending'?`<br><span style="font-size:.65rem;color:#888">⏱ ${fmtTime(c.statusTime)}</span>`:'';
-    return `<tr>
-      <td><strong>${c.caseNum||'—'}</strong><br><span style="font-size:.7rem;color:#888;font-style:italic">${c.courtName}</span></td>
-      <td style="font-weight:600">${c.parties}${c.urgent?' 🚨':''}</td>
-      <td style="font-size:.78rem">${c.assignedTo.join(', ')||'—'}</td>
-      <td><span class="eod-pill" style="background:${st.bg};color:${st.c};border:1px solid ${st.b}">${SS.find(s=>s.k===c.status)?.l||c.status}</span>${ts}</td>
-      <td style="font-size:.75rem;color:#666">${c.note||'—'}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('eodContent').innerHTML=`
-    <p style="font-size:.78rem;color:#888;margin-bottom:1rem">${dateStr} · Syed Sibtain Razvi & Associates</p>
-    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem">
-      ${SS.map(s=>`<div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:${SC[s.k]}">${cnt[s.k]}</div><div style="font-size:.65rem;color:#888;text-transform:uppercase;letter-spacing:.08em">${s.l}</div></div>`).join('')}
-    </div>
-    ${advSummary?`<div style="font-size:.78rem;color:#6b6660;background:#f5f2ec;border-radius:8px;padding:.5rem .8rem;margin-bottom:1rem"><strong>Cases per Advocate:</strong> ${advSummary}</div>`:''}
-    <div style="overflow-x:auto">
-      <table class="eod-table">
-        <thead><tr><th>Case / Court</th><th>Parties</th><th>Attending</th><th>Status</th><th>Notes</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-    <div class="eod-foot">Total: ${cases.length} · Completed: ${cnt.completed} · Pending: ${cnt.pending} · Attended: ${cnt.attended} · For Arguments: ${cnt.arguments}</div>`;
+  document.getElementById('eodContent').innerHTML = buildEODHtml();
   document.getElementById('eodOverlay').classList.add('on');
 }
+
+function buildEODHtml(){
+  const dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const timeStr = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const cnt = {}; SS.forEach(s=>cnt[s.k]=0);
+  cases.forEach(c=>{ if(cnt[c.status]!==undefined) cnt[c.status]++; });
+  const urg = cases.filter(c=>c.urgent).length;
+  const advCount = {};
+  cases.forEach(c=>{ c.assignedTo.forEach(a=>{ advCount[a]=(advCount[a]||0)+1; }); });
+  const advSummary = Object.entries(advCount).sort((a,b)=>b[1]-a[1])
+    .map(([a,n])=>`<b>${a}</b> (${n})`).join(' &nbsp;&nbsp; ');
+
+  // Group by court
+  const groups = {};
+  cases.forEach(c=>{ if(!groups[c.courtName]) groups[c.courtName]=[]; groups[c.courtName].push(c); });
+
+  let sn = 0;
+  const rows = Object.entries(groups).map(([court, cl]) => {
+    return cl.map((c, i) => {
+      sn++;
+      const statusLabel = SS.find(s=>s.k===c.status)?.l || c.status;
+      const ts = c.statusTime && c.status!=='pending' ? ' / '+fmtTime(c.statusTime) : '';
+      const urgMark = c.urgent ? ' &#x1F6A8;' : '';
+      return `<tr>
+        <td style="text-align:center;color:#888">${sn}</td>
+        ${i===0 ? `<td rowspan="${cl.length}" style="background:#f7f5f0;font-weight:bold;font-size:9pt;vertical-align:top">${court}</td>` : ''}
+        <td style="font-size:8.5pt;color:#444">${c.caseNum||'—'}<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">${c.stage||''}</span></td>
+        <td style="font-weight:bold;font-size:10pt">${c.parties}${urgMark}</td>
+        <td style="font-size:8.5pt">${c.assignedTo.join(', ')||'—'}</td>
+        <td style="font-size:8.5pt;font-weight:600">${statusLabel}${ts}</td>
+        <td style="font-size:8pt;color:#555">${c.note||'—'}</td>
+      </tr>`;
+    }).join('');
+  }).join('');
+
+  return `
+    <div style="font-family:Georgia,serif;font-size:10pt;color:#1a1814;line-height:1.5">
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:12pt">
+        <tr>
+          <td style="vertical-align:top">
+            <div style="font-size:16pt;font-weight:bold;letter-spacing:.02em">Syed Sibtain Razvi &amp; Associates</div>
+            <div style="font-size:8pt;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-top:2pt">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; Srinagar, J&amp;K</div>
+          </td>
+          <td style="text-align:right;vertical-align:top">
+            <div style="font-size:11pt;font-weight:bold">End-of-Day Report</div>
+            <div style="font-size:8.5pt;color:#666;margin-top:2pt">${dateStr}</div>
+            <div style="font-size:8pt;color:#999">Generated at ${timeStr}</div>
+          </td>
+        </tr>
+      </table>
+
+      <div style="border-top:2pt solid #1a1814;border-bottom:1pt solid #ccc;padding:8pt 0;margin-bottom:12pt">
+        <table style="width:100%;border-collapse:collapse">
+          <tr>
+            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif">${cases.length}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Total</div>
+            </td>
+            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif;color:#7a4f10">${cnt.pending}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Pending</div>
+            </td>
+            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif;color:#1e3d5c">${cnt.attended}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Attended</div>
+            </td>
+            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif;color:#3d1a5c">${cnt.arguments}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">For Arguments</div>
+            </td>
+            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif;color:#1e4d35">${cnt.completed}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Completed</div>
+            </td>
+            ${urg ? `<td style="text-align:center;padding:6pt 0">
+              <div style="font-size:20pt;font-family:Georgia,serif;color:#7a1c1c">${urg}</div>
+              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Urgent</div>
+            </td>` : ''}
+          </tr>
+        </table>
+      </div>
+
+      ${advSummary ? `<div style="background:#f7f5f0;border:1pt solid #ddd;border-radius:3pt;padding:6pt 9pt;margin-bottom:12pt;font-size:9pt">
+        <span style="font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#888;font-weight:bold;margin-right:8pt">Advocate Summary</span>
+        ${advSummary}
+      </div>` : ''}
+
+      <table style="width:100%;border-collapse:collapse;font-size:9.5pt">
+        <thead>
+          <tr style="background:#f0ede6">
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:center;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:4%">#</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:16%">Court</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:13%">Case No.</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:28%">Parties</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:12%">Advocate</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:12%">Status</th>
+            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:15%">Notes</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <div style="margin-top:12pt;padding-top:7pt;border-top:1pt solid #ccc;display:flex;justify-content:space-between;font-size:8pt;color:#999">
+        <span>Syed Sibtain Razvi &amp; Associates &nbsp;&middot;&nbsp; For Internal Use Only</span>
+        <span>${dateStr}</span>
+      </div>
+    </div>`;
+}
+
+function printEOD(){
+  const html = buildEODHtml();
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EOD Report</title>
+  <style>
+    @page { size: A4 portrait; margin: 14mm 12mm 14mm 12mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Georgia, serif; font-size: 10pt; color: #1a1814; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    table { border-collapse: collapse; }
+    tr { page-break-inside: avoid; }
+  </style></head><body>${html}</body></html>`);
+  w.document.close();
+  w.onload = () => { w.focus(); w.print(); };
+}
+
 document.getElementById('eodOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');});
 </script>
 </body>
