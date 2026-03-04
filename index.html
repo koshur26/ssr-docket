@@ -319,14 +319,19 @@ body::before {
 }
 .case-card:last-child { border-radius: 0 0 calc(var(--r) - 2px) calc(var(--r) - 2px); }
 .case-card:hover { background: var(--faint2); border-color: var(--faint); }
+.case-card.attended { border-top: 1px solid #a8ccb8; background: #dff2e8; }
+.case-card.attended .case-summary { background: #dff2e8; }
+.case-card.attended:hover { background: #d0eadc; }
+.case-card.attended .case-parties { color: #1e4d35; }
 .case-card.urgent { border-top: 1px solid #e8c0c0; border-left: 3px solid var(--urg); background: #fdf3f3; }
 .case-card.urgent .case-summary { background: #fdf3f3; }
 .case-card.urgent:hover { background: #fae8e8; }
 .case-card.urgent .case-parties { color: #7a1c1c; }
-.case-card.completed { border-top: 1px solid #c8e0d0; background: #edf7f1; }
-.case-card.completed .case-summary { background: #edf7f1; }
-.case-card.completed:hover { background: #e0f2ea; }
-.case-card.completed .case-parties { color: var(--green); }
+.case-card.completed { border-top: 1px solid #a8d8b8; background: #d4ede0; }
+.case-card.completed .case-summary { background: #d4ede0; }
+.case-card.completed:hover { background: #c4e4d4; }
+.case-card.completed .case-parties { color: #1a4a2e; font-weight: 600; }
+.case-card.completed .status-badge { background: #b8ddc8; color: #1a4a2e; border-color: #88c0a0; }
 
 /* SUMMARY ROW — always visible */
 .case-summary {
@@ -1354,7 +1359,7 @@ function cardHtml(c){
   const sbtns=SS.map(s=>`<button class="stbtn ${c.status===s.k?'on-'+s.k:''}" onclick="setSt('${c.id}','${s.k}');event.stopPropagation()">${s.l}</button>`).join('');
   const abtns=cols.map(col=>`<button class="advbtn ${c.assignedTo.includes(col)?'on':''}" onclick="toggleA('${c.id}','${col}');event.stopPropagation()"><span class="adot"></span>${col}</button>`).join('');
   const tsLine=c.statusTime&&c.status!=='pending'?`<div class="status-ts">⏱ ${SS.find(s=>s.k===c.status)?.l||c.status} at ${fmtTime(c.statusTime)}</div>`:`<div class="status-ts"></div>`;
-  return `<div class="case-card ${c.urgent?'urgent':''} ${c.status==='completed'?'completed':''}" id="cc-${c.id}">
+  return `<div class="case-card ${c.urgent?'urgent':''} ${c.status==='completed'?'completed':''} ${c.status==='attended'?'attended':''}" id="cc-${c.id}">
     <div class="case-summary" onclick="toggleCard('${c.id}')">
       <div class="case-summary-l">
         <div class="case-parties">${c.parties}${c.urgent?' <span class="urg-lbl">🚨</span>':''}</div>
