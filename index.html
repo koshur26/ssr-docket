@@ -760,98 +760,127 @@ body::before {
   --court-7: #3d3a1e;
 }
 
-/* ── DOCKET HEADER (new hero) ── */
+/* ── DOCKET HEADER ── */
 .docket-header {
-  background: var(--ink);
-  border-radius: var(--r);
-  padding: 1.5rem 1.75rem 1.35rem;
   margin-bottom: 2rem;
-  box-shadow: var(--shadow-md);
 }
 .docket-header-top {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  margin-bottom: .85rem;
+  margin-bottom: 1.1rem;
 }
 .docket-eyebrow {
-  font-size: .65rem;
-  font-weight: 600;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: #6a6458;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: .01em;
+}
+.docket-eyebrow em {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.4rem;
 }
 .docket-date-badge {
-  font-size: .7rem;
-  color: #7a7060;
+  font-size: .72rem;
+  color: var(--muted);
   letter-spacing: .04em;
 }
 .docket-stats-row {
   display: flex;
-  gap: 0;
-  margin-bottom: .9rem;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.07);
+  gap: .45rem;
+  margin-bottom: .85rem;
+  flex-wrap: wrap;
 }
 .dstat {
   flex: 1;
+  min-width: 72px;
   text-align: center;
-  padding: .75rem .5rem;
-  border-right: 1px solid rgba(255,255,255,.07);
+  padding: .9rem .4rem .75rem;
+  background: var(--paper);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
 }
-.dstat:last-child { border-right: none; }
+.dstat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  opacity: .6;
+}
+.dstat.total::before  { background: var(--line); }
+.dstat.pend::before   { background: var(--amber-line); }
+.dstat.att::before    { background: var(--green-line); }
+.dstat.comp::before   { background: var(--green); }
+.dstat.urg::before    { background: #d08080; }
+.dstat.args::before   { background: var(--plum-line); }
 .dstat-n {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 400;
   line-height: 1;
-  color: #f0ece3;
+  color: var(--ink2);
+  display: block;
 }
-.dstat-n.g { color: #7abf98; }
-.dstat-n.a { color: #d4a84a; }
-.dstat-n.b { color: #7a9abf; }
-.dstat-n.r { color: #d48080; }
+.dstat-n.g  { color: var(--green); }
+.dstat-n.a  { color: var(--amber); }
+.dstat-n.bl { color: #2a4a6a; }
+.dstat-n.r  { color: var(--red); }
+.dstat-n.p  { color: var(--plum); }
 .dstat-l {
-  font-size: .6rem;
+  font-size: .58rem;
   text-transform: uppercase;
   letter-spacing: .1em;
-  color: #5a5448;
-  margin-top: .2rem;
-  font-weight: 500;
+  color: var(--muted);
+  margin-top: .25rem;
+  font-weight: 600;
+  display: block;
+}
+/* slow breathe animation — fires every 8 seconds */
+@keyframes breathe {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .45; transform: scale(.94); }
+}
+.dstat-n.animate {
+  animation: breathe 3s ease-in-out;
 }
 .docket-sub {
-  font-size: .74rem;
-  color: #5a5448;
+  font-size: .75rem;
+  color: var(--muted);
   letter-spacing: .02em;
-  margin-bottom: .75rem;
+  margin-bottom: .8rem;
 }
 .progress-wrap { }
 .progress-bar {
-  height: 3px;
-  background: rgba(255,255,255,.08);
+  height: 4px;
+  background: var(--faint);
   border-radius: 2px;
   overflow: hidden;
   display: flex;
-  gap: 2px;
+  gap: 3px;
 }
-.pb-seg { height: 100%; border-radius: 2px; transition: flex .4s ease; }
-.pb-pending   { background: #c8a050; }
-.pb-attended  { background: #6aaa88; }
-.pb-arguments { background: #9878c0; }
-.pb-completed { background: #4a9a6a; }
+.pb-seg { height: 100%; border-radius: 2px; transition: flex .5s ease; }
+.pb-pending   { background: var(--amber-line); }
+.pb-attended  { background: #7ab090; }
+.pb-arguments { background: var(--plum-line); }
+.pb-completed { background: var(--green); }
 .progress-legend {
   display: flex;
-  gap: 1rem;
-  margin-top: .5rem;
+  gap: 1.1rem;
+  margin-top: .6rem;
   flex-wrap: wrap;
 }
 .pl-item {
   display: flex;
   align-items: center;
   gap: .28rem;
-  font-size: .65rem;
-  color: #5a5448;
+  font-size: .67rem;
+  color: var(--muted);
   letter-spacing: .03em;
 }
 .pl-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -1190,15 +1219,32 @@ function renderHero(){
   // date badge
   const db=document.getElementById('docketDateBadge');
   if(db) db.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  // title
+  const ey=document.querySelector('.docket-eyebrow');
+  if(ey) ey.innerHTML=`Today's Docket <em>— ${cases.length} case${cases.length!==1?'s':''}`;
   // stats row
   document.getElementById('heroStats').innerHTML=`
-    <div class="dstat"><div class="dstat-n">${cases.length}</div><div class="dstat-l">Total</div></div>
-    <div class="dstat"><div class="dstat-n a">${cnt.pending}</div><div class="dstat-l">Pending</div></div>
-    <div class="dstat"><div class="dstat-n b">${cnt.attended}</div><div class="dstat-l">Attended</div></div>
-    <div class="dstat"><div class="dstat-n g">${cnt.completed}</div><div class="dstat-l">Completed</div></div>
-    ${urg?`<div class="dstat"><div class="dstat-n r">${urg}</div><div class="dstat-l">Urgent</div></div>`:''}`;
+    <div class="dstat pend"><span class="dstat-n a" id="dn-pending">${cnt.pending}</span><span class="dstat-l">Pending</span></div>
+    <div class="dstat att"><span class="dstat-n bl" id="dn-attended">${cnt.attended}</span><span class="dstat-l">Attended</span></div>
+    <div class="dstat args"><span class="dstat-n p" id="dn-arguments">${cnt.arguments}</span><span class="dstat-l">Arguments</span></div>
+    <div class="dstat comp"><span class="dstat-n g" id="dn-completed">${cnt.completed}</span><span class="dstat-l">Completed</span></div>
+    ${urg?`<div class="dstat urg"><span class="dstat-n r" id="dn-urgent">${urg}</span><span class="dstat-l">Urgent</span></div>`:''}`;
   // sub line
-  document.getElementById('heroSub').textContent=`${cnt.arguments} for arguments later · ${cases.filter(c=>c.assignedTo.length).length} assigned`;
+  document.getElementById('heroSub').textContent=`${cases.filter(c=>c.assignedTo.length).length} of ${cases.length} cases assigned`;
+  // trigger breathe animation on numbers every 8s
+  startBreathing();
+}
+
+let breatheTimer=null;
+function startBreathing(){
+  if(breatheTimer) return; // already running
+  breatheTimer=setInterval(()=>{
+    document.querySelectorAll('.dstat-n').forEach(el=>{
+      el.classList.remove('animate');
+      void el.offsetWidth; // reflow to restart
+      el.classList.add('animate');
+    });
+  },8000);
 }
 
 function renderProgress(){
