@@ -149,103 +149,7 @@ body::before {
 .sdot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; animation: pulse 1.6s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* ── HERO ── */
-.hero {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-}
-.hero-left {}
-.hero-eyebrow {
-  font-size: .68rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: .4rem;
-}
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1;
-  letter-spacing: -.01em;
-}
-.hero-title span { font-style: italic; color: var(--muted); font-size: 2rem; }
-.hero-sub {
-  font-size: .78rem;
-  color: var(--muted);
-  margin-top: .5rem;
-  letter-spacing: .02em;
-}
-.hero-stats {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-end;
-}
-.hstat { text-align: right; }
-.hstat-n {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.4rem;
-  font-weight: 400;
-  line-height: 1;
-}
-.hstat-n.g { color: var(--green); }
-.hstat-n.a { color: var(--amber); }
-.hstat-n.b { color: #2a4a6a; }
-.hstat-l {
-  font-size: .64rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-top: .15rem;
-}
-
-/* ── PROGRESS BAR ── */
-.progress-wrap { margin-bottom: 2rem; }
-.progress-bar {
-  height: 3px;
-  background: var(--faint);
-  border-radius: 2px;
-  overflow: hidden;
-  display: flex;
-  gap: 2px;
-}
-.pb-seg { height: 100%; border-radius: 2px; transition: flex .4s ease; }
-.pb-pending   { background: var(--amber-line); }
-.pb-attended  { background: #7ab090; }
-.pb-arguments { background: var(--plum-line); }
-.pb-completed { background: var(--green); }
-.progress-legend {
-  display: flex;
-  gap: 1.2rem;
-  margin-top: .55rem;
-  flex-wrap: wrap;
-}
-.pl-item {
-  display: flex;
-  align-items: center;
-  gap: .3rem;
-  font-size: .7rem;
-  color: var(--muted);
-  letter-spacing: .03em;
-}
-.pl-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
 /* ── TEAM BAR ── */
-.team-bar {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--line);
-}
 .team-lbl {
   font-size: .65rem;
   font-weight: 600;
@@ -353,27 +257,32 @@ body::before {
 /* ── COURT GROUP ── */
 .court-group { margin-bottom: 2rem; }
 .court-label {
-  font-size: .65rem;
+  font-family: 'Jost', sans-serif;
+  font-size: .72rem;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: .13em;
   text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: .6rem;
+  color: #f0ece3;
+  margin-bottom: .5rem;
   display: flex;
   align-items: center;
-  gap: .5rem;
-}
-.court-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--line);
+  gap: .6rem;
+  padding: .55rem 1rem;
+  border-radius: 10px;
 }
 .court-color-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  background: rgba(255,255,255,.5);
   flex-shrink: 0;
+}
+.court-case-count {
+  margin-left: auto;
+  font-size: .65rem;
+  opacity: .6;
+  font-weight: 400;
+  letter-spacing: .06em;
 }
 
 /* ── CASE CARD ── */
@@ -387,9 +296,13 @@ body::before {
   overflow: hidden;
 }
 .case-card:hover { box-shadow: var(--shadow-md); border-color: var(--line); }
-.case-card.urgent { border-left: 3px solid var(--urg); }
-.case-card.completed { opacity: .65; }
-.case-card.completed .case-summary { background: var(--green-bg); }
+.case-card.urgent { border: 1px solid #d08080; border-left: 3px solid var(--urg); background: #fdf3f3; }
+.case-card.urgent .case-summary { background: #fdf3f3; }
+.case-card.urgent:hover .case-summary { background: #fae8e8; }
+.case-card.urgent .case-parties { color: #7a1c1c; }
+.case-card.completed { opacity: 1; border: 1px solid #a8ccb8; }
+.case-card.completed .case-summary { background: #dff0e8; }
+.case-card.completed .case-parties { color: var(--green); }
 
 /* SUMMARY ROW — always visible */
 .case-summary {
@@ -835,15 +748,133 @@ body::before {
 
 @keyframes rise { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
 
-/* Court colour dots */
-.cc-0 { background: #2a2520; }
-.cc-1 { background: #1e3d5c; }
-.cc-2 { background: #2d5a3a; }
-.cc-3 { background: #5c3a1e; }
-.cc-4 { background: #3a1e5c; }
-.cc-5 { background: #5c1e2d; }
-.cc-6 { background: #1e4a5c; }
-.cc-7 { background: #3d3a1e; }
+/* Court colours */
+:root {
+  --court-0: #2a2520;
+  --court-1: #1e3d5c;
+  --court-2: #2d5a3a;
+  --court-3: #5c3a1e;
+  --court-4: #3a1e5c;
+  --court-5: #5c1e2d;
+  --court-6: #1e4a5c;
+  --court-7: #3d3a1e;
+}
+
+/* ── DOCKET HEADER (new hero) ── */
+.docket-header {
+  background: var(--ink);
+  border-radius: var(--r);
+  padding: 1.5rem 1.75rem 1.35rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+.docket-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .85rem;
+}
+.docket-eyebrow {
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #6a6458;
+}
+.docket-date-badge {
+  font-size: .7rem;
+  color: #7a7060;
+  letter-spacing: .04em;
+}
+.docket-stats-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: .9rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+}
+.dstat {
+  flex: 1;
+  text-align: center;
+  padding: .75rem .5rem;
+  border-right: 1px solid rgba(255,255,255,.07);
+}
+.dstat:last-child { border-right: none; }
+.dstat-n {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #f0ece3;
+}
+.dstat-n.g { color: #7abf98; }
+.dstat-n.a { color: #d4a84a; }
+.dstat-n.b { color: #7a9abf; }
+.dstat-n.r { color: #d48080; }
+.dstat-l {
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #5a5448;
+  margin-top: .2rem;
+  font-weight: 500;
+}
+.docket-sub {
+  font-size: .74rem;
+  color: #5a5448;
+  letter-spacing: .02em;
+  margin-bottom: .75rem;
+}
+.progress-wrap { }
+.progress-bar {
+  height: 3px;
+  background: rgba(255,255,255,.08);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  gap: 2px;
+}
+.pb-seg { height: 100%; border-radius: 2px; transition: flex .4s ease; }
+.pb-pending   { background: #c8a050; }
+.pb-attended  { background: #6aaa88; }
+.pb-arguments { background: #9878c0; }
+.pb-completed { background: #4a9a6a; }
+.progress-legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: .5rem;
+  flex-wrap: wrap;
+}
+.pl-item {
+  display: flex;
+  align-items: center;
+  gap: .28rem;
+  font-size: .65rem;
+  color: #5a5448;
+  letter-spacing: .03em;
+}
+.pl-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── TEAM BAR BOTTOM ── */
+.team-bar-bottom {
+  max-width: 780px;
+  margin: 2.5rem auto 0;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.team-bar {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  background: var(--paper);
+  border: 1px solid var(--faint);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-sm);
+}
 
 @media(max-width:560px){
   .topbar { padding: 0 1rem; }
@@ -877,25 +908,18 @@ body::before {
 
   <!-- HERO -->
   <div id="heroWrap" style="display:none">
-    <div class="hero">
-      <div class="hero-left">
-        <div class="hero-eyebrow">Today's Docket</div>
-        <div class="hero-title" id="heroTitle">— <span>cases</span></div>
-        <div class="hero-sub" id="heroSub"></div>
+    <div class="docket-header">
+      <div class="docket-header-top">
+        <div class="docket-eyebrow">Today's Docket</div>
+        <div class="docket-date-badge" id="docketDateBadge"></div>
       </div>
-      <div class="hero-stats" id="heroStats"></div>
+      <div class="docket-stats-row" id="heroStats"></div>
+      <div class="docket-sub" id="heroSub"></div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-legend" id="progressLegend"></div>
+      </div>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-legend" id="progressLegend"></div>
-    </div>
-  </div>
-
-  <!-- TEAM -->
-  <div class="team-bar">
-    <span class="team-lbl">Team</span>
-    <div class="chips" id="colChips"></div>
-    <input class="col-in" id="colIn" placeholder="Add advocate, press Enter…"/>
   </div>
 
   <!-- IMPORT CARD -->
@@ -930,6 +954,15 @@ body::before {
 
   <div id="casesWrap"></div>
 </div>
+
+  <!-- TEAM (bottom) -->
+  <div class="team-bar-bottom" id="teamBarBottom">
+    <div class="team-bar">
+      <span class="team-lbl">Team</span>
+      <div class="chips" id="colChips"></div>
+      <input class="col-in" id="colIn" placeholder="Add advocate, press Enter…"/>
+    </div>
+  </div>
 
 <div class="footer">
   <p>Syed Sibtain Razvi & Associates &nbsp;·&nbsp; For Internal Use Only &nbsp;·&nbsp; <span id="footerDate"></span></p>
@@ -1154,14 +1187,18 @@ function renderHero(){
   const cnt={};SS.forEach(s=>cnt[s.k]=0);
   cases.forEach(c=>{if(cnt[c.status]!==undefined)cnt[c.status]++;});
   const urg=cases.filter(c=>c.urgent).length;
-  document.getElementById('heroTitle').innerHTML=`${cases.length} <span>case${cases.length!==1?'s':''}`;
-  let sub=`${cnt.completed} completed · ${cnt.pending} pending · ${cnt.arguments} for arguments`;
-  if(urg) sub+=` · 🚨 ${urg} urgent`;
-  document.getElementById('heroSub').textContent=sub;
+  // date badge
+  const db=document.getElementById('docketDateBadge');
+  if(db) db.textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  // stats row
   document.getElementById('heroStats').innerHTML=`
-    <div class="hstat"><div class="hstat-n g">${cnt.completed}</div><div class="hstat-l">Done</div></div>
-    <div class="hstat"><div class="hstat-n a">${cnt.pending}</div><div class="hstat-l">Pending</div></div>
-    <div class="hstat"><div class="hstat-n b">${cnt.attended}</div><div class="hstat-l">Attended</div></div>`;
+    <div class="dstat"><div class="dstat-n">${cases.length}</div><div class="dstat-l">Total</div></div>
+    <div class="dstat"><div class="dstat-n a">${cnt.pending}</div><div class="dstat-l">Pending</div></div>
+    <div class="dstat"><div class="dstat-n b">${cnt.attended}</div><div class="dstat-l">Attended</div></div>
+    <div class="dstat"><div class="dstat-n g">${cnt.completed}</div><div class="dstat-l">Completed</div></div>
+    ${urg?`<div class="dstat"><div class="dstat-n r">${urg}</div><div class="dstat-l">Urgent</div></div>`:''}`;
+  // sub line
+  document.getElementById('heroSub').textContent=`${cnt.arguments} for arguments later · ${cases.filter(c=>c.assignedTo.length).length} assigned`;
 }
 
 function renderProgress(){
@@ -1215,7 +1252,7 @@ function renderCards(){
   wrap.innerHTML=Object.entries(groups).map(([court,cl])=>{
     const cc=courtColorMap[court]||'cc-0';
     return `<div class="court-group">
-      <div class="court-label"><div class="court-color-dot ${cc}"></div>${court}</div>
+      <div class="court-label" style="background:var(--court-${cc.replace('cc-','')})"><div class="court-color-dot"></div>${court}<span class="court-case-count">${cl.length} case${cl.length>1?'s':''}</span></div>
       ${cl.map(c=>cardHtml(c)).join('')}
     </div>`;
   }).join('');
