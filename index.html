@@ -27,10 +27,15 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .topbar{background:var(--text);color:#e8e4dc;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
 .firm{font-family:'Instrument Serif',serif;font-size:1.2rem;color:#f0ece4;letter-spacing:.03em;}
 .firm em{font-style:italic;color:#e8c87a;font-size:.95rem;margin-left:.35rem;opacity:.85;}
-.topbar-r{display:flex;align-items:center;gap:1rem;}
+.topbar-r{display:flex;align-items:center;gap:.75rem;}
 .top-date{font-size:.8rem;color:#8a8070;}
 .top-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#e8e4dc;padding:.38rem 1rem;border-radius:20px;font-size:.82rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;transition:background .15s;}
 .top-btn:hover{background:rgba(255,255,255,.2);}
+.top-save{background:#2d7a52;border:1px solid #3a9a68;color:#e8f5ec;padding:.38rem 1rem;border-radius:20px;font-size:.82rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;transition:background .15s;display:none;}
+.top-save:hover{background:#1e5c3a;}
+.top-save.pending{display:inline-block;animation:savepulse 2s infinite;}
+.top-save.saving{display:inline-block;background:#1e5c3a;cursor:default;}
+@keyframes savepulse{0%,100%{opacity:1}50%{opacity:.65}}
 
 .page{max-width:900px;margin:0 auto;padding:2rem 1.25rem 1rem;}
 
@@ -57,8 +62,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .sync-bar.loading{background:var(--abg);border:1px solid var(--abdr);color:var(--amber);}
 .sdot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .hero{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1.25rem;box-shadow:var(--shadow);margin-bottom:1.25rem;animation:rise .4s ease both;flex-wrap:wrap;}
 .hero-left{display:flex;align-items:center;gap:1.1rem;}
@@ -186,7 +191,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 .overlay{display:none;position:fixed;inset:0;background:rgba(15,14,12,.55);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 .overlay.on{display:flex;}
-
 .pw-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2.25rem 2rem 2rem;width:93%;max-width:400px;box-shadow:var(--shadowmd);animation:rise .22s ease;text-align:center;}
 .pw-box .lock{font-size:2rem;margin-bottom:1rem;}
 .pw-box h3{font-family:'Instrument Serif',serif;font-size:1.3rem;color:var(--ink);margin-bottom:.45rem;}
@@ -244,6 +248,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <div class="firm">Syed Sibtain Razvi & Associates <em>— Daily Docket</em></div>
   <div class="topbar-r">
     <span class="top-date" id="topDate"></span>
+    <button class="top-save" id="saveBtn" onclick="forceSave()">💾 Save</button>
     <button class="top-btn" onclick="requestImport()">↑ Import Cases</button>
   </div>
 </div>
@@ -252,24 +257,24 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
   <div class="setup-banner" id="setupBanner">
     <strong>⚙️ First-time setup required</strong>
-    Enter your GitHub details below to sync the docket across all firm devices. This is a one-time setup.
+    Enter your details below to sync the docket across all firm devices. This is a one-time setup.
   </div>
 
   <div class="token-card" id="tokenCard">
-    <h3>🔑 GitHub Configuration</h3>
+    <h3>🔑 Configuration</h3>
     <div class="cfg-grid">
-      <div><div class="cfg-lbl">GitHub Username</div><input class="cfg-in" id="ghUser" placeholder="e.g. tuyyab-razvi"/></div>
-      <div><div class="cfg-lbl">Repository Name</div><input class="cfg-in" id="ghRepo" placeholder="e.g. ssr-docket"/></div>
+      <div><div class="cfg-lbl">Username</div><input class="cfg-in" id="ghUser" placeholder="Your username"/></div>
+      <div><div class="cfg-lbl">Repository</div><input class="cfg-in" id="ghRepo" placeholder="Repository name"/></div>
       <div>
-        <div class="cfg-lbl">Personal Access Token</div>
+        <div class="cfg-lbl">Access Token</div>
         <div class="token-row">
-          <input class="cfg-in" type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"/>
+          <input class="cfg-in" type="password" id="ghToken" placeholder="Personal access token"/>
           <button class="btn-green" onclick="saveToken()">Save & Connect</button>
         </div>
       </div>
     </div>
     <div class="token-saved" id="tokenSaved">✓ Connected. Setup panel will hide shortly.</div>
-    <div style="margin-top:.85rem;font-size:.77rem;color:var(--muted);">Token is stored only in this browser and sent only to GitHub's API.</div>
+    <div style="margin-top:.85rem;font-size:.77rem;color:var(--muted);">Token stored only in this browser.</div>
   </div>
 
   <div class="sync-bar" id="syncBar"><div class="sdot"></div><span id="syncMsg">Loading…</span></div>
@@ -301,7 +306,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <div class="upload-card" id="uploadCard">
     <div class="upload-icon">📋</div>
     <h3>Import Today's Case List</h3>
-    <p>Use ChatGPT to extract cases from your screenshot, then paste the result below.<br>
+    
     Format: <code style="background:rgba(0,0,0,.06);padding:.1rem .35rem;border-radius:4px;font-size:.8rem;">Court Name | Case Number | Parties | Stage | Date</code> — one case per line.</p>
     <textarea class="paste-area" id="pasteArea" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 1 Mar 2026&#10;Sub-Judge Srinagar | OS/456/2023 | Hajira Vs Akhter | Summon | 1 Mar 2026"></textarea>
     <div class="import-row">
@@ -381,8 +386,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 </div>
 
 <script>
-const DATA_FILE = 'data.json';
-const ADVOCATES = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. 1','Adv. 2','Adv. 3','Adv. 4'];
+const DATA_FILE  = 'data.json';
+const ADVOCATES  = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. 1','Adv. 2','Adv. 3','Adv. 4'];
 const COURT_COLORS = ['ch-0','ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7'];
 const SS = [
   {k:'pending',   l:'Pending'},
@@ -398,14 +403,52 @@ const SS2 = {
   completed:{bg:'#eaf4ee',c:'#1e5c3a',b:'#b8ddc8'},
 };
 
-let cases  = [];
-let cols   = JSON.parse(localStorage.getItem('ssr_cols') || JSON.stringify(ADVOCATES));
-let filt   = 'all';
-let editId = null;
-let pwCb   = null;
+let cases   = [];
+let cols    = JSON.parse(localStorage.getItem('ssr_cols') || JSON.stringify(ADVOCATES));
+let filt    = 'all';
+let editId  = null;
+let pwCb    = null;
 let fileSha = '';
-let saveTimer;
 let courtColorMap = {};
+
+// ── SAVE QUEUE ──────────────────────────────────────────────
+// All changes go through queueSave(). It waits 5 seconds after
+// the LAST change before writing to GitHub — so a burst of 10
+// clicks becomes exactly 1 commit, not 10.
+let saveTimer   = null;
+let saveQueued  = false;
+let isSaving    = false;
+
+function queueSave() {
+  saveQueued = true;
+  setSaveBtn('pending');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 10000); // 5 second debounce
+}
+
+async function flushSave() {
+  if(isSaving) { saveTimer = setTimeout(flushSave, 2000); return; }
+  if(!saveQueued) return;
+  saveQueued = false;
+  await saveToGitHub();
+}
+
+async function forceSave() {
+  clearTimeout(saveTimer);
+  saveQueued = false;
+  await saveToGitHub();
+}
+
+function setSaveBtn(state) {
+  const btn = document.getElementById('saveBtn');
+  if(!btn) return;
+  btn.className = 'top-save';
+  if(state === 'pending') { btn.classList.add('pending'); btn.textContent = '💾 Unsaved changes'; }
+  else if(state === 'saving') { btn.classList.add('saving'); btn.textContent = '💾 Saving…'; }
+  else if(state === 'saved')  { btn.classList.add('pending'); btn.textContent = '✓ Saved'; setTimeout(()=>{ btn.className='top-save'; },2500); }
+  else { btn.className = 'top-save'; } // hidden
+}
+// ─────────────────────────────────────────────────────────────
 
 (async function(){
   const dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -417,7 +460,8 @@ let courtColorMap = {};
     document.getElementById('tokenCard').style.display='none';
     await loadFromGitHub();
   }
-  setInterval(async()=>{ if(getToken()) await loadFromGitHub(true); },30000);
+  // Poll every 60 seconds (reads only, no writes)
+  setInterval(async()=>{ if(getToken()&&!saveQueued&&!isSaving) await loadFromGitHub(true); }, 60000);
 })();
 
 function getToken(){ return localStorage.getItem('gh_token')||''; }
@@ -453,15 +497,16 @@ async function loadFromGitHub(silent){
     } else if(!silent){
       cases=content.cases||[];
     } else {
+      // Merge server changes without overwriting local unsaved edits
       const sc=content.cases||[];
       const localIds=new Set(cases.map(c=>c.id));
       sc.forEach(s=>{ if(!localIds.has(s.id)) cases.push(s); });
       sc.forEach(s=>{
         const lc=cases.find(c=>c.id===s.id);
         if(lc&&(s._ts||0)>(lc._ts||0)){
-          lc.status=s.status;lc.assignedTo=s.assignedTo;
-          lc.urgent=s.urgent;lc.note=s.note;
-          lc._ts=s._ts;lc.statusTime=s.statusTime;
+          lc.status=s.status; lc.assignedTo=s.assignedTo;
+          lc.urgent=s.urgent; lc.note=s.note;
+          lc._ts=s._ts; lc.statusTime=s.statusTime;
         }
       });
     }
@@ -472,19 +517,37 @@ async function loadFromGitHub(silent){
 
 async function saveToGitHub(){
   if(!getToken()) return;
+  isSaving=true;
+  setSaveBtn('saving');
   showSync('Saving…','loading');
   const payload={date:getTodayKey(),cases};
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
   try{
     const body={message:`Docket update ${new Date().toISOString()}`,content};
     if(fileSha) body.sha=fileSha;
-    const res=await fetch(apiUrl(),{method:'PUT',headers:{'Authorization':`token ${getToken()}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify(body)});
-    if(!res.ok){ await loadFromGitHub(true); await saveToGitHub(); return; }
+    const res=await fetch(apiUrl(),{
+      method:'PUT',
+      headers:{'Authorization':`token ${getToken()}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
+      body:JSON.stringify(body)
+    });
+    if(!res.ok){
+      // SHA stale — get latest SHA and retry once
+      const check=await fetch(apiUrl(),{headers:{'Authorization':`token ${getToken()}`,'Accept':'application/vnd.github.v3+json'}});
+      if(check.ok){ const f=await check.json(); fileSha=f.sha; }
+      isSaving=false;
+      await saveToGitHub();
+      return;
+    }
     const data=await res.json();
     fileSha=data.content.sha;
     showSync('Saved ✓','ok');
-    setTimeout(()=>document.getElementById('syncBar').classList.remove('on'),2500);
-  } catch(e){ showSync('Save failed: '+e.message,'err'); }
+    setSaveBtn('saved');
+    setTimeout(()=>showSync('',''),2500);
+  } catch(e){
+    showSync('Save failed: '+e.message,'err');
+    setSaveBtn('pending');
+  }
+  isSaving=false;
 }
 
 function showSync(msg,type){
@@ -495,7 +558,6 @@ function showSync(msg,type){
   bar.classList.add('on');
   bar.classList.add(type==='err'?'err':type==='ok'?'ok':'loading');
 }
-function pushSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveToGitHub,1500); }
 
 function getTodayKey(){
   const d=new Date();
@@ -566,7 +628,9 @@ function doImport(){
     if(!existingKeys.has(k)){ cases.push(nc); existingKeys.add(k); added++; }
   });
   document.getElementById('pasteArea').value='';
-  render(); saveToGitHub();
+  render();
+  // Import always saves immediately — it's a big change
+  saveToGitHub();
   if(added===0) alert('All cases already exist. No new cases added.');
   else if(added<lines.length) alert(`${added} new case${added>1?'s':''} added. ${lines.length-added} duplicate${lines.length-added>1?'s':''} skipped.`);
 }
@@ -698,7 +762,7 @@ function cardHtml(c){
       ${tsLine}
       <div class="status-strip">${sbtns}</div>
       <div class="assign-strip"><span class="assign-lbl">Attending</span>${abtns}</div>
-      <input class="note-in" placeholder="Cause list serial no., next date, brief status…" value="${(c.note||'').replace(/"/g,'&quot;')}" oninput="setNote('${c.id}',this.value)" onblur="pushSave()"/>
+      <input class="note-in" placeholder="Cause list serial no., next date, brief status…" value="${(c.note||'').replace(/"/g,'&quot;')}" oninput="setNote('${c.id}',this.value)" onblur="queueSave()"/>
     </div>
     <div class="card-acts">
       <button class="ia urg ${c.urgent?'active':''}" onclick="toggleUrg('${c.id}')" title="Toggle urgent">🚨</button>
@@ -708,20 +772,21 @@ function cardHtml(c){
   </div>`;
 }
 
+// All these mark local state dirty then queue a batched save
 function setSt(id,s){
   const c=cases.find(x=>x.id===id); if(!c) return;
   c.status=s; c.statusTime=s!=='pending'?Date.now():null; c._ts=Date.now();
-  render(); saveToGitHub();
+  render(); queueSave();
 }
 function toggleA(id,n){
   const c=cases.find(x=>x.id===id); if(!c) return;
   const i=c.assignedTo.indexOf(n); if(i>=0)c.assignedTo.splice(i,1); else c.assignedTo.push(n);
-  c._ts=Date.now(); render(); saveToGitHub();
+  c._ts=Date.now(); render(); queueSave();
 }
 function setNote(id,v){ const c=cases.find(x=>x.id===id); if(c){c.note=v;c._ts=Date.now();} }
 function toggleUrg(id){
   const c=cases.find(x=>x.id===id); if(!c) return;
-  c.urgent=!c.urgent; c._ts=Date.now(); render(); saveToGitHub();
+  c.urgent=!c.urgent; c._ts=Date.now(); render(); queueSave();
 }
 function reqDel(id){
   showPw(()=>{ cases=cases.filter(x=>x.id!==id); render(); saveToGitHub(); },
