@@ -39,22 +39,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 .page{max-width:900px;margin:0 auto;padding:2rem 1.25rem 1rem;}
 
-.setup-banner{background:#fff8e8;border:1.5px solid var(--abdr);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.25rem;font-size:.86rem;line-height:1.7;color:#5a3a00;}
-.setup-banner strong{display:block;font-size:.95rem;margin-bottom:.35rem;}
-
-.token-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.25rem;}
-.token-card h3{font-family:'Instrument Serif',serif;font-size:1.1rem;margin-bottom:.85rem;}
-.cfg-grid{display:grid;gap:.7rem;}
-.cfg-lbl{font-size:.73rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.28rem;}
-.cfg-in{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.54rem .8rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;transition:border-color .15s;}
-.cfg-in:focus{border-color:var(--gmid);}
-.token-row{display:flex;gap:.6rem;flex-wrap:wrap;}
-.token-row .cfg-in{flex:1;min-width:180px;}
-.btn-green{background:var(--green);color:white;border:none;padding:.54rem 1.2rem;border-radius:20px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .15s;}
-.btn-green:hover{background:var(--gmid);}
-.token-saved{font-size:.78rem;color:var(--gmid);margin-top:.5rem;display:none;}
-.token-saved.on{display:block;}
-
 .sync-bar{border-radius:8px;padding:.48rem 1rem;font-size:.8rem;margin-bottom:1rem;display:none;align-items:center;gap:.5rem;}
 .sync-bar.on{display:flex;}
 .sync-bar.ok{background:var(--gbg);border:1px solid var(--gbdr);color:var(--green);}
@@ -63,7 +47,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .sdot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
-@keyframes spin{to{transform:rotate(360deg)}}
 
 .hero{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1.25rem;box-shadow:var(--shadow);margin-bottom:1.25rem;animation:rise .4s ease both;flex-wrap:wrap;}
 .hero-left{display:flex;align-items:center;gap:1.1rem;}
@@ -122,13 +105,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .btn-dark:hover{opacity:.8;}
 .btn-amber{display:inline-flex;align-items:center;gap:.35rem;background:var(--abg);color:var(--amber);border:1px solid var(--abdr);padding:.44rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .btn-amber:hover{background:#fce8c0;}
+.btn-green{background:var(--green);color:white;border:none;padding:.54rem 1.2rem;border-radius:20px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.btn-green:hover{background:var(--gmid);}
 
 .court-group{margin-bottom:1.4rem;animation:rise .3s ease both;}
 .court-hdr{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.25rem;border-radius:var(--r) var(--r) 0 0;font-size:.88rem;font-weight:600;letter-spacing:.04em;}
 .court-hdr-l{display:flex;align-items:center;gap:.5rem;}
 .cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:white;opacity:.6;}
 .cbadge{border-radius:20px;padding:.08rem .55rem;font-size:.75rem;background:rgba(255,255,255,.15);color:rgba(255,255,255,.75);}
-
 .ch-0{background:#2a2520;color:#f0ece4;}
 .ch-1{background:#1e3d5c;color:#e8f0f8;}
 .ch-2{background:#2d5a3a;color:#e8f5ec;}
@@ -236,7 +220,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .firm{font-size:1rem;}
 }
 @media print{
-  .topbar,.controls,.col-card,.upload-card,.card-acts,.status-strip,.assign-strip,.sync-bar,.token-card,.setup-banner{display:none!important;}
+  .topbar,.controls,.col-card,.upload-card,.card-acts,.status-strip,.assign-strip,.sync-bar{display:none!important;}
   body{background:white;}
   .page{padding:0;}
 }
@@ -254,29 +238,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 </div>
 
 <div class="page">
-
-  <div class="setup-banner" id="setupBanner">
-    <strong>⚙️ First-time setup required</strong>
-    Enter your details below to sync the docket across all firm devices. This is a one-time setup.
-  </div>
-
-  <div class="token-card" id="tokenCard">
-    <h3>🔑 Configuration</h3>
-    <div class="cfg-grid">
-      <div><div class="cfg-lbl">Username</div><input class="cfg-in" id="ghUser" placeholder="Your username"/></div>
-      <div><div class="cfg-lbl">Repository</div><input class="cfg-in" id="ghRepo" placeholder="Repository name"/></div>
-      <div>
-        <div class="cfg-lbl">Access Token</div>
-        <div class="token-row">
-          <input class="cfg-in" type="password" id="ghToken" placeholder="Personal access token"/>
-          <button class="btn-green" onclick="saveToken()">Save & Connect</button>
-        </div>
-      </div>
-    </div>
-    <div class="token-saved" id="tokenSaved">✓ Connected. Setup panel will hide shortly.</div>
-    <div style="margin-top:.85rem;font-size:.77rem;color:var(--muted);">Token stored only in this browser.</div>
-  </div>
-
   <div class="sync-bar" id="syncBar"><div class="sdot"></div><span id="syncMsg">Loading…</span></div>
 
   <div class="hero" id="heroCard" style="display:none">
@@ -306,8 +267,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <div class="upload-card" id="uploadCard">
     <div class="upload-icon">📋</div>
     <h3>Import Today's Case List</h3>
-    
-    Format: <code style="background:rgba(0,0,0,.06);padding:.1rem .35rem;border-radius:4px;font-size:.8rem;">Court Name | Case Number | Parties | Stage | Date</code> — one case per line.</p>
+    <p>Paste extracted case text below — one case per line.<br>
+    Format: <code style="background:rgba(0,0,0,.06);padding:.1rem .35rem;border-radius:4px;font-size:.8rem;">Court Name | Case Number | Parties | Stage | Date</code></p>
     <textarea class="paste-area" id="pasteArea" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 1 Mar 2026&#10;Sub-Judge Srinagar | OS/456/2023 | Hajira Vs Akhter | Summon | 1 Mar 2026"></textarea>
     <div class="import-row">
       <button class="btn-green" onclick="requestImport()">↑ Import Cases</button>
@@ -386,8 +347,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 </div>
 
 <script>
-const DATA_FILE  = 'data.json';
-const ADVOCATES  = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. 1','Adv. 2','Adv. 3','Adv. 4'];
+// ── SUPABASE CONFIG (hardcoded — no setup needed) ──────────
+const SB_URL  = 'https://ddqlncebxfuairwsajsp.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkcWxuY2VieGZ1YWlyd3NhanNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MzE0MDcsImV4cCI6MjA4ODIwNzQwN30.ti6gzM9HVD7YH8FkAppEzd_8yWt48t7mb3z4MWIYMYg';
+const SB_REST = `${SB_URL}/rest/v1/docket?id=eq.1`;
+const SB_HDR  = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+// ───────────────────────────────────────────────────────────
+
+const ADVOCATES    = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. 1','Adv. 2','Adv. 3','Adv. 4'];
 const COURT_COLORS = ['ch-0','ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7'];
 const SS = [
   {k:'pending',   l:'Pending'},
@@ -408,98 +375,67 @@ let cols    = JSON.parse(localStorage.getItem('ssr_cols') || JSON.stringify(ADVO
 let filt    = 'all';
 let editId  = null;
 let pwCb    = null;
-let fileSha = '';
 let courtColorMap = {};
+let saveTimer  = null;
+let saveQueued = false;
+let isSaving   = false;
 
-// ── SAVE QUEUE ──────────────────────────────────────────────
-// All changes go through queueSave(). It waits 5 seconds after
-// the LAST change before writing to GitHub — so a burst of 10
-// clicks becomes exactly 1 commit, not 10.
-let saveTimer   = null;
-let saveQueued  = false;
-let isSaving    = false;
-
-function queueSave() {
+// ── SAVE QUEUE: batches all clicks into one write every 10s ─
+function queueSave(){
   saveQueued = true;
   setSaveBtn('pending');
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(flushSave, 10000); // 5 second debounce
+  saveTimer = setTimeout(flushSave, 10000);
 }
-
-async function flushSave() {
-  if(isSaving) { saveTimer = setTimeout(flushSave, 2000); return; }
+async function flushSave(){
+  if(isSaving){ saveTimer=setTimeout(flushSave,2000); return; }
   if(!saveQueued) return;
   saveQueued = false;
-  await saveToGitHub();
+  await saveToSupabase();
 }
-
-async function forceSave() {
+async function forceSave(){
   clearTimeout(saveTimer);
   saveQueued = false;
-  await saveToGitHub();
+  await saveToSupabase();
 }
-
-function setSaveBtn(state) {
-  const btn = document.getElementById('saveBtn');
-  if(!btn) return;
-  btn.className = 'top-save';
-  if(state === 'pending') { btn.classList.add('pending'); btn.textContent = '💾 Unsaved changes'; }
-  else if(state === 'saving') { btn.classList.add('saving'); btn.textContent = '💾 Saving…'; }
-  else if(state === 'saved')  { btn.classList.add('pending'); btn.textContent = '✓ Saved'; setTimeout(()=>{ btn.className='top-save'; },2500); }
-  else { btn.className = 'top-save'; } // hidden
+function setSaveBtn(state){
+  const btn=document.getElementById('saveBtn'); if(!btn) return;
+  btn.className='top-save';
+  if(state==='pending'){btn.classList.add('pending');btn.textContent='💾 Unsaved changes';}
+  else if(state==='saving'){btn.classList.add('saving');btn.textContent='💾 Saving…';}
+  else if(state==='saved'){btn.classList.add('pending');btn.textContent='✓ Saved';setTimeout(()=>{btn.className='top-save';},2500);}
+  else{btn.className='top-save';}
 }
-// ─────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
 
 (async function(){
-  const dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const dateStr=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('topDate').textContent    = dateStr;
   document.getElementById('footerDate').textContent = dateStr;
   renderCols();
-  if(getToken()&&getUser()&&getRepo()){
-    document.getElementById('setupBanner').style.display='none';
-    document.getElementById('tokenCard').style.display='none';
-    await loadFromGitHub();
-  }
-  // Poll every 60 seconds (reads only, no writes)
-  setInterval(async()=>{ if(getToken()&&!saveQueued&&!isSaving) await loadFromGitHub(true); }, 60000);
+  await loadFromSupabase();
+  // Poll every 15 seconds — instant feels instant, no build delay
+  setInterval(async()=>{ if(!saveQueued&&!isSaving) await loadFromSupabase(true); }, 15000);
 })();
 
-function getToken(){ return localStorage.getItem('gh_token')||''; }
-function getUser(){  return localStorage.getItem('gh_user') ||''; }
-function getRepo(){  return localStorage.getItem('gh_repo') ||''; }
-function apiUrl(){   return `https://api.github.com/repos/${getUser()}/${getRepo()}/contents/${DATA_FILE}`; }
-
-function saveToken(){
-  const t=document.getElementById('ghToken').value.trim();
-  const u=document.getElementById('ghUser').value.trim();
-  const r=document.getElementById('ghRepo').value.trim();
-  if(!t||!u||!r){ alert('Please fill in all three fields.'); return; }
-  localStorage.setItem('gh_token',t);
-  localStorage.setItem('gh_user',u);
-  localStorage.setItem('gh_repo',r);
-  document.getElementById('tokenSaved').classList.add('on');
-  document.getElementById('setupBanner').style.display='none';
-  setTimeout(()=>{ document.getElementById('tokenCard').style.display='none'; },1800);
-  loadFromGitHub();
-}
-
-async function loadFromGitHub(silent){
-  if(!silent) showSync('Loading today\'s docket…','loading');
+// ── SUPABASE READ ───────────────────────────────────────────
+async function loadFromSupabase(silent){
+  if(!silent) showSync('Loading…','loading');
   try{
-    const res=await fetch(apiUrl(),{headers:{'Authorization':`token ${getToken()}`,'Accept':'application/vnd.github.v3+json'}});
-    if(!res.ok) throw new Error('Could not read data.json — check your GitHub username, repo name and token.');
-    const file=await res.json();
-    fileSha=file.sha;
-    const content=JSON.parse(atob(file.content.replace(/\n/g,'')));
-    const today=getTodayKey();
-    if(content.date!==today){
-      cases=[];
+    const res = await fetch(SB_REST, { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } });
+    if(!res.ok) throw new Error('Could not connect. Check your internet connection.');
+    const rows = await res.json();
+    if(!rows.length) throw new Error('No data found in database.');
+    const row   = rows[0];
+    const today = getTodayKey();
+    if(row.date !== today){
+      cases = [];
     } else if(!silent){
-      cases=content.cases||[];
+      cases = row.cases || [];
     } else {
-      // Merge server changes without overwriting local unsaved edits
-      const sc=content.cases||[];
-      const localIds=new Set(cases.map(c=>c.id));
+      // Merge: pick up new cases added by others, keep local unsaved edits
+      const sc = row.cases || [];
+      const localIds = new Set(cases.map(c=>c.id));
       sc.forEach(s=>{ if(!localIds.has(s.id)) cases.push(s); });
       sc.forEach(s=>{
         const lc=cases.find(c=>c.id===s.id);
@@ -515,46 +451,37 @@ async function loadFromGitHub(silent){
   } catch(e){ showSync(e.message,'err'); }
 }
 
-async function saveToGitHub(){
-  if(!getToken()) return;
-  isSaving=true;
+// ── SUPABASE WRITE ──────────────────────────────────────────
+async function saveToSupabase(){
+  isSaving = true;
   setSaveBtn('saving');
   showSync('Saving…','loading');
-  const payload={date:getTodayKey(),cases};
-  const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
   try{
-    const body={message:`Docket update ${new Date().toISOString()}`,content};
-    if(fileSha) body.sha=fileSha;
-    const res=await fetch(apiUrl(),{
-      method:'PUT',
-      headers:{'Authorization':`token ${getToken()}`,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
-      body:JSON.stringify(body)
+    const res = await fetch(SB_REST, {
+      method: 'PATCH',
+      headers: SB_HDR,
+      body: JSON.stringify({ date: getTodayKey(), cases })
     });
     if(!res.ok){
-      // SHA stale — get latest SHA and retry once
-      const check=await fetch(apiUrl(),{headers:{'Authorization':`token ${getToken()}`,'Accept':'application/vnd.github.v3+json'}});
-      if(check.ok){ const f=await check.json(); fileSha=f.sha; }
-      isSaving=false;
-      await saveToGitHub();
-      return;
+      const err = await res.text();
+      throw new Error('Save failed: '+err);
     }
-    const data=await res.json();
-    fileSha=data.content.sha;
     showSync('Saved ✓','ok');
     setSaveBtn('saved');
     setTimeout(()=>showSync('',''),2500);
   } catch(e){
-    showSync('Save failed: '+e.message,'err');
+    showSync(e.message,'err');
     setSaveBtn('pending');
   }
-  isSaving=false;
+  isSaving = false;
 }
+// ────────────────────────────────────────────────────────────
 
 function showSync(msg,type){
   const bar=document.getElementById('syncBar');
   document.getElementById('syncMsg').textContent=msg;
   bar.className='sync-bar';
-  if(!type){ bar.classList.remove('on'); return; }
+  if(!type){bar.classList.remove('on');return;}
   bar.classList.add('on');
   bar.classList.add(type==='err'?'err':type==='ok'?'ok':'loading');
 }
@@ -585,7 +512,7 @@ function showPw(onSuccess,title,desc){
   document.getElementById('pwOverlay').classList.add('on');
   setTimeout(()=>document.getElementById('pwIn').focus(),80);
 }
-function closePw(){ document.getElementById('pwOverlay').classList.remove('on'); pwCb=null; }
+function closePw(){document.getElementById('pwOverlay').classList.remove('on');pwCb=null;}
 function confirmPw(){
   const v=document.getElementById('pwIn').value.trim();
   if(v===getTodayPw()){
@@ -605,14 +532,13 @@ document.getElementById('pwIn').addEventListener('keydown',function(e){
 });
 
 function requestImport(){
-  if(!getToken()){ alert('Please complete the GitHub setup first.'); return; }
   showPw(()=>doImport(),'Import Case List','Enter the access password to import today\'s cases.');
 }
 function doImport(){
   const raw=document.getElementById('pasteArea').value.trim();
-  if(!raw){ alert('Please paste the case text first.'); return; }
+  if(!raw){alert('Please paste the case text first.');return;}
   const lines=raw.split('\n').map(l=>l.trim()).filter(l=>l&&l.includes('|'));
-  if(!lines.length){ alert('No valid cases found. Each line must have fields separated by |'); return; }
+  if(!lines.length){alert('No valid cases found. Each line must have fields separated by |');return;}
   const existingKeys=new Set(cases.map(c=>caseKey(c)));
   let added=0;
   lines.forEach(line=>{
@@ -625,16 +551,15 @@ function doImport(){
       _ts:0,statusTime:null
     };
     const k=caseKey(nc);
-    if(!existingKeys.has(k)){ cases.push(nc); existingKeys.add(k); added++; }
+    if(!existingKeys.has(k)){cases.push(nc);existingKeys.add(k);added++;}
   });
   document.getElementById('pasteArea').value='';
   render();
-  // Import always saves immediately — it's a big change
-  saveToGitHub();
+  saveToSupabase(); // import always saves immediately
   if(added===0) alert('All cases already exist. No new cases added.');
   else if(added<lines.length) alert(`${added} new case${added>1?'s':''} added. ${lines.length-added} duplicate${lines.length-added>1?'s':''} skipped.`);
 }
-function caseKey(c){ return [c.courtName,c.caseNum,c.parties,c.stage].map(s=>(s||'').trim().toLowerCase()).join('|'); }
+function caseKey(c){return [c.courtName,c.caseNum,c.parties,c.stage].map(s=>(s||'').trim().toLowerCase()).join('|');}
 
 function renderCols(){
   document.getElementById('colChips').innerHTML=cols.map((c,i)=>
@@ -647,9 +572,9 @@ function renderCols(){
     if(cols.includes(cur)) advF.value=cur;
   }
 }
-function removeCol(i){ cols.splice(i,1); renderCols(); render(); }
+function removeCol(i){cols.splice(i,1);renderCols();render();}
 document.getElementById('colIn').addEventListener('keydown',function(e){
-  if(e.key==='Enter'&&this.value.trim()){ cols.push(this.value.trim()); this.value=''; renderCols(); render(); }
+  if(e.key==='Enter'&&this.value.trim()){cols.push(this.value.trim());this.value='';renderCols();render();}
 });
 
 function setF(f,btn){
@@ -664,13 +589,13 @@ function render(){
   document.getElementById('tlCard').style.display    =has?'block':'none';
   document.getElementById('controls').style.display  =has?'flex':'none';
   document.getElementById('uploadCard').style.display=has?'none':'block';
-  if(has){ renderHero(); renderTimeline(); }
-  renderCourtFilter(); renderAdvFilter(); renderCards();
+  if(has){renderHero();renderTimeline();}
+  renderCourtFilter();renderAdvFilter();renderCards();
 }
 
 function renderHero(){
   const cnt={};SS.forEach(s=>cnt[s.k]=0);
-  cases.forEach(c=>{ if(cnt[c.status]!==undefined) cnt[c.status]++; });
+  cases.forEach(c=>{if(cnt[c.status]!==undefined)cnt[c.status]++;});
   const urg=cases.filter(c=>c.urgent).length;
   document.getElementById('heroTitle').textContent=`${cases.length} Case${cases.length>1?'s':''} Today`;
   let sub=`${cnt.completed} completed · ${cnt.pending} pending · ${cnt.arguments} for arguments`;
@@ -699,7 +624,7 @@ function renderCourtFilter(){
   const sel=document.getElementById('courtF'); if(!sel) return;
   const cur=sel.value;
   const courts=[...new Set(cases.map(c=>c.courtName).filter(Boolean))].sort();
-  courts.forEach((ct,i)=>{ if(!courtColorMap[ct]) courtColorMap[ct]=COURT_COLORS[i%COURT_COLORS.length]; });
+  courts.forEach((ct,i)=>{if(!courtColorMap[ct])courtColorMap[ct]=COURT_COLORS[i%COURT_COLORS.length];});
   sel.innerHTML=`<option value="all">All Courts</option>`+courts.map(c=>`<option value="${c}">${c}</option>`).join('');
   if(courts.includes(cur)) sel.value=cur;
 }
@@ -727,7 +652,7 @@ function renderCards(){
     return;
   }
   const groups={};
-  list.forEach(c=>{ if(!groups[c.courtName])groups[c.courtName]=[]; groups[c.courtName].push(c); });
+  list.forEach(c=>{if(!groups[c.courtName])groups[c.courtName]=[];groups[c.courtName].push(c);});
   Object.keys(groups).forEach(court=>{
     groups[court].sort((a,b)=>(a.status==='completed'?1:0)-(b.status==='completed'?1:0));
   });
@@ -772,30 +697,29 @@ function cardHtml(c){
   </div>`;
 }
 
-// All these mark local state dirty then queue a batched save
 function setSt(id,s){
-  const c=cases.find(x=>x.id===id); if(!c) return;
-  c.status=s; c.statusTime=s!=='pending'?Date.now():null; c._ts=Date.now();
-  render(); queueSave();
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  c.status=s;c.statusTime=s!=='pending'?Date.now():null;c._ts=Date.now();
+  render();queueSave();
 }
 function toggleA(id,n){
-  const c=cases.find(x=>x.id===id); if(!c) return;
-  const i=c.assignedTo.indexOf(n); if(i>=0)c.assignedTo.splice(i,1); else c.assignedTo.push(n);
-  c._ts=Date.now(); render(); queueSave();
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  const i=c.assignedTo.indexOf(n);if(i>=0)c.assignedTo.splice(i,1);else c.assignedTo.push(n);
+  c._ts=Date.now();render();queueSave();
 }
-function setNote(id,v){ const c=cases.find(x=>x.id===id); if(c){c.note=v;c._ts=Date.now();} }
+function setNote(id,v){const c=cases.find(x=>x.id===id);if(c){c.note=v;c._ts=Date.now();}}
 function toggleUrg(id){
-  const c=cases.find(x=>x.id===id); if(!c) return;
-  c.urgent=!c.urgent; c._ts=Date.now(); render(); queueSave();
+  const c=cases.find(x=>x.id===id);if(!c)return;
+  c.urgent=!c.urgent;c._ts=Date.now();render();queueSave();
 }
 function reqDel(id){
-  showPw(()=>{ cases=cases.filter(x=>x.id!==id); render(); saveToGitHub(); },
+  showPw(()=>{cases=cases.filter(x=>x.id!==id);render();saveToSupabase();},
     'Confirm Deletion','Enter the access password to remove this case.');
 }
 
-function openAdd(){ editId=null; clearM(); document.getElementById('mTitle').textContent='Add Case'; document.getElementById('caseOverlay').classList.add('on'); }
+function openAdd(){editId=null;clearM();document.getElementById('mTitle').textContent='Add Case';document.getElementById('caseOverlay').classList.add('on');}
 function openEdit(id){
-  const c=cases.find(x=>x.id===id); if(!c) return; editId=id;
+  const c=cases.find(x=>x.id===id);if(!c)return;editId=id;
   document.getElementById('mTitle').textContent='Edit Case';
   document.getElementById('fCourt').value=c.courtName||'';
   document.getElementById('fCaseNum').value=c.caseNum||'';
@@ -805,19 +729,19 @@ function openEdit(id){
   document.getElementById('fNote').value=c.note||'';
   document.getElementById('caseOverlay').classList.add('on');
 }
-function clearM(){ ['fCourt','fCaseNum','fParties','fStage','fDate','fNote'].forEach(id=>document.getElementById(id).value=''); }
-function closeModal(){ document.getElementById('caseOverlay').classList.remove('on'); editId=null; }
+function clearM(){['fCourt','fCaseNum','fParties','fStage','fDate','fNote'].forEach(id=>document.getElementById(id).value='');}
+function closeModal(){document.getElementById('caseOverlay').classList.remove('on');editId=null;}
 function saveModal(){
   const p=document.getElementById('fParties').value.trim();
   const ct=document.getElementById('fCourt').value.trim();
-  if(!p&&!ct){ alert('Please enter parties or court name.'); return; }
+  if(!p&&!ct){alert('Please enter parties or court name.');return;}
   if(editId){
     const c=cases.find(x=>x.id===editId);
     if(c){c.courtName=ct||c.courtName;c.caseNum=document.getElementById('fCaseNum').value.trim();c.parties=p||c.parties;c.stage=document.getElementById('fStage').value.trim();c.dateStr=document.getElementById('fDate').value.trim();c.note=document.getElementById('fNote').value.trim();c._ts=Date.now();}
   } else {
     cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,_ts:Date.now(),statusTime:null});
   }
-  render(); saveToGitHub(); closeModal();
+  render();saveToSupabase();closeModal();
 }
 document.getElementById('caseOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
@@ -827,7 +751,7 @@ function openEOD(){
   cases.forEach(c=>{if(cnt[c.status]!==undefined)cnt[c.status]++;});
   const urg=cases.filter(c=>c.urgent).length;
   const advCount={};
-  cases.forEach(c=>{ c.assignedTo.forEach(a=>{ advCount[a]=(advCount[a]||0)+1; }); });
+  cases.forEach(c=>{c.assignedTo.forEach(a=>{advCount[a]=(advCount[a]||0)+1;});});
   const advSummary=Object.entries(advCount).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`${a}: ${n} case${n>1?'s':''}`).join(' &nbsp;·&nbsp; ');
   const rows=cases.map(c=>{
     const st=SS2[c.status]||{bg:'#eee',c:'#666',b:'#ccc'};
