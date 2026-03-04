@@ -72,6 +72,7 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 1rem;
 }
 .firm {
   font-family: 'Cormorant Garamond', serif;
@@ -79,6 +80,11 @@ body::before {
   font-weight: 500;
   color: #f0ece3;
   letter-spacing: .04em;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .firm em {
   font-style: italic;
@@ -87,7 +93,7 @@ body::before {
   margin-left: .4rem;
   opacity: .85;
 }
-.topbar-r { display: flex; align-items: center; gap: .65rem; }
+.topbar-r { display: flex; align-items: center; gap: .65rem; flex-shrink: 0; }
 .top-date { font-size: .74rem; color: #6a6458; letter-spacing: .04em; font-weight: 400; }
 
 .top-btn {
@@ -928,7 +934,7 @@ body::before {
   <div class="topbar-r">
     <span class="top-date" id="topDate"></span>
     <button class="top-save" id="saveBtn" onclick="forceSave()">Saving…</button>
-    <button class="top-btn" onclick="requestImport()">↑ Import</button>
+    
   </div>
 </div>
 
