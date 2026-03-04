@@ -261,7 +261,22 @@ body::before {
 .btn-solid:hover { opacity: .8; }
 
 /* ── COURT GROUP ── */
-.court-group { margin-bottom: 2rem; }
+.court-group {
+  margin-bottom: 1.5rem;
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1.5px solid var(--faint);
+  box-shadow: var(--shadow-sm);
+  transition: border-color .3s, box-shadow .3s;
+}
+.court-group.all-done {
+  border-color: var(--green-line);
+  box-shadow: 0 0 0 1px var(--green-line), var(--shadow-sm);
+}
+.court-group.has-urgent {
+  border-color: var(--red-line);
+  box-shadow: 0 0 0 1px var(--red-line), var(--shadow-sm);
+}
 .court-label {
   font-family: 'Jost', sans-serif;
   font-size: .72rem;
@@ -269,12 +284,12 @@ body::before {
   letter-spacing: .13em;
   text-transform: uppercase;
   color: #f0ece3;
-  margin-bottom: .5rem;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: .6rem;
-  padding: .55rem 1rem;
-  border-radius: 10px;
+  padding: .6rem 1rem;
+  border-radius: 0;
 }
 .court-color-dot {
   width: 7px;
@@ -294,20 +309,23 @@ body::before {
 /* ── CASE CARD ── */
 .case-card {
   background: var(--paper);
-  border: 1px solid var(--faint);
-  border-radius: var(--r);
-  margin-bottom: .5rem;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow .2s, border-color .2s;
+  border: none;
+  border-top: 1px solid var(--faint);
+  border-radius: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  transition: background .2s;
   overflow: hidden;
 }
-.case-card:hover { box-shadow: var(--shadow-md); border-color: var(--line); }
-.case-card.urgent { border: 1px solid #d08080; border-left: 3px solid var(--urg); background: #fdf3f3; }
+.case-card:last-child { border-radius: 0 0 calc(var(--r) - 2px) calc(var(--r) - 2px); }
+.case-card:hover { background: var(--faint2); border-color: var(--faint); }
+.case-card.urgent { border-top: 1px solid #e8c0c0; border-left: 3px solid var(--urg); background: #fdf3f3; }
 .case-card.urgent .case-summary { background: #fdf3f3; }
-.case-card.urgent:hover .case-summary { background: #fae8e8; }
+.case-card.urgent:hover { background: #fae8e8; }
 .case-card.urgent .case-parties { color: #7a1c1c; }
-.case-card.completed { opacity: 1; border: 1px solid #a8ccb8; }
-.case-card.completed .case-summary { background: #dff0e8; }
+.case-card.completed { border-top: 1px solid #c8e0d0; background: #edf7f1; }
+.case-card.completed .case-summary { background: #edf7f1; }
+.case-card.completed:hover { background: #e0f2ea; }
 .case-card.completed .case-parties { color: var(--green); }
 
 /* SUMMARY ROW — always visible */
@@ -1301,10 +1319,30 @@ function renderCards(){
   }
   const groups={};
   list.forEach(c=>{if(!groups[c.courtName])groups[c.courtName]=[];groups[c.courtName].push(c);});
-  Object.keys(groups).forEach(ct=>{groups[ct].sort((a,b)=>(a.status==='completed'?1:0)-(b.status==='completed'?1:0));});
-  wrap.innerHTML=Object.entries(groups).map(([court,cl])=>{
+  // Sort within group: attended+completed sink to bottom
+  const doneStatuses = new Set(['completed','attended']);
+  Object.keys(groups).forEach(ct=>{
+    groups[ct].sort((a,b)=>{
+      const aD=doneStatuses.has(a.status)?1:0;
+      const bD=doneStatuses.has(b.status)?1:0;
+      return aD-bD;
+    });
+  });
+
+  // Sort court groups: all cases done → move group to bottom
+  const groupEntries = Object.entries(groups);
+  groupEntries.sort((a,b)=>{
+    const aAllDone = a[1].every(c=>doneStatuses.has(c.status)) ? 1 : 0;
+    const bAllDone = b[1].every(c=>doneStatuses.has(c.status)) ? 1 : 0;
+    return aAllDone - bAllDone;
+  });
+
+  wrap.innerHTML=groupEntries.map(([court,cl])=>{
     const cc=courtColorMap[court]||'cc-0';
-    return `<div class="court-group">
+    const allDone = cl.every(c=>doneStatuses.has(c.status));
+    const hasUrgent = cl.some(c=>c.urgent);
+    const groupClass = allDone ? 'all-done' : hasUrgent ? 'has-urgent' : '';
+    return `<div class="court-group ${groupClass}">
       <div class="court-label" style="background:var(--court-${cc.replace('cc-','')})"><div class="court-color-dot"></div>${court}<span class="court-case-count">${cl.length} case${cl.length>1?'s':''}</span></div>
       ${cl.map(c=>cardHtml(c)).join('')}
     </div>`;
