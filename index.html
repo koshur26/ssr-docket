@@ -63,70 +63,101 @@ body::before {
 
 /* ── TOPBAR ── */
 .topbar {
-  background: var(--ink);
-  height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
+  background: #0f0e0c;
   position: sticky;
   top: 0;
   z-index: 100;
-  gap: 1rem;
+  border-bottom: 1px solid #2a2520;
 }
-.firm {
+.topbar-main {
+  padding: .9rem 1.25rem .75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.firm-left {}
+.firm-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #f0ece3;
-  letter-spacing: .04em;
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #f0ece4;
+  line-height: 1.1;
+  letter-spacing: .015em;
 }
-.firm em {
-  font-style: italic;
-  color: #c8b878;
-  font-size: 1rem;
-  margin-left: .4rem;
-  opacity: .85;
-}
-.topbar-r { display: flex; align-items: center; gap: .65rem; flex-shrink: 0; }
-.top-date { font-size: .74rem; color: #6a6458; letter-spacing: .04em; font-weight: 400; }
-
-.top-btn {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.15);
-  color: #c8c0b0;
-  padding: .32rem .9rem;
-  border-radius: 20px;
-  font-size: .75rem;
+.firm-name .ampersand { color: #c8b878; font-style: italic; }
+.firm-sub {
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #4a4840;
+  margin-top: .22rem;
   font-family: 'Jost', sans-serif;
-  cursor: pointer;
   font-weight: 500;
-  letter-spacing: .04em;
-  transition: all .2s;
 }
-.top-btn:hover { border-color: rgba(255,255,255,.35); color: #f0ece3; }
-
+.firm-sub .docket-tag {
+  color: #c8b878;
+  letter-spacing: .12em;
+}
+.topbar-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .1rem;
+  flex-shrink: 0;
+}
+.topbar-day {
+  font-family: 'Jost', sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #c8b878;
+  line-height: 1;
+  animation: goldglow 4s ease-in-out infinite;
+}
+@keyframes goldglow {
+  0%,100% { text-shadow: none; opacity: .85; }
+  50%      { text-shadow: 0 0 14px rgba(200,184,120,.7); opacity: 1; }
+}
+.topbar-date {
+  font-family: 'Jost', sans-serif;
+  font-size: .65rem;
+  color: #4a4840;
+  letter-spacing: .04em;
+  margin-top: .12rem;
+}
+.topbar-gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #3a3428 20%, #c8b878 50%, #3a3428 80%, transparent 100%);
+  background-size: 200% 100%;
+  animation: rulesweep 5s ease-in-out infinite;
+  opacity: .7;
+}
+@keyframes rulesweep {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
 .top-save {
   display: none;
   background: transparent;
-  border: 1px solid var(--green-line);
-  color: #8abba0;
-  padding: .32rem .9rem;
+  border: 1px solid rgba(168,204,184,.3);
+  color: #6aaa88;
+  padding: .18rem .6rem;
   border-radius: 20px;
-  font-size: .75rem;
+  font-size: .65rem;
   font-family: 'Jost', sans-serif;
   cursor: pointer;
-  font-weight: 500;
-  letter-spacing: .04em;
-  transition: all .2s;
+  margin-top: .25rem;
 }
 .top-save.pending { display: inline-block; }
-.top-save.saving  { display: inline-block; color: #6a9a80; }
+.top-save.saving  { display: inline-block; color: #5a9a78; }
+
+@media(max-width:480px){
+  .topbar-main { padding: .75rem 1rem .65rem; }
+  .firm-name { font-size: 1.22rem; }
+}
+
 
 /* ── PAGE ── */
 .page {
@@ -194,137 +225,148 @@ body::before {
 .col-in::placeholder { color: var(--muted); }
 
 /* ── FILTERS ── */
-.filters {
-  margin-bottom: 1.25rem;
-}
+.filters { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: .55rem; }
+
+/* Status pills row — horizontal scroll on mobile */
 .filter-scroll {
   display: flex;
   gap: .35rem;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: .6rem;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding-bottom: .1rem;
+  -webkit-overflow-scrolling: touch;
 }
-.filter-row2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-  flex-wrap: wrap;
-}
-.filter-dropdowns { display: flex; gap: .4rem; flex-wrap: wrap; flex: 1; }
+.filter-scroll::-webkit-scrollbar { display: none; }
+
 .pill {
   background: transparent;
   border: 1.5px solid var(--line);
-  border-radius: 30px;
-  padding: .38rem .95rem;
-  font-size: .78rem;
+  border-radius: 20px;
+  padding: .4rem .85rem;
+  font-size: .76rem;
   font-weight: 500;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
-  letter-spacing: .03em;
-  transition: all .15s;
   white-space: nowrap;
-  min-height: 36px;
+  flex-shrink: 0;
+  transition: all .15s;
+  height: 34px;
   display: inline-flex;
   align-items: center;
 }
 .pill:hover { border-color: var(--ink2); color: var(--ink); }
 .pill.on { background: var(--ink); border-color: var(--ink); color: #f0ece3; }
+
+/* Dropdowns row */
+.filter-row2 {
+  display: flex;
+  gap: .4rem;
+}
 .sel-pill {
+  flex: 1;
   background: var(--paper);
   border: 1.5px solid var(--line);
-  border-radius: 30px;
-  padding: .38rem .95rem;
-  font-size: .78rem;
+  border-radius: 20px;
+  padding: .4rem .85rem;
+  font-size: .76rem;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
   outline: none;
-  letter-spacing: .03em;
-  min-height: 36px;
-  flex: 1;
-  min-width: 130px;
+  height: 34px;
+  min-width: 0;
 }
-.filter-actions { display: flex; gap: .5rem; }
 
-/* multi-court selector */
-.court-multi-wrap { position: relative; flex: 1; min-width: 130px; }
+/* Multi-court */
+.court-multi-wrap { position: relative; flex: 1; min-width: 0; }
 .court-multi-btn {
   background: var(--paper);
   border: 1.5px solid var(--line);
-  border-radius: 30px;
-  padding: .38rem .95rem;
-  font-size: .78rem;
+  border-radius: 20px;
+  padding: .4rem .85rem;
+  font-size: .76rem;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
   width: 100%;
-  text-align: left;
-  min-height: 36px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .4rem;
-  letter-spacing: .03em;
+  white-space: nowrap;
+  overflow: hidden;
 }
-.court-multi-btn.active { border-color: var(--ink2); color: var(--ink); }
+.court-multi-btn.active { border-color: var(--ink); color: var(--ink); font-weight: 500; }
 .court-multi-dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 5px);
+  top: calc(100% + 4px);
   left: 0;
   background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: 12px;
   box-shadow: var(--shadow-md);
   z-index: 200;
-  min-width: 220px;
-  max-height: 260px;
+  min-width: 240px;
+  max-height: 280px;
   overflow-y: auto;
-  padding: .4rem 0;
 }
 .court-multi-dropdown.open { display: block; }
 .court-multi-opt {
   display: flex;
   align-items: center;
-  gap: .5rem;
-  padding: .55rem 1rem;
+  gap: .6rem;
+  padding: .65rem 1rem;
   font-size: .8rem;
   font-family: 'Jost', sans-serif;
   color: var(--ink2);
   cursor: pointer;
-  transition: background .12s;
   user-select: none;
+  border-bottom: 1px solid var(--faint);
 }
+.court-multi-opt:last-of-type { border-bottom: none; }
 .court-multi-opt:hover { background: var(--faint2); }
 .court-multi-opt input[type=checkbox] {
-  width: 15px; height: 15px;
+  width: 16px; height: 16px;
   accent-color: var(--green);
   cursor: pointer;
   flex-shrink: 0;
 }
 .court-multi-clear {
-  padding: .45rem 1rem;
-  font-size: .75rem;
-  color: var(--muted);
-  border-top: 1px solid var(--faint);
+  padding: .5rem 1rem;
+  font-size: .74rem;
+  color: var(--red);
+  border-top: 1px solid var(--line);
   cursor: pointer;
   font-family: 'Jost', sans-serif;
-  transition: color .12s;
+  text-align: center;
 }
-.court-multi-clear:hover { color: var(--red); }
 
-@media(max-width:580px){
-  .filter-scroll { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .25rem; -webkit-overflow-scrolling: touch; }
-  .filter-scroll::-webkit-scrollbar { display: none; }
-  .filter-row2 { flex-direction: column; align-items: stretch; }
-  .filter-dropdowns { flex-direction: column; }
-  .sel-pill { min-width: unset; }
-  .court-multi-wrap { min-width: unset; }
-  .filter-actions { justify-content: stretch; }
-  .filter-actions .btn-ghost, .filter-actions .btn-solid { flex: 1; text-align: center; padding: .5rem .5rem; min-height: 40px; font-size: .8rem; }
+/* Actions row */
+.filter-actions {
+  display: flex;
+  gap: .4rem;
 }
+.filt-action-btn {
+  flex: 1;
+  height: 38px;
+  border-radius: 20px;
+  font-size: .76rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink2);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.filt-action-btn:hover { background: var(--faint2); }
+.filt-action-btn.red { color: var(--red); border-color: var(--red-line); }
+.filt-action-btn.red:hover { background: var(--red-bg); }
+.filt-action-btn.dark { background: var(--ink); border-color: var(--ink); color: #f0ece3; font-weight: 600; }
+.filt-action-btn.dark:hover { opacity: .85; }
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--line);
@@ -1184,6 +1226,8 @@ body::before {
 
 @media(max-width:560px){
   .hero-title { font-size: 2rem; }
+  .topbar { padding: .85rem 1.1rem .7rem; }
+  .firm-name { font-size: 1.18rem; }
 }
 @media print {
   .topbar, .filters, .team-bar, .import-card, .case-details, .footer { display: none !important; }
@@ -1195,12 +1239,18 @@ body::before {
 <body>
 
 <div class="topbar">
-  <div class="firm">Syed Sibtain Razvi & Associates <em>— Daily Docket</em></div>
-  <div class="topbar-r">
-    <span class="top-date" id="topDate"></span>
-    <button class="top-save" id="saveBtn" onclick="forceSave()">Saving…</button>
-    
+  <div class="topbar-main">
+    <div class="firm-left">
+      <div class="firm-name">Syed Sibtain Razvi <span class="ampersand">&amp;</span> Associates</div>
+      <div class="firm-sub">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; <span class="docket-tag">Daily Docket</span></div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-day" id="topDay"></span>
+      <span class="topbar-date" id="topDate"></span>
+      <button class="top-save" id="saveBtn" onclick="forceSave()">Saving…</button>
+    </div>
   </div>
+  <div class="topbar-gold-rule"></div>
 </div>
 
 <div class="page">
@@ -1363,9 +1413,14 @@ function setSaveBtn(state){
 }
 
 (async function(){
-  const dateStr=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const d = new Date();
+  const dayStr  = d.toLocaleDateString('en-IN',{weekday:'long'});
+  const dateStr = d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const fullStr = d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const topDay = document.getElementById('topDay');
+  if(topDay) topDay.textContent = dayStr;
   document.getElementById('topDate').textContent    = dateStr;
-  document.getElementById('footerDate').textContent = dateStr;
+  document.getElementById('footerDate').textContent = fullStr;
   renderCols();
   await loadFromSupabase();
   setInterval(async()=>{ if(!isSaving) await loadFromSupabase(true); },15000);
@@ -1545,13 +1600,13 @@ function updateCourtLabel(){
   else{ lbl.textContent=selectedCourts.size+' Courts'; btn.classList.add('active'); }
 }
 function rebuildCourtOptions(){
-  const courts=[...new Set(cases.map(c=>c.courtName).filter(Boolean))].sort();
-  const wrap=document.getElementById('courtMultiOptions'); if(!wrap)return;
-  wrap.innerHTML=courts.map(ct=>`
-    <label class="court-multi-opt">
-      <input type="checkbox" value="${ct}" ${selectedCourts.has(ct)?'checked':''} onchange="toggleCourtSel(this)"/>
-      ${ct}
-    </label>`).join('');
+  var courts=[...new Set(cases.map(function(c){return c.courtName;}).filter(Boolean))].sort();
+  var wrap=document.getElementById('courtMultiOptions'); if(!wrap) return;
+  if(!courts.length){ wrap.innerHTML='<div style="padding:.6rem 1rem;font-size:.8rem;color:var(--muted)">No courts loaded</div>'; return; }
+  wrap.innerHTML=courts.map(function(ct){
+    var checked = selectedCourts.has(ct) ? 'checked' : '';
+    return '<label class="court-multi-opt"><input type="checkbox" value="'+ct+'" '+checked+' onchange="toggleCourtSel(this)"/> '+ct+'</label>';
+  }).join('');
 }
 function toggleCourtSel(cb){
   if(cb.checked) selectedCourts.add(cb.value);
@@ -1795,127 +1850,95 @@ function openEOD(){
 }
 
 function buildEODHtml(){
-  const dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const timeStr = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const cnt = {}; SS.forEach(s=>cnt[s.k]=0);
-  cases.forEach(c=>{ if(cnt[c.status]!==undefined) cnt[c.status]++; });
-  const urg = cases.filter(c=>c.urgent).length;
-  const advCount = {};
-  cases.forEach(c=>{ c.assignedTo.forEach(a=>{ advCount[a]=(advCount[a]||0)+1; }); });
-  const advSummary = Object.entries(advCount).sort((a,b)=>b[1]-a[1])
-    .map(([a,n])=>`<b>${a}</b> (${n})`).join(' &nbsp;&nbsp; ');
+  var dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var timeStr = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  var cnt = {}; SS.forEach(function(s){ cnt[s.k]=0; });
+  cases.forEach(function(c){ if(cnt[c.status]!==undefined) cnt[c.status]++; });
+  var urg = cases.filter(function(c){ return c.urgent; }).length;
+  var advCount = {};
+  cases.forEach(function(c){ c.assignedTo.forEach(function(a){ advCount[a]=(advCount[a]||0)+1; }); });
+  var advParts = Object.keys(advCount).sort(function(a,b){ return advCount[b]-advCount[a]; }).map(function(a){ return a+' ('+advCount[a]+')'; });
+  var advLine = advParts.length ? advParts.join('  |  ') : 'None assigned';
 
-  // Group by court
-  const groups = {};
-  cases.forEach(c=>{ if(!groups[c.courtName]) groups[c.courtName]=[]; groups[c.courtName].push(c); });
+  var sn = 0;
+  var rows = '';
+  cases.forEach(function(c){
+    sn++;
+    var bg = sn % 2 === 0 ? '#f7f5f0' : '#ffffff';
+    var statusLabel = (SS.find(function(s){ return s.k===c.status; })||{l:c.status}).l;
+    var statusColors = {pending:'#7a4f10',attended:'#1e3d5c',arguments:'#3d1a5c',completed:'#1e4d35'};
+    var statusCol = statusColors[c.status]||'#333';
+    var ts = (c.statusTime && c.status!=='pending') ? '  ' + fmtTime(c.statusTime) : '';
+    var urgMark = c.urgent ? '  [URGENT]' : '';
+    rows += '<tr style="background:'+bg+'">';
+    rows += '<td style="text-align:center;color:#aaa;font-size:8pt;border:1pt solid #e0ddd6;padding:5pt 4pt">'+sn+'</td>';
+    rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+c.courtName+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;color:#333">'+( c.caseNum||'—')+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(c.stage||'')+'</span></td>';
+    rows += '<td style="font-weight:bold;font-size:10pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+c.parties+urgMark+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(c.assignedTo.join(', ')||'—')+'</td>';
+    rows += '<td style="font-size:8.5pt;font-weight:600;color:'+statusCol+';border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+statusLabel+ts+'</td>';
+    rows += '<td style="font-size:8pt;color:#555;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(c.note||'—')+'</td>';
+    rows += '</tr>';
+  });
 
-  let sn = 0;
-  const rows = Object.entries(groups).map(([court, cl]) => {
-    return cl.map((c, i) => {
-      sn++;
-      const statusLabel = SS.find(s=>s.k===c.status)?.l || c.status;
-      const ts = c.statusTime && c.status!=='pending' ? ' / '+fmtTime(c.statusTime) : '';
-      const urgMark = c.urgent ? ' &#x1F6A8;' : '';
-      return `<tr>
-        <td style="text-align:center;color:#888">${sn}</td>
-        ${i===0 ? `<td rowspan="${cl.length}" style="background:#f7f5f0;font-weight:bold;font-size:9pt;vertical-align:top">${court}</td>` : ''}
-        <td style="font-size:8.5pt;color:#444">${c.caseNum||'—'}<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">${c.stage||''}</span></td>
-        <td style="font-weight:bold;font-size:10pt">${c.parties}${urgMark}</td>
-        <td style="font-size:8.5pt">${c.assignedTo.join(', ')||'—'}</td>
-        <td style="font-size:8.5pt;font-weight:600">${statusLabel}${ts}</td>
-        <td style="font-size:8pt;color:#555">${c.note||'—'}</td>
-      </tr>`;
-    }).join('');
-  }).join('');
+  var html = '';
+  html += '<div style="font-family:Georgia,serif;font-size:10pt;color:#1a1814;line-height:1.5">';
 
-  return `
-    <div style="font-family:Georgia,serif;font-size:10pt;color:#1a1814;line-height:1.5">
+  // HEADER
+  html += '<table style="width:100%;border-collapse:collapse;margin-bottom:10pt">';
+  html += '<tr><td style="vertical-align:top">';
+  html += '<div style="font-size:17pt;font-weight:bold;letter-spacing:.02em">Syed Sibtain Razvi &amp; Associates</div>';
+  html += '<div style="font-size:8pt;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-top:2pt">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; Srinagar, J&amp;K</div>';
+  html += '</td><td style="text-align:right;vertical-align:top">';
+  html += '<div style="font-size:12pt;font-weight:bold">End-of-Day Report</div>';
+  html += '<div style="font-size:8.5pt;color:#555;margin-top:2pt">'+dateStr+'</div>';
+  html += '<div style="font-size:8pt;color:#999">Generated at '+timeStr+'</div>';
+  html += '</td></tr></table>';
+  html += '<div style="border-top:2pt solid #1a1814;margin-bottom:10pt"></div>';
 
-      <table style="width:100%;border-collapse:collapse;margin-bottom:12pt">
-        <tr>
-          <td style="vertical-align:top">
-            <div style="font-size:16pt;font-weight:bold;letter-spacing:.02em">Syed Sibtain Razvi &amp; Associates</div>
-            <div style="font-size:8pt;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-top:2pt">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; Srinagar, J&amp;K</div>
-          </td>
-          <td style="text-align:right;vertical-align:top">
-            <div style="font-size:11pt;font-weight:bold">End-of-Day Report</div>
-            <div style="font-size:8.5pt;color:#666;margin-top:2pt">${dateStr}</div>
-            <div style="font-size:8pt;color:#999">Generated at ${timeStr}</div>
-          </td>
-        </tr>
-      </table>
+  // SUMMARY — plain text, no boxes
+  html += '<div style="font-size:9pt;color:#444;margin-bottom:6pt;line-height:1.9">';
+  html += '<strong>Summary:</strong> &nbsp;';
+  html += 'Total Cases: <strong>'+cases.length+'</strong> &nbsp;&nbsp; ';
+  html += 'Pending: <strong style="color:#7a4f10">'+cnt.pending+'</strong> &nbsp;&nbsp; ';
+  html += 'Attended: <strong style="color:#1e3d5c">'+cnt.attended+'</strong> &nbsp;&nbsp; ';
+  html += 'For Arguments: <strong style="color:#3d1a5c">'+cnt.arguments+'</strong> &nbsp;&nbsp; ';
+  html += 'Completed: <strong style="color:#1e4d35">'+cnt.completed+'</strong>';
+  if(urg) html += ' &nbsp;&nbsp; Urgent: <strong style="color:#7a1c1c">'+urg+'</strong>';
+  html += '</div>';
+  html += '<div style="font-size:9pt;color:#444;margin-bottom:12pt">';
+  html += '<strong>Advocates:</strong> &nbsp; '+advLine;
+  html += '</div>';
 
-      <div style="border-top:2pt solid #1a1814;border-bottom:1pt solid #ccc;padding:8pt 0;margin-bottom:12pt">
-        <table style="width:100%;border-collapse:collapse">
-          <tr>
-            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif">${cases.length}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Total</div>
-            </td>
-            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif;color:#7a4f10">${cnt.pending}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Pending</div>
-            </td>
-            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif;color:#1e3d5c">${cnt.attended}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Attended</div>
-            </td>
-            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif;color:#3d1a5c">${cnt.arguments}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">For Arguments</div>
-            </td>
-            <td style="text-align:center;border-right:1pt solid #ddd;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif;color:#1e4d35">${cnt.completed}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Completed</div>
-            </td>
-            ${urg ? `<td style="text-align:center;padding:6pt 0">
-              <div style="font-size:20pt;font-family:Georgia,serif;color:#7a1c1c">${urg}</div>
-              <div style="font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-top:2pt">Urgent</div>
-            </td>` : ''}
-          </tr>
-        </table>
-      </div>
+  // TABLE
+  html += '<div style="font-size:8pt;font-weight:bold;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:4pt;border-bottom:1pt solid #ccc;padding-bottom:3pt">Case Details</div>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:14pt">';
+  html += '<thead><tr style="background:#f0ede6">';
+  html += '<th style="padding:5pt 4pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;width:4%;text-align:center">#</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:16%">Court</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:13%">Case No.</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:27%">Parties</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:12%">Advocate</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:12%">Status</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:16%">Notes</th>';
+  html += '</tr></thead>';
+  html += '<tbody>'+rows+'</tbody></table>';
 
-      ${advSummary ? `<div style="background:#f7f5f0;border:1pt solid #ddd;border-radius:3pt;padding:6pt 9pt;margin-bottom:12pt;font-size:9pt">
-        <span style="font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#888;font-weight:bold;margin-right:8pt">Advocate Summary</span>
-        ${advSummary}
-      </div>` : ''}
-
-      <table style="width:100%;border-collapse:collapse;font-size:9.5pt">
-        <thead>
-          <tr style="background:#f0ede6">
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:center;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:4%">#</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:16%">Court</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:13%">Case No.</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:28%">Parties</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:12%">Advocate</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:12%">Status</th>
-            <th style="padding:5pt 6pt;border:1pt solid #ccc;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666;width:15%">Notes</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-
-      <div style="margin-top:12pt;padding-top:7pt;border-top:1pt solid #ccc;display:flex;justify-content:space-between;font-size:8pt;color:#999">
-        <span>Syed Sibtain Razvi &amp; Associates &nbsp;&middot;&nbsp; For Internal Use Only</span>
-        <span>${dateStr}</span>
-      </div>
-    </div>`;
+  // FOOTER
+  html += '<div style="border-top:1pt solid #ccc;padding-top:7pt;font-size:8pt;color:#999;display:flex;justify-content:space-between">';
+  html += '<span>Syed Sibtain Razvi &amp; Associates &nbsp;&middot;&nbsp; For Internal Use Only</span>';
+  html += '<span>'+dateStr+'</span>';
+  html += '</div>';
+  html += '</div>';
+  return html;
 }
 
 function printEOD(){
-  const html = buildEODHtml();
-  const w = window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EOD Report</title>
-  <style>
-    @page { size: A4 portrait; margin: 14mm 12mm 14mm 12mm; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Georgia, serif; font-size: 10pt; color: #1a1814; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    table { border-collapse: collapse; }
-    tr { page-break-inside: avoid; }
-  </style></head><body>${html}</body></html>`);
+  var html = buildEODHtml();
+  var w = window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EOD Report</title><style>@page{size:A4 portrait;margin:14mm 12mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Georgia,serif;font-size:10pt;color:#1a1814;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{border-collapse:collapse}tr{page-break-inside:avoid}</style></head><body>'+html+'</body></html>');
   w.document.close();
-  w.onload = () => { w.focus(); w.print(); };
+  w.onload = function(){ w.focus(); w.print(); };
 }
 
 document.getElementById('eodOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');});
