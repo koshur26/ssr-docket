@@ -1567,6 +1567,12 @@ async function loadFromSupabase(silent){
       cases=[];
     } else if(!silent){
       cases=row.cases||[];
+      cases.forEach(function(c){
+        c.assignedTo=(c.assignedTo||[]).map(function(a){
+          var match=cols.find(function(col){return col.toLowerCase()===a.toLowerCase();});
+          return match||a;
+        });
+      });
     } else {
       const sc=row.cases||[];
       const localIds=new Set(cases.map(c=>c.id));
