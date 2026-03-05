@@ -638,47 +638,89 @@ body::before {
   background: var(--paper);
   border: 1px solid var(--faint);
   border-radius: var(--r);
-  padding: 2.5rem 2rem;
-  text-align: center;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
-.import-icon {
-  width: 48px;
-  height: 48px;
+.import-card-top {
   background: var(--faint2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto .85rem;
-  font-size: 1.3rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
 }
-.import-card h3 {
+.import-card-icon {
+  font-size: 2rem;
+  margin-bottom: .6rem;
+  line-height: 1;
+}
+.import-card-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 500;
   color: var(--ink);
-  margin-bottom: .35rem;
+  margin-bottom: .3rem;
+  letter-spacing: .02em;
 }
-.import-card p { font-size: .8rem; color: var(--muted); margin-bottom: 1.1rem; line-height: 1.6; }
+.import-card-sub {
+  font-size: .75rem;
+  color: var(--muted);
+  letter-spacing: .02em;
+  margin-bottom: .85rem;
+}
+.import-fmt {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .35rem .75rem;
+}
+.fmt-label {
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.fmt-code {
+  font-size: .72rem;
+  color: var(--muted);
+  font-family: 'Jost', sans-serif;
+}
 .paste-area {
+  display: block;
   width: 100%;
   background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: .7rem .9rem;
+  border: none;
+  border-top: 1px solid var(--faint);
+  padding: 1rem 1.25rem;
   font-family: 'Jost', sans-serif;
-  font-size: .8rem;
+  font-size: .82rem;
   color: var(--ink);
   outline: none;
-  resize: vertical;
-  min-height: 85px;
-  text-align: left;
-  transition: border-color .15s;
+  resize: none;
+  min-height: 100px;
+  transition: background .15s;
 }
-.paste-area:focus { border-color: var(--ink2); }
-.paste-area::placeholder { color: var(--muted); }
-.import-row { display: flex; justify-content: center; margin-top: .75rem; }
+.paste-area:focus { background: var(--paper); }
+.paste-area::placeholder { color: var(--muted); line-height: 1.7; }
+.import-btn {
+  display: block;
+  width: 100%;
+  background: var(--green);
+  color: #f0ece4;
+  border: none;
+  padding: .95rem 1rem;
+  font-size: .85rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-top: 1px solid rgba(255,255,255,.08);
+  transition: opacity .15s;
+}
+.import-btn:hover { opacity: .88; }
 
 /* ── EMPTY STATE ── */
 .empty {
@@ -1271,14 +1313,17 @@ body::before {
 
   <!-- IMPORT CARD -->
   <div class="import-card" id="uploadCard">
-    <div class="import-icon">📋</div>
-    <h3>Import Today's Cases</h3>
-    <p>Paste extracted case text below — one case per line.<br>
-    Format: <code style="background:rgba(0,0,0,.05);padding:.1rem .3rem;border-radius:4px;font-size:.75rem;">Court | Case No. | Parties | Stage | Date</code></p>
-    <textarea class="paste-area" id="pasteArea" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 1 Mar 2026&#10;Sub-Judge Srinagar | OS/456/2023 | Hajira Vs Akhter | Summon | 1 Mar 2026"></textarea>
-    <div class="import-row">
-      <button class="btn-solid" onclick="requestImport()">↑ Import Cases</button>
+    <div class="import-card-top">
+      <div class="import-card-icon">⚖️</div>
+      <div class="import-card-title">Today's Cause List</div>
+      <div class="import-card-sub">Paste the extracted case data below, one case per line</div>
+      <div class="import-fmt">
+        <span class="fmt-label">Format</span>
+        <span class="fmt-code">Court &nbsp;|&nbsp; Case No. &nbsp;|&nbsp; Parties &nbsp;|&nbsp; Stage &nbsp;|&nbsp; Date</span>
+      </div>
     </div>
+    <textarea class="paste-area" id="pasteArea" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 5 Mar 2026"></textarea>
+    <button class="import-btn" onclick="requestImport()">Import Cases</button>
   </div>
 
   <!-- FILTERS -->
@@ -1745,7 +1790,7 @@ function renderCards(){
 
 function cardHtml(c){
   const sbadge=`<span class="status-badge sb-${c.status}">${SS.find(s=>s.k===c.status)?.l||c.status}</span>`;
-  const sbtns=SS.map(s=>`<button class="stbtn ${c.status===s.k?'on-'+s.k:''}" onclick="setSt('${c.id}','${s.k}');event.stopPropagation()">${s.l}</button>`).join('');
+  const sbtns=SS.filter(s=>s.k!=='completed').map(s=>`<button class="stbtn ${c.status===s.k?'on-'+s.k:''}" onclick="setSt('${c.id}','${s.k}');event.stopPropagation()">${s.l}</button>`).join('');
   const abtns=cols.map(col=>`<button class="advbtn ${c.assignedTo.includes(col)?'on':''}" onclick="toggleA('${c.id}','${col}');event.stopPropagation()"><span class="adot"></span>${col}</button>`).join('');
   const tsLine=c.statusTime&&c.status!=='pending'?`<div class="status-ts">⏱ ${SS.find(s=>s.k===c.status)?.l||c.status} at ${fmtTime(c.statusTime)}</div>`:`<div class="status-ts"></div>`;
   return `<div class="case-card ${c.urgent?'urgent':''} ${c.status==='completed'?'completed':''} ${c.status==='attended'?'attended':''}" id="cc-${c.id}">
