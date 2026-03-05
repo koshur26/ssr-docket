@@ -1486,30 +1486,27 @@ function doImport(){
 function parseImportDate(str){
   if(!str) return null;
   str = str.trim();
-  // DD-MM-YYYY or DD/MM/YYYY
-  let m = str.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
-  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-  // D Mon YYYY e.g. "1 Mar 2026"
-  m = str.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
-  if(m){
-    const months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-    const mo=months[m[2].toLowerCase().substr(0,3)];
-    if(mo!==undefined) return new Date(+m[3],mo,+m[1]);
+  var parts = str.split(/[-\/]/);
+  if(parts.length===3 && parts[2].length===4){
+    return new Date(+parts[2], +parts[1]-1, +parts[0]);
+  }
+  var months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  var words = str.split(' ');
+  if(words.length===3 && words[2].length===4){
+    var mo = months[words[1].toLowerCase().substr(0,3)];
+    if(mo!==undefined) return new Date(+words[2], mo, +words[0]);
   }
   return null;
 }
 
+function dismissDateBanner(){ document.getElementById('dateMismatchBanner').style.display='none'; }
 function showDateMismatchWarning(mismatchCases){
-  const today = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-  const list = mismatchCases.slice(0,5).map(c=>`• ${c.parties} (${c.dateStr})`).join('
-');
-  const more = mismatchCases.length>5 ? `
-…and ${mismatchCases.length-5} more` : '';
-  const banner = document.getElementById('dateMismatchBanner');
-  if(banner){
-    banner.innerHTML=`⚠️ <strong>${mismatchCases.length} case${mismatchCases.length>1?'s':''} may not be for today</strong> (${today}). Check dates before proceeding. <span onclick="this.parentElement.style.display='none'" style="cursor:pointer;float:right;font-size:1rem">✕</span>`;
-    banner.style.display='block';
-  }
+  var today = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  var count = mismatchCases.length;
+  var banner = document.getElementById('dateMismatchBanner');
+  if(!banner) return;
+  banner.innerHTML = '<strong>⚠️ ' + count + ' case' + (count>1?'s':'') + ' may not be for today</strong> (' + today + '). Please verify dates before proceeding. <span onclick="dismissDateBanner()" style="cursor:pointer;float:right;margin-left:1rem">✕</span>';
+  banner.style.display = 'block';
 }
 function caseKey(c){return[c.courtName,c.caseNum,c.parties,c.stage].map(s=>(s||'').trim().toLowerCase()).join('|');}
 
