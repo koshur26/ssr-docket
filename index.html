@@ -742,15 +742,34 @@ body::before {
 
 /* ── FOOTER ── */
 .footer {
-  max-width: 780px;
-  margin: 3rem auto 0;
+  margin: 3rem 0 0;
   padding: 1.25rem 1.5rem 3rem;
-  border-top: 1px solid var(--line);
-  text-align: center;
   position: relative;
   z-index: 1;
 }
-.footer p { font-size: .74rem; color: var(--muted); line-height: 1.8; letter-spacing: .03em; }
+.footer-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  background: var(--faint2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .3rem .6rem;
+}
+.footer-seg {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.footer-seg.brand { color: var(--ink2); font-weight: 500; }
+.footer-seg.divider { color: var(--line); }
+.footer-seg.date { color: var(--muted); }
 
 /* ── OVERLAYS ── */
 .overlay {
@@ -1367,7 +1386,13 @@ body::before {
   </div>
 
 <div class="footer">
-  <p>Syed Sibtain Razvi & Associates &nbsp;·&nbsp; For Internal Use Only &nbsp;·&nbsp; <span id="footerDate"></span></p>
+  <div class="footer-inner">
+    <span class="footer-seg brand">Syed Sibtain Razvi &amp; Associates</span>
+    <span class="footer-seg divider">//</span>
+    <span class="footer-seg">internal use only</span>
+    <span class="footer-seg divider">//</span>
+    <span class="footer-seg date" id="footerDate"></span>
+  </div>
 </div>
 
 <!-- PASSWORD -->
