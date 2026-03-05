@@ -1570,7 +1570,12 @@ async function loadFromSupabase(silent){
       cases.forEach(function(c){
         var seen={};
         c.assignedTo=(c.assignedTo||[]).map(function(a){
-          var match=cols.find(function(col){return col.toLowerCase()===a.toLowerCase();});
+          // strip periods and spaces for comparison e.g. "Adv tehjud" == "Adv. Tehjud"
+          var aClean=a.toLowerCase().replace(/\.\s*/g,' ').replace(/\s+/g,' ').trim();
+          var match=cols.find(function(col){
+            var cClean=col.toLowerCase().replace(/\.\s*/g,' ').replace(/\s+/g,' ').trim();
+            return cClean===aClean;
+          });
           return match||a;
         }).filter(function(a){
           if(seen[a.toLowerCase()]) return false;
