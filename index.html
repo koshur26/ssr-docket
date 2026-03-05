@@ -1262,9 +1262,16 @@ body::before {
 .pl-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── TEAM BAR BOTTOM ── */
+.bottom-actions {
+  max-width: 780px;
+  margin: 2rem auto 0;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
 .team-bar-bottom {
   max-width: 780px;
-  margin: 2.5rem auto 0;
+  margin: .75rem auto 0;
   padding: 0 1.5rem;
   position: relative;
   z-index: 1;
@@ -1366,17 +1373,19 @@ body::before {
       </div>
       <select class="sel-pill" id="advF" onchange="renderCards()"><option value="all">All Advocates</option></select>
     </div>
+  </div>
+
+  <div id="casesWrap"></div>
+</div>
+
+  <!-- ACTIONS + TEAM (bottom) -->
+  <div class="bottom-actions" id="bottomActions" style="display:none">
     <div class="f-action-row">
       <button class="fa-btn" onclick="openEOD()">EOD Report</button>
       <button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>
       <button class="fa-btn primary" onclick="openAdd()">+ Case</button>
     </div>
   </div>
-
-  <div id="casesWrap"></div>
-</div>
-
-  <!-- TEAM (bottom) -->
   <div class="team-bar-bottom" id="teamBarBottom">
     <div class="team-bar">
       <span class="team-lbl">Team</span>
@@ -1701,6 +1710,8 @@ function render(){
   document.getElementById('heroWrap').style.display  =has?'block':'none';
   document.getElementById('filtersBar').style.display=has?'flex':'none';
   document.getElementById('uploadCard').style.display=has?'none':'block';
+  const ba=document.getElementById('bottomActions');
+  if(ba) ba.style.display=has?'block':'none';
   if(has){renderHero();renderProgress();}
   renderCourtFilter();renderAdvFilter();renderCards();
 }
