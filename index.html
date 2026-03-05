@@ -195,42 +195,136 @@ body::before {
 
 /* ── FILTERS ── */
 .filters {
+  margin-bottom: 1.25rem;
+}
+.filter-scroll {
+  display: flex;
+  gap: .35rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: .6rem;
+}
+.filter-row2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .75rem;
-  margin-bottom: 1.25rem;
+  gap: .5rem;
   flex-wrap: wrap;
 }
-.filter-pills { display: flex; gap: .3rem; flex-wrap: wrap; align-items: center; }
+.filter-dropdowns { display: flex; gap: .4rem; flex-wrap: wrap; flex: 1; }
 .pill {
   background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: .22rem .75rem;
-  font-size: .72rem;
+  border: 1.5px solid var(--line);
+  border-radius: 30px;
+  padding: .38rem .95rem;
+  font-size: .78rem;
   font-weight: 500;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
   letter-spacing: .03em;
   transition: all .15s;
+  white-space: nowrap;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
 }
 .pill:hover { border-color: var(--ink2); color: var(--ink); }
 .pill.on { background: var(--ink); border-color: var(--ink); color: #f0ece3; }
 .sel-pill {
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: .22rem .75rem;
-  font-size: .72rem;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 30px;
+  padding: .38rem .95rem;
+  font-size: .78rem;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
   outline: none;
   letter-spacing: .03em;
+  min-height: 36px;
+  flex: 1;
+  min-width: 130px;
 }
 .filter-actions { display: flex; gap: .5rem; }
+
+/* multi-court selector */
+.court-multi-wrap { position: relative; flex: 1; min-width: 130px; }
+.court-multi-btn {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 30px;
+  padding: .38rem .95rem;
+  font-size: .78rem;
+  font-family: 'Jost', sans-serif;
+  color: var(--muted);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem;
+  letter-spacing: .03em;
+}
+.court-multi-btn.active { border-color: var(--ink2); color: var(--ink); }
+.court-multi-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  z-index: 200;
+  min-width: 220px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: .4rem 0;
+}
+.court-multi-dropdown.open { display: block; }
+.court-multi-opt {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem 1rem;
+  font-size: .8rem;
+  font-family: 'Jost', sans-serif;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: background .12s;
+  user-select: none;
+}
+.court-multi-opt:hover { background: var(--faint2); }
+.court-multi-opt input[type=checkbox] {
+  width: 15px; height: 15px;
+  accent-color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.court-multi-clear {
+  padding: .45rem 1rem;
+  font-size: .75rem;
+  color: var(--muted);
+  border-top: 1px solid var(--faint);
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  transition: color .12s;
+}
+.court-multi-clear:hover { color: var(--red); }
+
+@media(max-width:580px){
+  .filter-scroll { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .25rem; -webkit-overflow-scrolling: touch; }
+  .filter-scroll::-webkit-scrollbar { display: none; }
+  .filter-row2 { flex-direction: column; align-items: stretch; }
+  .filter-dropdowns { flex-direction: column; }
+  .sel-pill { min-width: unset; }
+  .court-multi-wrap { min-width: unset; }
+  .filter-actions { justify-content: stretch; }
+  .filter-actions .btn-ghost, .filter-actions .btn-solid { flex: 1; text-align: center; padding: .5rem .5rem; min-height: 40px; font-size: .8rem; }
+}
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--line);
@@ -1089,13 +1183,7 @@ body::before {
 }
 
 @media(max-width:560px){
-  .topbar { padding: 0 1rem; }
-  .firm em { display: none; }
   .hero-title { font-size: 2rem; }
-  .hstat-n { font-size: 1.8rem; }
-  .hero { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .hero-stats { gap: 1rem; }
-  .hstat { text-align: left; }
 }
 @media print {
   .topbar, .filters, .team-bar, .import-card, .case-details, .footer { display: none !important; }
@@ -1117,6 +1205,7 @@ body::before {
 
 <div class="page">
   <div class="sync-bar" id="syncBar"><div class="sdot"></div><span id="syncMsg"></span></div>
+  <div id="dateMismatchBanner" style="display:none;background:#fdf4e3;border:1.5px solid #e8c870;border-radius:10px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#7a4f10;line-height:1.5;position:relative"></div>
 
   <!-- HERO -->
   <div id="heroWrap" style="display:none">
@@ -1370,8 +1459,57 @@ function doImport(){
   });
   document.getElementById('pasteArea').value='';
   render();saveToSupabase();
-  if(added===0)alert('All cases already exist.');
-  else if(added<lines.length)alert(`${added} case${added>1?'s':''} added. ${lines.length-added} duplicate${lines.length-added>1?'s':''} skipped.`);
+
+  // Date mismatch check
+  const todayKey = getTodayKey(); // DD-MM-YYYY
+  // convert to readable for comparison
+  const today = new Date();
+  const todayTokens = [String(today.getDate()).padStart(2,'0'), String(today.getMonth()+1).padStart(2,'0'), today.getFullYear()];
+
+  const mismatchedCases = cases.filter(c=>{
+    if(!c.dateStr) return false;
+    // parse dateStr like "27-02-2026" or "27 Feb 2026" or "1 Mar 2026"
+    const d = parseImportDate(c.dateStr);
+    if(!d) return false;
+    return d.getDate()!==today.getDate() || d.getMonth()!==today.getMonth() || d.getFullYear()!==today.getFullYear();
+  });
+
+  if(mismatchedCases.length>0){
+    showDateMismatchWarning(mismatchedCases);
+  } else if(added===0){
+    alert('All cases already exist. No new cases added.');
+  } else if(added<lines.length){
+    alert(`${added} case${added>1?'s':''} added. ${lines.length-added} duplicate${lines.length-added>1?'s':''} skipped.`);
+  }
+}
+
+function parseImportDate(str){
+  if(!str) return null;
+  str = str.trim();
+  // DD-MM-YYYY or DD/MM/YYYY
+  let m = str.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+  // D Mon YYYY e.g. "1 Mar 2026"
+  m = str.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if(m){
+    const months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    const mo=months[m[2].toLowerCase().substr(0,3)];
+    if(mo!==undefined) return new Date(+m[3],mo,+m[1]);
+  }
+  return null;
+}
+
+function showDateMismatchWarning(mismatchCases){
+  const today = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const list = mismatchCases.slice(0,5).map(c=>`• ${c.parties} (${c.dateStr})`).join('
+');
+  const more = mismatchCases.length>5 ? `
+…and ${mismatchCases.length-5} more` : '';
+  const banner = document.getElementById('dateMismatchBanner');
+  if(banner){
+    banner.innerHTML=`⚠️ <strong>${mismatchCases.length} case${mismatchCases.length>1?'s':''} may not be for today</strong> (${today}). Check dates before proceeding. <span onclick="this.parentElement.style.display='none'" style="cursor:pointer;float:right;font-size:1rem">✕</span>`;
+    banner.style.display='block';
+  }
 }
 function caseKey(c){return[c.courtName,c.caseNum,c.parties,c.stage].map(s=>(s||'').trim().toLowerCase()).join('|');}
 
@@ -1388,6 +1526,48 @@ document.getElementById('colIn').addEventListener('keydown',function(e){
 });
 
 function setF(f,btn){filt=f;document.querySelectorAll('.pill[data-f]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderCards();}
+
+// ── MULTI-COURT FILTER ──────────────────────────────────────
+let selectedCourts = new Set();
+
+function toggleCourtDropdown(){
+  const dd = document.getElementById('courtMultiDropdown');
+  dd.classList.toggle('open');
+}
+function clearCourtFilter(){
+  selectedCourts.clear();
+  document.querySelectorAll('#courtMultiOptions input[type=checkbox]').forEach(cb=>cb.checked=false);
+  updateCourtLabel();
+  renderCards();
+}
+function updateCourtLabel(){
+  const lbl = document.getElementById('courtMultiLabel');
+  const btn = document.getElementById('courtMultiBtn');
+  if(selectedCourts.size===0){ lbl.textContent='All Courts'; btn.classList.remove('active'); }
+  else if(selectedCourts.size===1){ lbl.textContent=[...selectedCourts][0]; btn.classList.add('active'); }
+  else{ lbl.textContent=selectedCourts.size+' Courts'; btn.classList.add('active'); }
+}
+function rebuildCourtOptions(){
+  const courts=[...new Set(cases.map(c=>c.courtName).filter(Boolean))].sort();
+  const wrap=document.getElementById('courtMultiOptions'); if(!wrap)return;
+  wrap.innerHTML=courts.map(ct=>`
+    <label class="court-multi-opt">
+      <input type="checkbox" value="${ct}" ${selectedCourts.has(ct)?'checked':''} onchange="toggleCourtSel(this)"/>
+      ${ct}
+    </label>`).join('');
+}
+function toggleCourtSel(cb){
+  if(cb.checked) selectedCourts.add(cb.value);
+  else selectedCourts.delete(cb.value);
+  updateCourtLabel();
+  renderCards();
+}
+// close dropdown on outside click
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('courtMultiWrap');
+  if(wrap&&!wrap.contains(e.target)) document.getElementById('courtMultiDropdown')?.classList.remove('open');
+});
+// ────────────────────────────────────────────────────────────
 
 function render(){
   const has=cases.length>0;
@@ -1448,12 +1628,9 @@ function renderProgress(){
 }
 
 function renderCourtFilter(){
-  const sel=document.getElementById('courtF');if(!sel)return;
-  const cur=sel.value;
   const courts=[...new Set(cases.map(c=>c.courtName).filter(Boolean))].sort();
   courts.forEach((ct,i)=>{if(!courtColorMap[ct])courtColorMap[ct]=COURT_COLORS[i%COURT_COLORS.length];});
-  sel.innerHTML=`<option value="all">All Courts</option>`+courts.map(c=>`<option value="${c}">${c}</option>`).join('');
-  if(courts.includes(cur))sel.value=cur;
+  rebuildCourtOptions();
 }
 
 function renderAdvFilter(){
@@ -1465,12 +1642,11 @@ function renderAdvFilter(){
 
 function renderCards(){
   const wrap=document.getElementById('casesWrap');
-  const cf=document.getElementById('courtF')?.value||'all';
   const af=document.getElementById('advF')?.value||'all';
   let list=cases.filter(c=>{
     if(filt==='urgent')return c.urgent;
     if(filt!=='all'&&c.status!==filt)return false;
-    if(cf!=='all'&&c.courtName!==cf)return false;
+    if(selectedCourts.size>0&&!selectedCourts.has(c.courtName))return false;
     if(af!=='all'&&!c.assignedTo.includes(af))return false;
     return true;
   });
