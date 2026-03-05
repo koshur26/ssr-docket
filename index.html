@@ -88,16 +88,16 @@ body::before {
 .firm-name .ampersand { color: #c8b878; font-style: italic; }
 .firm-sub {
   font-size: .62rem;
-  letter-spacing: .14em;
+  letter-spacing: .16em;
   text-transform: uppercase;
-  color: #4a4840;
-  margin-top: .22rem;
+  margin-top: .2rem;
   font-family: 'Jost', sans-serif;
   font-weight: 500;
 }
 .firm-sub .docket-tag {
   color: #c8b878;
-  letter-spacing: .12em;
+  letter-spacing: .16em;
+  animation: goldglow 4s ease-in-out infinite;
 }
 .topbar-right {
   display: flex;
@@ -225,91 +225,91 @@ body::before {
 .col-in::placeholder { color: var(--muted); }
 
 /* ── FILTERS ── */
-.filters { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: .55rem; }
+/* ── FILTERS ─────────────────────────────────────────────── */
+.filters { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: .5rem; }
 
-/* Status pills row — horizontal scroll on mobile */
-.filter-scroll {
+.f-status-row {
   display: flex;
-  gap: .35rem;
+  gap: .3rem;
   overflow-x: auto;
-  flex-wrap: nowrap;
-  padding-bottom: .1rem;
   -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+  scrollbar-width: none;
 }
-.filter-scroll::-webkit-scrollbar { display: none; }
+.f-status-row::-webkit-scrollbar { display: none; }
 
 .pill {
-  background: transparent;
+  flex-shrink: 0;
+  background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: 20px;
-  padding: .4rem .85rem;
-  font-size: .76rem;
+  padding: 0 .9rem;
+  height: 38px;
+  font-size: .78rem;
   font-weight: 500;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
-  transition: all .15s;
-  height: 34px;
   display: inline-flex;
   align-items: center;
+  transition: all .15s;
 }
 .pill:hover { border-color: var(--ink2); color: var(--ink); }
 .pill.on { background: var(--ink); border-color: var(--ink); color: #f0ece3; }
 
-/* Dropdowns row */
-.filter-row2 {
+.f-select-row {
   display: flex;
   gap: .4rem;
 }
 .sel-pill {
   flex: 1;
+  min-width: 0;
   background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: 20px;
-  padding: .4rem .85rem;
-  font-size: .76rem;
+  padding: 0 .9rem;
+  height: 38px;
+  font-size: .78rem;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
-  cursor: pointer;
   outline: none;
-  height: 34px;
-  min-width: 0;
+  cursor: pointer;
 }
 
-/* Multi-court */
 .court-multi-wrap { position: relative; flex: 1; min-width: 0; }
 .court-multi-btn {
+  width: 100%;
+  height: 38px;
   background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: 20px;
-  padding: .4rem .85rem;
-  font-size: .76rem;
+  padding: 0 .9rem;
+  font-size: .78rem;
   font-family: 'Jost', sans-serif;
   color: var(--muted);
   cursor: pointer;
-  width: 100%;
-  height: 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: .4rem;
   white-space: nowrap;
   overflow: hidden;
 }
 .court-multi-btn.active { border-color: var(--ink); color: var(--ink); font-weight: 500; }
+.court-multi-btn .caret { font-size: .6rem; opacity: .5; flex-shrink: 0; }
 .court-multi-dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 5px);
   left: 0;
+  right: 0;
   background: var(--paper);
   border: 1.5px solid var(--line);
   border-radius: 12px;
   box-shadow: var(--shadow-md);
   z-index: 200;
-  min-width: 240px;
-  max-height: 280px;
+  max-height: 260px;
   overflow-y: auto;
 }
 .court-multi-dropdown.open { display: block; }
@@ -317,84 +317,53 @@ body::before {
   display: flex;
   align-items: center;
   gap: .6rem;
-  padding: .65rem 1rem;
-  font-size: .8rem;
+  padding: .7rem 1rem;
+  font-size: .82rem;
   font-family: 'Jost', sans-serif;
   color: var(--ink2);
   cursor: pointer;
-  user-select: none;
   border-bottom: 1px solid var(--faint);
+  user-select: none;
 }
 .court-multi-opt:last-of-type { border-bottom: none; }
 .court-multi-opt:hover { background: var(--faint2); }
 .court-multi-opt input[type=checkbox] {
-  width: 16px; height: 16px;
+  width: 17px; height: 17px;
   accent-color: var(--green);
-  cursor: pointer;
   flex-shrink: 0;
 }
 .court-multi-clear {
-  padding: .5rem 1rem;
-  font-size: .74rem;
+  padding: .55rem 1rem;
+  font-size: .76rem;
   color: var(--red);
-  border-top: 1px solid var(--line);
+  border-top: 1.5px solid var(--line);
   cursor: pointer;
   font-family: 'Jost', sans-serif;
   text-align: center;
+  font-weight: 500;
 }
 
-/* Actions row */
-.filter-actions {
-  display: flex;
-  gap: .4rem;
-}
-.filt-action-btn {
+.f-action-row { display: flex; gap: .4rem; }
+.fa-btn {
   flex: 1;
-  height: 38px;
+  height: 40px;
   border-radius: 20px;
-  font-size: .76rem;
+  font-size: .78rem;
   font-family: 'Jost', sans-serif;
   font-weight: 500;
   cursor: pointer;
   border: 1.5px solid var(--line);
   background: var(--paper);
   color: var(--ink2);
-  transition: all .15s;
   white-space: nowrap;
-}
-.filt-action-btn:hover { background: var(--faint2); }
-.filt-action-btn.red { color: var(--red); border-color: var(--red-line); }
-.filt-action-btn.red:hover { background: var(--red-bg); }
-.filt-action-btn.dark { background: var(--ink); border-color: var(--ink); color: #f0ece3; font-weight: 600; }
-.filt-action-btn.dark:hover { opacity: .85; }
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: .26rem .85rem;
-  font-size: .72rem;
-  font-family: 'Jost', sans-serif;
-  color: var(--ink2);
-  cursor: pointer;
-  letter-spacing: .03em;
-  font-weight: 500;
   transition: all .15s;
 }
-.btn-ghost:hover { background: var(--faint2); }
-.btn-solid {
-  background: var(--ink);
-  border: 1px solid var(--ink);
-  border-radius: 20px;
-  padding: .26rem .85rem;
-  font-size: .72rem;
-  font-family: 'Jost', sans-serif;
-  color: #f0ece3;
-  cursor: pointer;
-  letter-spacing: .03em;
-  font-weight: 500;
-  transition: opacity .15s;
-}
-.btn-solid:hover { opacity: .8; }
+.fa-btn:hover { background: var(--faint2); }
+.fa-btn.danger { color: var(--red); border-color: #d08080; }
+.fa-btn.danger:hover { background: var(--red-bg); }
+.fa-btn.primary { background: var(--ink); border-color: var(--ink); color: #f0ece3; font-weight: 600; }
+.fa-btn.primary:hover { opacity: .85; }
+
 
 /* ── COURT GROUP ── */
 .court-group {
@@ -1242,7 +1211,7 @@ body::before {
   <div class="topbar-main">
     <div class="firm-left">
       <div class="firm-name">Syed Sibtain Razvi <span class="ampersand">&amp;</span> Associates</div>
-      <div class="firm-sub">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; <span class="docket-tag">Daily Docket</span></div>
+      <div class="firm-sub"><span class="docket-tag">Daily Docket</span></div>
     </div>
     <div class="topbar-right">
       <span class="topbar-day" id="topDay"></span>
@@ -1287,20 +1256,30 @@ body::before {
 
   <!-- FILTERS -->
   <div class="filters" id="filtersBar" style="display:none">
-    <div class="filter-pills">
+    <div class="f-status-row">
       <button class="pill on" data-f="all"       onclick="setF('all',this)">All</button>
       <button class="pill"    data-f="pending"   onclick="setF('pending',this)">Pending</button>
       <button class="pill"    data-f="attended"  onclick="setF('attended',this)">Attended</button>
-      <button class="pill"    data-f="arguments" onclick="setF('arguments',this)">For Arguments</button>
+      <button class="pill"    data-f="arguments" onclick="setF('arguments',this)">Arguments</button>
       <button class="pill"    data-f="completed" onclick="setF('completed',this)">Completed</button>
       <button class="pill"    data-f="urgent"    onclick="setF('urgent',this)">🚨 Urgent</button>
-      <select class="sel-pill" id="courtF" onchange="renderCards()"><option value="all">All Courts</option></select>
-      <select class="sel-pill" id="advF"   onchange="renderCards()"><option value="all">All Advocates</option></select>
     </div>
-    <div class="filter-actions">
-      <button class="btn-ghost" onclick="openEOD()">EOD Report</button>
-      <button class="btn-ghost" style="color:var(--red);border-color:var(--red-line);" onclick="requestReset()">↺ Reset Day</button>
-      <button class="btn-solid" onclick="openAdd()">+ Case</button>
+    <div class="f-select-row">
+      <div class="court-multi-wrap" id="courtMultiWrap">
+        <button class="court-multi-btn" id="courtMultiBtn" onclick="toggleCourtDropdown()">
+          <span id="courtMultiLabel">All Courts</span><span class="caret">▾</span>
+        </button>
+        <div class="court-multi-dropdown" id="courtMultiDropdown">
+          <div id="courtMultiOptions"></div>
+          <div class="court-multi-clear" onclick="clearCourtFilter()">✕ Clear</div>
+        </div>
+      </div>
+      <select class="sel-pill" id="advF" onchange="renderCards()"><option value="all">All Advocates</option></select>
+    </div>
+    <div class="f-action-row">
+      <button class="fa-btn" onclick="openEOD()">EOD Report</button>
+      <button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>
+      <button class="fa-btn primary" onclick="openAdd()">+ Case</button>
     </div>
   </div>
 
@@ -1680,8 +1659,8 @@ function renderProgress(){
 }
 
 function renderCourtFilter(){
-  const courts=[...new Set(cases.map(c=>c.courtName).filter(Boolean))].sort();
-  courts.forEach((ct,i)=>{if(!courtColorMap[ct])courtColorMap[ct]=COURT_COLORS[i%COURT_COLORS.length];});
+  var courts=[...new Set(cases.map(function(c){return c.courtName;}).filter(Boolean))].sort();
+  courts.forEach(function(ct,i){if(!courtColorMap[ct])courtColorMap[ct]=COURT_COLORS[i%COURT_COLORS.length];});
   rebuildCourtOptions();
 }
 
