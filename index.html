@@ -1568,9 +1568,14 @@ async function loadFromSupabase(silent){
     } else if(!silent){
       cases=row.cases||[];
       cases.forEach(function(c){
+        var seen={};
         c.assignedTo=(c.assignedTo||[]).map(function(a){
           var match=cols.find(function(col){return col.toLowerCase()===a.toLowerCase();});
           return match||a;
+        }).filter(function(a){
+          if(seen[a.toLowerCase()]) return false;
+          seen[a.toLowerCase()]=true;
+          return true;
         });
       });
     } else {
