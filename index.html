@@ -1323,6 +1323,25 @@ body::before {
   body { background: white; }
   .case-summary { cursor: default; }
 }
+
+.cc-adv-pill {
+  display: inline-flex; align-items: center; gap: .2rem;
+  font-size: .7rem; font-family: 'Jost', sans-serif;
+  background: rgba(30,77,62,.09); color: #1e4d3e;
+  border: 1px solid rgba(30,77,62,.18);
+  border-radius: 20px; padding: .15rem .5rem;
+  max-width: 160px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.cc-note-pill {
+  display: inline-flex; align-items: center; gap: .2rem;
+  font-size: .7rem; font-family: 'Jost', sans-serif;
+  background: rgba(90,60,20,.07); color: #5a3c14;
+  border: 1px solid rgba(90,60,20,.14);
+  border-radius: 20px; padding: .15rem .5rem;
+  max-width: 160px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
 </style>
 </head>
 <body>
@@ -1863,6 +1882,8 @@ function cardHtml(c){
           ${c.caseNum?`<span class="case-num-lbl">${c.caseNum}</span>`:''}
           ${c.stage?`<span class="case-stage-lbl">${c.stage}</span>`:''}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
+          ${c.assignedTo&&c.assignedTo.length?`<span class="cc-adv-pill">👤 ${c.assignedTo.join(', ')}</span>`:''}
+          ${c.note?`<span class="cc-note-pill">📝 ${c.note}</span>`:''}
         </div>
       </div>
       <div class="case-summary-r">
