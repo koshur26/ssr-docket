@@ -1262,6 +1262,15 @@ body::before {
 .pl-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── TEAM BAR BOTTOM ── */
+.bottom-actions-title {
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .6rem;
+  font-family: 'Jost', sans-serif;
+}
 .bottom-actions {
   max-width: 780px;
   margin: 1rem auto 0;
@@ -1381,6 +1390,7 @@ body::before {
 
   <!-- ACTIONS + TEAM (bottom) -->
   <div class="bottom-actions" id="bottomActions" style="display:none">
+    <div class="bottom-actions-title">Actions</div>
     <div class="f-action-row">
       <button class="fa-btn" onclick="openEOD()">EOD Report</button>
       <button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>
