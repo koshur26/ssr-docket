@@ -880,21 +880,48 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.4rem;
+  padding: .85rem 1.25rem;
   border-bottom: 1px solid var(--line);
   flex-shrink: 0;
+  background: var(--ink);
 }
 .eod-modal-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 500;
-  color: var(--ink);
+  color: #f0ece4;
+  letter-spacing: .02em;
 }
 .eod-modal-body {
   overflow-y: auto;
   padding: 1.4rem;
   flex: 1;
 }
+.eod-modal-hdr .btn-solid {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.2);
+  color: #c8b878;
+  font-size: .74rem;
+  padding: .3rem .85rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  transition: all .15s;
+}
+.eod-modal-hdr .btn-solid:hover { border-color: #c8b878; background: rgba(200,184,120,.1); }
+.eod-modal-hdr .mc {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.12);
+  color: #6a6458;
+  font-size: .74rem;
+  padding: .3rem .85rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  transition: all .15s;
+}
+.eod-modal-hdr .mc:hover { color: #f0ece4; border-color: rgba(255,255,255,.25); }
 
 /* A4 PRINT DOCUMENT */
 .eod-doc {
@@ -1261,7 +1288,6 @@ body::before {
       <button class="pill"    data-f="pending"   onclick="setF('pending',this)">Pending</button>
       <button class="pill"    data-f="attended"  onclick="setF('attended',this)">Attended</button>
       <button class="pill"    data-f="arguments" onclick="setF('arguments',this)">Arguments</button>
-      <button class="pill"    data-f="completed" onclick="setF('completed',this)">Completed</button>
       <button class="pill"    data-f="urgent"    onclick="setF('urgent',this)">🚨 Urgent</button>
     </div>
     <div class="f-select-row">
