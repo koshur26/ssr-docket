@@ -1417,7 +1417,10 @@ function openEOD(){
 }
 
 function buildEODHtml(){
-  var dateStr = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  // Use the date being viewed, not necessarily today
+  var viewedDate = new Date();
+  viewedDate.setDate(viewedDate.getDate() + viewOffset);
+  var dateStr = viewedDate.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   var timeStr = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   var cnt = {}; SS.forEach(function(s){ cnt[s.k]=0; });
   cases.forEach(function(c){ if(cnt[c.status]!==undefined) cnt[c.status]++; });
@@ -1469,8 +1472,7 @@ function buildEODHtml(){
   html += 'Total Cases: <strong>'+cases.length+'</strong> &nbsp;&nbsp; ';
   html += 'Pending: <strong style="color:#7a4f10">'+cnt.pending+'</strong> &nbsp;&nbsp; ';
   html += 'Attended: <strong style="color:#1e3d5c">'+cnt.attended+'</strong> &nbsp;&nbsp; ';
-  html += 'For Arguments: <strong style="color:#3d1a5c">'+cnt.arguments+'</strong> &nbsp;&nbsp; ';
-  html += 'Completed: <strong style="color:#1e4d35">'+cnt.completed+'</strong>';
+  html += 'For Arguments: <strong style="color:#3d1a5c">'+cnt.arguments+'</strong>';
   if(urg) html += ' &nbsp;&nbsp; Urgent: <strong style="color:#7a1c1c">'+urg+'</strong>';
   html += '</div>';
   html += '<div style="font-size:9pt;color:#444;margin-bottom:12pt">';
