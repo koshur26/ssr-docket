@@ -1228,6 +1228,9 @@ function renderAdvFilter(){
 }
 
 function renderCards(){
+  // Don't overwrite the too-far-ahead or read-only message
+  if(viewOffset > 2 && cases.length === 0) return;
+  if(isReadOnly && cases.length === 0) return;
   const wrap=document.getElementById('casesWrap');
   const af=document.getElementById('advF')?.value||'all';
   let list=cases.filter(c=>{
