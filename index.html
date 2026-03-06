@@ -505,6 +505,27 @@ body::before {
   letter-spacing: .05em;
   text-transform: uppercase;
 }
+.serial-badge {
+  font-size:.72rem; font-family:'Jost',sans-serif; font-weight:600;
+  color:var(--ink2); background:var(--faint2);
+  border:1px solid var(--line); border-radius:6px;
+  padding:.08rem .45rem; letter-spacing:.02em;
+}
+.serial-add {
+  font-size:.68rem; color:var(--muted);
+  border:1px dashed var(--line); border-radius:6px;
+  padding:.08rem .45rem; cursor:pointer; font-family:'Jost',sans-serif;
+}
+.serial-add:hover { border-color:var(--ink2); color:var(--ink); }
+.serial-section { display:flex; gap:.5rem; flex-wrap:wrap; align-items:flex-end; }
+.serial-field { display:flex; flex-direction:column; gap:.25rem; flex:1; min-width:80px; }
+.serial-field label { font-size:.62rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.serial-field input, .serial-field select {
+  height:34px; background:var(--bg); border:1px solid var(--line);
+  border-radius:8px; padding:0 .7rem;
+  font-family:'Jost',sans-serif; font-size:.8rem; color:var(--ink); outline:none;
+}
+.serial-field input:focus, .serial-field select:focus { border-color:var(--ink2); }
 .case-summary-r {
   display: flex;
   align-items: center;
@@ -1654,7 +1675,7 @@ function doImport(){
   const ek=new Set(cases.map(c=>caseKey(c)));let added=0;
   lines.forEach(line=>{
     const p=line.split('|').map(x=>x.trim());
-    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,_ts:0,statusTime:null};
+    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,_ts:0,statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''};
     const k=caseKey(nc);if(!ek.has(k)){cases.push(nc);ek.add(k);added++;}
   });
   document.getElementById('pasteArea').value='';
@@ -1897,6 +1918,7 @@ function cardHtml(c){
         <div class="case-meta">
           ${c.caseNum?`<span class="case-num-lbl">${c.caseNum}</span>`:''}
           ${c.stage?`<span class="case-stage-lbl">${c.stage}</span>`:''}
+          ${c.serialNo?`<span class="serial-badge">${c.serialType||'Civil'} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
           ${c.assignedTo&&c.assignedTo.length?`<span class="cc-adv-pill">👤 ${c.assignedTo.join(', ')}</span>`:''}
           ${c.note?`<span class="cc-note-pill">📝 ${c.note.length>60?c.note.substring(0,60)+'…':c.note}</span>`:''}
@@ -1920,6 +1942,26 @@ function cardHtml(c){
       <div class="detail-section">
         <div class="detail-lbl">Note</div>
         <input class="note-in" placeholder="Cause list serial no., next date, brief status…" value="${(c.note||'').replace(/"/g,'&quot;')}" oninput="setNote('${c.id}',this.value)" onblur="queueSave()" onclick="event.stopPropagation()"/>
+      </div>
+      <div class="detail-section">
+        <div class="detail-lbl">Serial Number</div>
+        <div class="serial-section">
+          <div class="serial-field">
+            <label>Type</label>
+            <select onchange="setSerialType('${c.id}',this.value)" onclick="event.stopPropagation()">
+              <option ${(!c.serialType||c.serialType==='Civil')?'selected':''}>Civil</option>
+              <option ${c.serialType==='Criminal'?'selected':''}>Criminal</option>
+            </select>
+          </div>
+          <div class="serial-field">
+            <label>Our No.</label>
+            <input type="number" min="1" placeholder="—" value="${c.serialNo||''}" onchange="setSerialNo('${c.id}',this.value)" onblur="queueSave()" onclick="event.stopPropagation()"/>
+          </div>
+          <div class="serial-field">
+            <label>Total in List</label>
+            <input type="number" min="1" placeholder="—" value="${c.serialTotal||''}" onchange="setSerialTotal('${c.id}',this.value)" onblur="queueSave()" onclick="event.stopPropagation()"/>
+          </div>
+        </div>
       </div>
       <div class="detail-actions">
         <button class="da-btn urg ${c.urgent?'urg-on':''}" onclick="toggleUrg('${c.id}');event.stopPropagation()">🚨 ${c.urgent?'Remove urgent':'Mark urgent'}</button>
@@ -1946,6 +1988,9 @@ function toggleA(id,n){
   c._ts=Date.now();render();queueSave();
 }
 function setNote(id,v){const c=cases.find(x=>x.id===id);if(c){c.note=v;c._ts=Date.now();}}
+function setSerialNo(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialNo=v;c._ts=Date.now();}}
+function setSerialType(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialType=v;c._ts=Date.now();render();queueSave();}}
+function setSerialTotal(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialTotal=v;c._ts=Date.now();}}
 function toggleUrg(id){
   const c=cases.find(x=>x.id===id);if(!c)return;
   c.urgent=!c.urgent;c._ts=Date.now();render();queueSave();
@@ -1987,7 +2032,7 @@ function saveModal(){
     const c=cases.find(x=>x.id===editId);
     if(c){c.courtName=ct||c.courtName;c.caseNum=document.getElementById('fCaseNum').value.trim();c.parties=p||c.parties;c.stage=document.getElementById('fStage').value.trim();c.dateStr=document.getElementById('fDate').value.trim();c.note=document.getElementById('fNote').value.trim();c._ts=Date.now();}
   } else {
-    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,_ts:Date.now(),statusTime:null});
+    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,_ts:Date.now(),statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''});
   }
   render();saveToSupabase();closeModal();
 }
