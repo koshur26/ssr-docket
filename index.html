@@ -1040,12 +1040,16 @@ function render(){
   document.getElementById('progressLegend').style.display=has?'block':'none';
   document.getElementById('heroSub').style.display=has?'block':'none';
   // Show import card when empty and not read-only; show empty state when read-only
-  const showImport = !has && !isReadOnly;
+  const tooFarAhead = viewOffset > 2;
+  const showImport = !has && !isReadOnly && !tooFarAhead;
   const showEmpty  = !has && isReadOnly;
+  const showTooFar = !has && tooFarAhead;
   document.getElementById('uploadCard').style.display = showImport ? 'block' : 'none';
   if(showImport) buildImportDateRow();
   if(showEmpty){
     document.getElementById('casesWrap').innerHTML='<div class="empty"><div class="ei">📅</div><h3>No cases for '+formatDateFull(viewOffset)+'</h3><p>This is a past date — read only</p></div>';
+  } else if(showTooFar){
+    document.getElementById('casesWrap').innerHTML='<div class="empty"><div class="ei">🗓️</div><h3>Too far ahead</h3><p>Cause list import is only available for Today, Tomorrow, and Day After.<br>Check back closer to the date.</p></div>';
   } else if(!has){
     document.getElementById('casesWrap').innerHTML='';
   }
@@ -1367,11 +1371,11 @@ async function resetDay(){
   render();
   isSaving=true;setSaveBtn('saving');
   try{
-    const todayDate=getTodayKey();
-    const chk=await fetch(SB_BASE+'?date=eq.'+todayDate,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+    const targetDate=getDateKey(viewOffset);
+    const chk=await fetch(SB_BASE+'?date=eq.'+targetDate,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
     const rows=await chk.json();
     if(rows.length){
-      const res=await fetch(SB_BASE+'?date=eq.'+todayDate,{method:'PATCH',headers:SB_HDR,body:JSON.stringify({cases:[]})});
+      const res=await fetch(SB_BASE+'?date=eq.'+targetDate,{method:'PATCH',headers:SB_HDR,body:JSON.stringify({cases:[]})});
       if(!res.ok) throw new Error(await res.text());
     }
     setSaveBtn('saved');
