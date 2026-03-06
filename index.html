@@ -69,9 +69,19 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   background: var(--paper);
   border-bottom: 1px solid var(--line);
   padding: .6rem 1rem;
-  position: sticky; top: 88px; z-index: 90;
+  position: sticky;
+  top: 62px;
+  left: 0; right: 0;
+  z-index: 90;
   display: flex; gap: .35rem;
   overflow-x: auto; scrollbar-width: none;
+  transition: transform .3s ease, opacity .3s ease;
+  will-change: transform;
+}
+.tabs-nav.hidden {
+  transform: translateY(-200%);
+  opacity: 0;
+  pointer-events: none;
 }
 .tabs-nav::-webkit-scrollbar { display: none; }
 .tab-btn {
@@ -103,7 +113,8 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .date-nav-readonly { font-size: .62rem; color: var(--red); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-top: .15rem; }
 
 /* ── PAGE WRAP ───────────────────────────────────────────── */
-.page { max-width: 780px; margin: 0 auto; padding: 1.25rem 1rem 0; position: relative; z-index: 1; }
+.page { max-width: 780px; margin: 0 auto; padding: 1.25rem 1rem 0; position: relative; z-index: 1;
+}
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
@@ -1809,6 +1820,33 @@ function saveFilingModal() {
 }
 
 
+
+// ── SCROLL-AWARE TABS NAV ──────────────────────────────
+(function(){
+  let lastY = 0;
+  let ticking = false;
+  const nav = document.querySelector('.tabs-nav');
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        const y = window.scrollY;
+        if(y <= 10){
+          // At top — always show
+          nav.classList.remove('hidden');
+        } else if(y > lastY){
+          // Scrolling down — hide
+          nav.classList.add('hidden');
+        } else {
+          // Scrolling up — show
+          nav.classList.remove('hidden');
+        }
+        lastY = y;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, {passive: true});
+})();
 
 </script>
 </body>
