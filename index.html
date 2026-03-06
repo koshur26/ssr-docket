@@ -1022,8 +1022,12 @@ document.addEventListener('click',function(e){
 
 function render(){
   const has=cases.length>0;
-  document.getElementById('heroWrap').style.display  =has?'block':'none';
+  document.getElementById('heroWrap').style.display  ='block'; // always show hero for date nav
   document.getElementById('filtersBar').style.display=has?'flex':'none';
+  document.getElementById('heroStats').style.visibility=has?'visible':'hidden';
+  document.getElementById('progressBar').style.display=has?'block':'none';
+  document.getElementById('progressLegend').style.display=has?'block':'none';
+  document.getElementById('heroSub').style.display=has?'block':'none';
   // Show import card when empty and not read-only; show empty state when read-only
   const showImport = !has && !isReadOnly;
   const showEmpty  = !has && isReadOnly;
@@ -1098,6 +1102,7 @@ function showDatePicker(){
 
 function goToToday(){
   viewOffset = 0;
+  importOffset = 0;
   cases = [];
   updateDateNav();
   loadFromSupabase(false);
@@ -1106,6 +1111,9 @@ function goToToday(){
 function goDate(dir){
   viewOffset += dir;
   cases = [];
+  // Pre-select the matching import pill if viewing today/tomorrow/day-after
+  if(viewOffset >= 0 && viewOffset <= 2) importOffset = viewOffset;
+  else importOffset = 0;
   updateDateNav();
   loadFromSupabase(false);
 }
@@ -1118,6 +1126,8 @@ function goToDate(val){
   const diff = Math.round((picked - today) / 86400000);
   viewOffset = diff;
   cases = [];
+  if(viewOffset >= 0 && viewOffset <= 2) importOffset = viewOffset;
+  else importOffset = 0;
   updateDateNav();
   loadFromSupabase(false);
 }
