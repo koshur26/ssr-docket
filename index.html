@@ -1059,16 +1059,14 @@ function renderHero(){
 let breatheTimer=null;
 
 function updateDateNav(){
-  // Update the date badge area even when no cases loaded
   const db = document.getElementById('docketDateBadge');
-  if(!db) return;
   if(db) db.textContent = formatDateFull(viewOffset);
-  if(ro) ro.style.display = isReadOnly ? 'inline-block' : 'none';
-  // update eyebrow even if no cases
-  const ey = document.querySelector('.docket-eyebrow');
-  if(ey && !cases.length){
+  const ro = document.getElementById('readonlyBadge');
+  if(ro) ro.style.display = isReadOnly ? 'block' : 'none';
+  const ey = document.getElementById('docketEyebrow');
+  if(ey){
     const dTitle = viewOffset===0?"Today's Docket":viewOffset===1?"Tomorrow's Docket":viewOffset===-1?"Yesterday's Docket":formatDateFull(viewOffset);
-    ey.innerHTML = dTitle;
+    ey.textContent = dTitle;
   }
 }
 
