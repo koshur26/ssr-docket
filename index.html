@@ -1916,7 +1916,6 @@ function cardHtml(c){
       <div class="case-summary-l">
         <div class="case-parties">${c.parties}${c.urgent?' <span class="urg-lbl">🚨</span>':''}</div>
         <div class="case-meta">
-          ${c.caseNum?`<span class="case-num-lbl">${c.caseNum}</span>`:''}
           ${c.stage?`<span class="case-stage-lbl">${c.stage}</span>`:''}
           ${c.serialNo?`<span class="serial-badge">${c.serialType||'Civil'} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
