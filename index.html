@@ -1363,6 +1363,92 @@ body::before {
   white-space: normal; line-height: 1.4;
   margin-top: .2rem;
 }
+
+/* ── TABS ─────────────────────────────────────────────── */
+.tabs-nav {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: .55rem 1rem;
+  display: flex; gap: .35rem;
+  overflow-x: auto; scrollbar-width: none;
+  position: sticky; top: 76px; z-index: 90;
+}
+.tabs-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0; height: 36px; padding: 0 1.1rem;
+  border-radius: 20px; font-size: .78rem; font-weight: 500;
+  font-family: 'Jost', sans-serif; letter-spacing: .03em;
+  cursor: pointer; transition: all .18s;
+  border: 1.5px solid var(--line);
+  background: transparent; color: var(--muted); white-space: nowrap;
+}
+.tab-btn:hover { border-color: var(--ink2); color: var(--ink); }
+.tab-btn.active { background: var(--ink); border-color: var(--ink); color: #f0ece4; font-weight: 600; }
+
+/* ── TAB HERO ─────────────────────────────────────────── */
+.tab-hero { margin-bottom: 1rem; }
+.tab-hero-title { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 500; color: var(--ink); line-height: 1.2; }
+.tab-hero-sub { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+
+/* ── MISC / FILING STATS ──────────────────────────────── */
+.misc-stats, .filing-stats { display: flex; gap: .5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.mstat { flex: 1; min-width: 60px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: .55rem .5rem; text-align: center; }
+.mstat-n { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; display: block; color: var(--ink); }
+.mstat-l { font-size: .6rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+
+/* ── MISC CARDS ───────────────────────────────────────── */
+.misc-card { background: var(--paper); border: 1.5px solid var(--line); border-radius: var(--r); margin-bottom: .75rem; overflow: hidden; box-shadow: var(--shadow-sm); }
+.misc-card.urgent-task { border-color: #e08080; background: #fdf8f8; }
+.misc-card.done-task { border-color: #a8d8b8; background: #f0f8f4; }
+.misc-summary { display: flex; align-items: flex-start; padding: .75rem .9rem; cursor: pointer; gap: .6rem; }
+.misc-summary:hover { background: rgba(0,0,0,.02); }
+.misc-summary-l { flex: 1; min-width: 0; }
+.misc-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: var(--ink); margin-bottom: .25rem; }
+.misc-meta { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; margin-top: .15rem; }
+.misc-badge { font-size: .65rem; border-radius: 4px; padding: .05rem .4rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; border: 1px solid; }
+.mb-pending  { background: #fff8e8; color: #8a6a20; border-color: #e8c870; }
+.mb-progress { background: #e8f0f8; color: #2c5f8a; border-color: #6a9abf; }
+.mb-done     { background: #d4ede0; color: #1a4a2e; border-color: #a8d8b8; }
+.mb-urgent   { background: #fdf0f0; color: var(--urg); border-color: #e08080; }
+.misc-details { display: none; padding: .4rem .9rem .85rem; border-top: 1px solid var(--faint2); }
+.misc-card.open .misc-details { display: block; }
+.misc-card.open .expand-icon { transform: rotate(180deg); }
+
+/* ── FILING CARDS ─────────────────────────────────────── */
+.filing-card { background: var(--paper); border: 1.5px solid var(--line); border-radius: var(--r); margin-bottom: .75rem; overflow: hidden; box-shadow: var(--shadow-sm); }
+.filing-card.overdue { border-color: #e08080; background: #fdf8f8; }
+.filing-card.filed { border-color: #a8d8b8; background: #f0f8f4; }
+.filing-summary { display: flex; align-items: flex-start; padding: .75rem .9rem; cursor: pointer; gap: .6rem; }
+.filing-summary:hover { background: rgba(0,0,0,.02); }
+.filing-summary-l { flex: 1; min-width: 0; }
+.filing-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: var(--ink); margin-bottom: .25rem; }
+.filing-meta { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; margin-top: .15rem; }
+.deadline-badge { font-size: .68rem; font-family: 'Jost', sans-serif; font-weight: 600; border-radius: 6px; padding: .1rem .5rem; border: 1px solid; }
+.db-ok      { background: #e8f0f8; color: #2c5f8a; border-color: #6a9abf; }
+.db-soon    { background: #fff8e8; color: #8a6a20; border-color: #e8c870; }
+.db-overdue { background: #fdf0f0; color: var(--urg); border-color: #e08080; }
+.filing-details { display: none; padding: .4rem .9rem .85rem; border-top: 1px solid var(--faint2); }
+.filing-card.open .filing-details { display: block; }
+.filing-card.open .expand-icon { transform: rotate(180deg); }
+
+/* ── MODAL EXTRAS ─────────────────────────────────────── */
+.modal-hdr { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1.25rem; border-bottom: 1px solid var(--line); flex-shrink: 0; background: var(--ink); }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: #f0ece4; }
+.modal-body { overflow-y: auto; padding: 1.25rem; flex: 1; display: flex; flex-direction: column; gap: .85rem; }
+.modal-close { background: transparent; border: 1px solid rgba(255,255,255,.15); color: #6a6458; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.modal-close:hover { color: #f0ece4; }
+.field-group { display: flex; flex-direction: column; gap: .3rem; }
+.field-group label { font-size: .62rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.field-group input, .field-group select, .field-group textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: .5rem .75rem; font-family: 'Jost', sans-serif; font-size: .85rem; color: var(--ink); outline: none; transition: border-color .15s; width: 100%; }
+.field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--ink2); }
+.field-group textarea { resize: vertical; min-height: 70px; }
+.field-row { display: flex; gap: .6rem; }
+.field-row .field-group { flex: 1; }
+.modal-footer { display: flex; gap: .5rem; justify-content: flex-end; padding: .85rem 1.25rem; border-top: 1px solid var(--line); flex-shrink: 0; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--line); border-radius: 20px; padding: .35rem .9rem; font-size: .78rem; font-family: 'Jost', sans-serif; color: var(--ink2); cursor: pointer; transition: all .15s; }
+.btn-ghost:hover { border-color: var(--ink2); }
+.btn-solid-m { background: var(--ink); border: 1.5px solid var(--ink); border-radius: 20px; padding: .35rem .9rem; font-size: .78rem; font-family: 'Jost', sans-serif; color: #f0ece4; cursor: pointer; font-weight: 600; transition: opacity .15s; }
+.btn-solid-m:hover { opacity: .85; }
 </style>
 </head>
 <body>
@@ -1382,7 +1468,16 @@ body::before {
   <div class="topbar-gold-rule"></div>
 </div>
 
+<!-- TABS NAV -->
+<div class="tabs-nav" id="tabsNav">
+  <button class="tab-btn active" id="tabDocket" onclick="switchTab('docket',this)">⚖️ Today's Docket</button>
+  <button class="tab-btn" id="tabMisc" onclick="switchTab('misc',this)">📋 Misc. Work</button>
+  <button class="tab-btn" id="tabFilings" onclick="switchTab('filings',this)">📁 Fresh Filings</button>
+</div>
+
 <div class="page">
+  <!-- DOCKET TAB -->
+  <div id="tab-docket" class="tab-content active">
   <div class="sync-bar" id="syncBar"><div class="sdot"></div><span id="syncMsg"></span></div>
   <div id="dateMismatchBanner" style="display:none;background:#fdf4e3;border:1.5px solid #e8c870;border-radius:10px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#7a4f10;line-height:1.5;position:relative"></div>
 
@@ -1443,10 +1538,31 @@ body::before {
   <div id="casesWrap"></div>
 </div>
 
-  <!-- ACTIONS + TEAM (bottom) -->
+  </div><!-- /tab-docket -->
+
+<!-- MISC TAB -->
+<div id="tab-misc" class="tab-content" style="display:none;max-width:780px;margin:0 auto;padding:1.25rem 1rem 0;position:relative;z-index:1">
+  <div class="tab-hero">
+    <div class="tab-hero-title">Miscellaneous Work <span id="miscCount" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--muted)"></span></div>
+    <div class="tab-hero-sub">Office tasks, drafting, client meetings and other work</div>
+  </div>
+  <div class="misc-stats" id="miscStats"></div>
+  <div id="miscWrap"></div>
+</div>
+
+<!-- FILINGS TAB -->
+<div id="tab-filings" class="tab-content" style="display:none;max-width:780px;margin:0 auto;padding:1.25rem 1rem 0;position:relative;z-index:1">
+  <div class="tab-hero">
+    <div class="tab-hero-title">Fresh Filings <span id="filingsCount" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--muted)"></span></div>
+    <div class="tab-hero-sub">New matters to be filed — sorted by deadline</div>
+  </div>
+  <div class="filing-stats" id="filingStats"></div>
+  <div id="filingsWrap"></div>
+</div>
+
   <div class="bottom-actions" id="bottomActions" style="display:none">
     <div class="bottom-actions-title">Actions</div>
-    <div class="f-action-row">
+    <div class="f-action-row" id="actionRow">
       <button class="fa-btn" onclick="openEOD()">EOD Report</button>
       <button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>
       <button class="fa-btn primary" onclick="openAdd()">+ Case</button>
@@ -1528,7 +1644,7 @@ const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const SB_REST = `${SB_URL}/rest/v1/docket?id=eq.1`;
 const SB_HDR  = {'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'};
 
-const ADVOCATES    = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. Showkat','Adv. T','Adv. 1'];
+const ADVOCATES    = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. Showkat','Adv. T','Adv. 1','ABC'];
 const COURT_COLORS = ['cc-0','cc-1','cc-2','cc-3','cc-4','cc-5','cc-6','cc-7'];
 const SS = [
   {k:'pending',   l:'Pending'},
@@ -1545,7 +1661,7 @@ const SS2 = {
 };
 
 let cases   = [];
-let cols    = JSON.parse(localStorage.getItem('ssr_cols') || JSON.stringify(ADVOCATES));
+let cols    = (function(){ var saved=localStorage.getItem('ssr_cols'); var ver=localStorage.getItem('ssr_cols_ver'); if(saved && ver==='2') return JSON.parse(saved); localStorage.setItem('ssr_cols_ver','2'); return JSON.parse(JSON.stringify(ADVOCATES)); })();
 let filt    = 'all';
 let editId  = null;
 let pwCb    = null;
@@ -1574,6 +1690,8 @@ function setSaveBtn(state){
   renderCols();
   await loadFromSupabase();
   setInterval(async()=>{ if(!isSaving) await loadFromSupabase(true); },15000);
+  loadMiscFromSupabase();
+  loadFilingsFromSupabase();
 })();
 
 async function loadFromSupabase(silent){
@@ -1661,10 +1779,10 @@ function confirmPw(){
   if(v===getTodayPw()){document.getElementById('pwOverlay').classList.remove('on');const cb=pwCb;pwCb=null;if(cb)cb();}
   else{const i=document.getElementById('pwIn');document.getElementById('pwErr').textContent='Incorrect password.';i.classList.add('err');i.value='';setTimeout(()=>i.classList.remove('err'),600);i.focus();}
 }
-document.getElementById('pwIn').addEventListener('keydown',function(e){
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('pwIn').addEventListener('keydown',function(e){
   if(e.key==='Enter')confirmPw();
   document.getElementById('pwErr').textContent='';this.classList.remove('err');
-});
+});});
 
 function requestImport(){showPw(()=>doImport(),'Import Cases','Enter the access password to import today\'s cases.');}
 function doImport(){
@@ -1739,9 +1857,9 @@ function renderCols(){
   if(advF){const cur=advF.value;advF.innerHTML=`<option value="all">All Advocates</option>`+cols.map(c=>`<option value="${c}">${c}</option>`).join('');if(cols.includes(cur))advF.value=cur;}
 }
 function removeCol(i){cols.splice(i,1);renderCols();render();}
-document.getElementById('colIn').addEventListener('keydown',function(e){
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('colIn').addEventListener('keydown',function(e){
   if(e.key==='Enter'&&this.value.trim()){cols.push(this.value.trim());this.value='';renderCols();render();}
-});
+});});
 
 function setF(f,btn){filt=f;document.querySelectorAll('.pill[data-f]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderCards();}
 
@@ -1794,6 +1912,7 @@ function render(){
   document.getElementById('uploadCard').style.display=has?'none':'block';
   const ba=document.getElementById('bottomActions');
   if(ba) ba.style.display=has?'block':'none';
+  updateActionRow();
   if(has){renderHero();renderProgress();}
   renderCourtFilter();renderAdvFilter();renderCards();
 }
@@ -2035,7 +2154,11 @@ function saveModal(){
   }
   render();saveToSupabase();closeModal();
 }
-document.getElementById('caseOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('caseOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+  document.getElementById('miscOverlay').addEventListener('click',function(e){if(e.target===this)closeMiscModal();});
+  document.getElementById('filingOverlay').addEventListener('click',function(e){if(e.target===this)closeFilingModal();});
+});
 
 function openEOD(){
   document.getElementById('eodContent').innerHTML = buildEODHtml();
@@ -2134,7 +2257,375 @@ function printEOD(){
   w.onload = function(){ w.focus(); w.print(); };
 }
 
-document.getElementById('eodOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');});
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('eodOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');});});
+
+// ── STATE ─────────────────────────────────────────────────
+let miscItems = [];
+let filingItems = [];
+let miscEditId = null;
+let filingEditId = null;
+let currentTab = 'docket';
+
+// ── TAB SWITCHING ─────────────────────────────────────────
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => { c.style.display = 'none'; });
+  document.getElementById('tab-' + tab).style.display = 'block';
+  updateActionRow();
+  if(tab === 'misc') renderMisc();
+  if(tab === 'filings') renderFilings();
+}
+
+function updateActionRow() {
+  const row = document.getElementById('actionRow');
+  const ba = document.getElementById('bottomActions');
+  if(!row || !ba) return;
+  if(currentTab === 'docket') {
+    ba.style.display = cases.length > 0 ? 'block' : 'none';
+    row.innerHTML = '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
+      '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
+      '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
+  } else if(currentTab === 'misc') {
+    ba.style.display = 'block';
+    row.innerHTML = '<button class="fa-btn primary" onclick="openMiscModal()">+ Add Task</button>';
+  } else if(currentTab === 'filings') {
+    ba.style.display = 'block';
+    row.innerHTML = '<button class="fa-btn primary" onclick="openFilingModal()">+ Add Filing</button>';
+  }
+}
+
+// ── SUPABASE MISC ─────────────────────────────────────────
+const SB_ALL = 'https://ddqlncebxfuairwsajsp.supabase.co/rest/v1/docket';
+
+async function loadMiscFromSupabase() {
+  try {
+    const res = await fetch(SB_ALL + '?date=eq.__misc__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const rows = await res.json();
+    miscItems = rows.length ? (rows[0].cases || []) : [];
+    if(currentTab === 'misc') renderMisc();
+  } catch(e) {}
+}
+
+async function saveMiscToSupabase() {
+  try {
+    const res = await fetch(SB_ALL + '?date=eq.__misc__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const rows = await res.json();
+    if(rows.length) {
+      await fetch(SB_ALL + '?date=eq.__misc__', {method:'PATCH', headers:SB_HDR, body:JSON.stringify({cases:miscItems})});
+    } else {
+      await fetch(SB_ALL, {method:'POST', headers:{...SB_HDR,'Prefer':'return=minimal'}, body:JSON.stringify({date:'__misc__', cases:miscItems})});
+    }
+  } catch(e) {}
+}
+
+// ── SUPABASE FILINGS ──────────────────────────────────────
+async function loadFilingsFromSupabase() {
+  try {
+    const res = await fetch(SB_ALL + '?date=eq.__filings__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const rows = await res.json();
+    filingItems = rows.length ? (rows[0].cases || []) : [];
+    if(currentTab === 'filings') renderFilings();
+  } catch(e) {}
+}
+
+async function saveFilingsToSupabase() {
+  try {
+    const res = await fetch(SB_ALL + '?date=eq.__filings__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const rows = await res.json();
+    if(rows.length) {
+      await fetch(SB_ALL + '?date=eq.__filings__', {method:'PATCH', headers:SB_HDR, body:JSON.stringify({cases:filingItems})});
+    } else {
+      await fetch(SB_ALL, {method:'POST', headers:{...SB_HDR,'Prefer':'return=minimal'}, body:JSON.stringify({date:'__filings__', cases:filingItems})});
+    }
+  } catch(e) {}
+}
+
+// ── RENDER MISC ───────────────────────────────────────────
+function renderMisc() {
+  const wrap = document.getElementById('miscWrap');
+  const countEl = document.getElementById('miscCount');
+  if(countEl) countEl.textContent = '— ' + miscItems.length + (miscItems.length !== 1 ? ' tasks' : ' task');
+  const pending = miscItems.filter(m => m.mStatus === 'pending').length;
+  const progress = miscItems.filter(m => m.mStatus === 'progress').length;
+  const done = miscItems.filter(m => m.mStatus === 'done').length;
+  const statsEl = document.getElementById('miscStats');
+  if(statsEl) statsEl.innerHTML =
+    '<div class="mstat"><span class="mstat-n">'+pending+'</span><span class="mstat-l">Pending</span></div>'+
+    '<div class="mstat"><span class="mstat-n">'+progress+'</span><span class="mstat-l">In Progress</span></div>'+
+    '<div class="mstat"><span class="mstat-n">'+done+'</span><span class="mstat-l">Done</span></div>';
+  if(!miscItems.length) {
+    wrap.innerHTML = '<div class="empty"><div class="ei">📋</div><h3>No tasks yet</h3><p>Add miscellaneous work using the button below</p></div>';
+    return;
+  }
+  const sorted = [...miscItems].sort((a,b) => {
+    if(a.priority==='urgent' && b.priority!=='urgent') return -1;
+    if(b.priority==='urgent' && a.priority!=='urgent') return 1;
+    if(a.mStatus==='done' && b.mStatus!=='done') return 1;
+    if(b.mStatus==='done' && a.mStatus!=='done') return -1;
+    return 0;
+  });
+  wrap.innerHTML = sorted.map(m => miscCardHtml(m)).join('');
+}
+
+function miscCardHtml(m) {
+  const id = m.id;
+  const statusMap = {pending:'mb-pending', progress:'mb-progress', done:'mb-done'};
+  const statusLabel = {pending:'Pending', progress:'In Progress', done:'Done'};
+  const advPill = m.assignedTo ? '<span class="cc-adv-pill">\u{1F464} '+m.assignedTo+'</span>' : '';
+  const notePill = m.note ? '<span class="cc-note-pill">\u{1F4DD} '+(m.note.length>40?m.note.substring(0,40)+'\u2026':m.note)+'</span>' : '';
+  const stbtns = ['pending','progress','done'].map(function(s){
+    return '<button class="stbtn '+(m.mStatus===s?'on-attended':'')+'" data-id="'+id+'" data-s="'+s+'" onclick="setMiscStatus(this.dataset.id,this.dataset.s);event.stopPropagation()">'+(s==='pending'?'Pending':s==='progress'?'In Progress':'Done')+'</button>';
+  }).join('');
+  const advbtns = cols.map(function(col){
+    return '<button class="advbtn '+(m.assignedTo===col?'on':'')+'" data-id="'+id+'" data-col="'+col+'" onclick="setMiscAdv(this.dataset.id,this.dataset.col);event.stopPropagation()"><span class="adot"></span>'+col+'</button>';
+  }).join('');
+  const urgBtn = m.priority==='urgent'
+    ? '<button class="da-btn" data-id="'+id+'" onclick="setMiscPriority(this.dataset.id,\'normal\');event.stopPropagation()">Remove Urgent</button>'
+    : '<button class="da-btn urg" data-id="'+id+'" onclick="setMiscPriority(this.dataset.id,\'urgent\');event.stopPropagation()">\u{1F6A8} Mark Urgent</button>';
+  return '<div class="misc-card '+(m.priority==='urgent'?'urgent-task':m.mStatus==='done'?'done-task':'')+'" id="mc-'+id+'">'+
+    '<div class="misc-summary" data-id="'+id+'" onclick="toggleMisc(this.dataset.id)">'+
+      '<div class="misc-summary-l">'+
+        '<div class="misc-title">'+m.title+'</div>'+
+        '<div class="misc-meta">'+
+          '<span class="misc-badge '+(statusMap[m.mStatus]||'mb-pending')+'">'+(statusLabel[m.mStatus]||'Pending')+'</span>'+
+          (m.priority==='urgent'?'<span class="misc-badge mb-urgent">Urgent</span>':'')+
+          advPill + notePill +
+        '</div>'+
+      '</div>'+
+      '<span class="expand-icon">\u25BE</span>'+
+    '</div>'+
+    '<div class="misc-details">'+
+      '<div class="detail-section"><div class="detail-lbl">Status</div><div class="status-btns">'+stbtns+'</div></div>'+
+      '<div class="detail-section"><div class="detail-lbl">Assigned To</div><div class="adv-btns">'+advbtns+'</div></div>'+
+      '<div class="detail-section"><div class="detail-lbl">Note</div>'+
+        '<input class="note-in" value="'+( m.note||'').replace(/"/g,'&quot;')+'" placeholder="Details\u2026" data-id="'+id+'" oninput="setMiscNote(this.dataset.id,this.value)" onblur="saveMiscToSupabase()" onclick="event.stopPropagation()"/>'+
+      '</div>'+
+      '<div class="detail-actions">'+
+        urgBtn+
+        '<button class="da-btn" data-id="'+id+'" onclick="openMiscModal(this.dataset.id);event.stopPropagation()">\u270F\uFE0F Edit</button>'+
+        '<button class="da-btn del" data-id="'+id+'" onclick="deleteMisc(this.dataset.id);event.stopPropagation()">\u{1F5D1} Delete</button>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function toggleMisc(id) { document.getElementById('mc-'+id)?.classList.toggle('open'); }
+function setMiscStatus(id,s) { const m=miscItems.find(x=>x.id===id); if(m){m.mStatus=s;renderMisc();saveMiscToSupabase();} }
+function setMiscAdv(id,a) { const m=miscItems.find(x=>x.id===id); if(m){m.assignedTo=(m.assignedTo===a?'':a);renderMisc();saveMiscToSupabase();} }
+function setMiscNote(id,v) { const m=miscItems.find(x=>x.id===id); if(m) m.note=v; }
+function setMiscPriority(id,p) { const m=miscItems.find(x=>x.id===id); if(m){m.priority=p;renderMisc();saveMiscToSupabase();} }
+function deleteMisc(id) { miscItems=miscItems.filter(x=>x.id!==id); renderMisc(); saveMiscToSupabase(); }
+
+function openMiscModal(id) {
+  miscEditId = id || null;
+  const m = id ? miscItems.find(x=>x.id===id) : null;
+  document.getElementById('miscMTitle').textContent = m ? 'Edit Task' : 'Add Task';
+  document.getElementById('mfTitle').value = m ? m.title : '';
+  document.getElementById('mfPriority').value = m ? (m.priority||'normal') : 'normal';
+  document.getElementById('mfStatus').value = m ? (m.mStatus||'pending') : 'pending';
+  document.getElementById('mfNote').value = m ? (m.note||'') : '';
+  const advSel = document.getElementById('mfAdv');
+  advSel.innerHTML = '<option value="">Unassigned</option>' + cols.map(c => '<option value="'+c+'"'+(m&&m.assignedTo===c?' selected':'')+'>'+c+'</option>').join('');
+  document.getElementById('miscOverlay').classList.add('on');
+}
+function closeMiscModal() { document.getElementById('miscOverlay').classList.remove('on'); miscEditId=null; }
+function saveMiscModal() {
+  const title = document.getElementById('mfTitle').value.trim();
+  if(!title) { alert('Please enter a task title.'); return; }
+  const item = {
+    id: miscEditId || (Date.now()+'-'+Math.random().toString(36).substr(2,5)),
+    title, assignedTo: document.getElementById('mfAdv').value,
+    priority: document.getElementById('mfPriority').value,
+    mStatus: document.getElementById('mfStatus').value,
+    note: document.getElementById('mfNote').value.trim()
+  };
+  if(miscEditId) { const i=miscItems.findIndex(x=>x.id===miscEditId); if(i>=0) miscItems[i]=item; }
+  else miscItems.push(item);
+  renderMisc(); saveMiscToSupabase(); closeMiscModal();
+}
+
+
+// ── RENDER FILINGS ────────────────────────────────────────
+function renderFilings() {
+  const wrap = document.getElementById('filingsWrap');
+  const countEl = document.getElementById('filingsCount');
+  if(countEl) countEl.textContent = '— ' + filingItems.length + (filingItems.length!==1?' filings':' filing');
+  const draft = filingItems.filter(f=>f.fStatus==='draft').length;
+  const ready = filingItems.filter(f=>f.fStatus==='ready').length;
+  const filed = filingItems.filter(f=>f.fStatus==='filed'||f.fStatus==='registered').length;
+  const overdue = filingItems.filter(f=>isOverdue(f)).length;
+  const statsEl = document.getElementById('filingStats');
+  if(statsEl) statsEl.innerHTML =
+    '<div class="mstat"><span class="mstat-n">'+draft+'</span><span class="mstat-l">Draft</span></div>'+
+    '<div class="mstat"><span class="mstat-n">'+ready+'</span><span class="mstat-l">Ready</span></div>'+
+    '<div class="mstat"><span class="mstat-n">'+filed+'</span><span class="mstat-l">Filed</span></div>'+
+    (overdue?'<div class="mstat" style="border-color:#e08080"><span class="mstat-n" style="color:var(--urg)">'+overdue+'</span><span class="mstat-l">Overdue</span></div>':'');
+  if(!filingItems.length) {
+    wrap.innerHTML = '<div class="empty"><div class="ei">📁</div><h3>No filings yet</h3><p>Add fresh filings using the button below</p></div>';
+    return;
+  }
+  const sorted = [...filingItems].sort((a,b) => {
+    const aF = a.fStatus==='filed'||a.fStatus==='registered';
+    const bF = b.fStatus==='filed'||b.fStatus==='registered';
+    if(aF&&!bF) return 1; if(bF&&!aF) return -1;
+    if(!a.deadline&&!b.deadline) return 0;
+    if(!a.deadline) return 1; if(!b.deadline) return -1;
+    return new Date(a.deadline)-new Date(b.deadline);
+  });
+  wrap.innerHTML = sorted.map(f => filingCardHtml(f)).join('');
+}
+
+function isOverdue(f) {
+  if(!f.deadline||f.fStatus==='filed'||f.fStatus==='registered') return false;
+  return new Date(f.deadline) < new Date();
+}
+
+function deadlineBadge(f) {
+  if(!f.deadline) return '';
+  const d=new Date(f.deadline); const today=new Date(); today.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  const diff = Math.round((d-today)/86400000);
+  const label = d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  if(diff<0) return '<span class="deadline-badge db-overdue">Overdue: '+label+'</span>';
+  if(diff<=7) return '<span class="deadline-badge db-soon">By '+label+'</span>';
+  return '<span class="deadline-badge db-ok">By '+label+'</span>';
+}
+
+function filingCardHtml(f) {
+  const id = f.id;
+  const isFiled = f.fStatus==='filed'||f.fStatus==='registered';
+  const statusLabels = {draft:'Draft', ready:'Ready to File', filed:'Filed', registered:'Registered'};
+  const advPill = f.assignedTo ? '<span class="cc-adv-pill">\u{1F464} '+f.assignedTo+'</span>' : '';
+  const stbtns = ['draft','ready','filed','registered'].map(function(s){
+    return '<button class="stbtn '+(f.fStatus===s?'on-attended':'')+'" data-id="'+id+'" data-s="'+s+'" onclick="setFilingStatus(this.dataset.id,this.dataset.s);event.stopPropagation()">'+(statusLabels[s]||s)+'</button>';
+  }).join('');
+  const advbtns = cols.map(function(col){
+    return '<button class="advbtn '+(f.assignedTo===col?'on':'')+'" data-id="'+id+'" data-col="'+col+'" onclick="setFilingAdv(this.dataset.id,this.dataset.col);event.stopPropagation()"><span class="adot"></span>'+col+'</button>';
+  }).join('');
+  return '<div class="filing-card '+(isOverdue(f)?'overdue':isFiled?'filed':'')+'" id="fc-'+id+'">'+
+    '<div class="filing-summary" data-id="'+id+'" onclick="toggleFiling(this.dataset.id)">'+
+      '<div class="filing-summary-l">'+
+        '<div class="filing-title">'+f.parties+'</div>'+
+        '<div class="filing-meta">'+
+          '<span class="case-stage-lbl">'+f.fType+'</span>'+
+          deadlineBadge(f)+
+          '<span class="misc-badge mb-pending">'+(statusLabels[f.fStatus]||f.fStatus)+'</span>'+
+          advPill+
+        '</div>'+
+      '</div>'+
+      '<span class="expand-icon">\u25BE</span>'+
+    '</div>'+
+    '<div class="filing-details">'+
+      '<div class="detail-section"><div class="detail-lbl">Status</div><div class="status-btns">'+stbtns+'</div></div>'+
+      '<div class="detail-section"><div class="detail-lbl">Assigned To</div><div class="adv-btns">'+advbtns+'</div></div>'+
+      '<div class="detail-section"><div class="detail-lbl">By / Before Date</div>'+
+        '<input type="date" class="note-in" value="'+(f.deadline||'')+'" data-id="'+id+'" onchange="setFilingDeadline(this.dataset.id,this.value)" onclick="event.stopPropagation()"/>'+
+      '</div>'+
+      '<div class="detail-section"><div class="detail-lbl">Note</div>'+
+        '<input class="note-in" value="'+(f.note||'').replace(/"/g,'&quot;')+'" placeholder="Documents needed, remarks\u2026" data-id="'+id+'" oninput="setFilingNote(this.dataset.id,this.value)" onblur="saveFilingsToSupabase()" onclick="event.stopPropagation()"/>'+
+      '</div>'+
+      '<div class="detail-actions">'+
+        '<button class="da-btn" data-id="'+id+'" onclick="openFilingModal(this.dataset.id);event.stopPropagation()">\u270F\uFE0F Edit</button>'+
+        '<button class="da-btn del" data-id="'+id+'" onclick="deleteFiling(this.dataset.id);event.stopPropagation()">\u{1F5D1} Delete</button>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function toggleFiling(id) { document.getElementById('fc-'+id)?.classList.toggle('open'); }
+function setFilingStatus(id,s) { const f=filingItems.find(x=>x.id===id); if(f){f.fStatus=s;renderFilings();saveFilingsToSupabase();} }
+function setFilingAdv(id,a) { const f=filingItems.find(x=>x.id===id); if(f){f.assignedTo=(f.assignedTo===a?'':a);renderFilings();saveFilingsToSupabase();} }
+function setFilingNote(id,v) { const f=filingItems.find(x=>x.id===id); if(f) f.note=v; }
+function setFilingDeadline(id,v) { const f=filingItems.find(x=>x.id===id); if(f){f.deadline=v;renderFilings();saveFilingsToSupabase();} }
+function deleteFiling(id) { filingItems=filingItems.filter(x=>x.id!==id); renderFilings(); saveFilingsToSupabase(); }
+
+function openFilingModal(id) {
+  filingEditId = id || null;
+  const f = id ? filingItems.find(x=>x.id===id) : null;
+  document.getElementById('filingMTitle').textContent = f ? 'Edit Filing' : 'Add Filing';
+  document.getElementById('ffParties').value = f ? f.parties : '';
+  document.getElementById('ffType').value = f ? f.fType : 'Civil';
+  document.getElementById('ffDeadline').value = f ? (f.deadline||'') : '';
+  document.getElementById('ffStatus').value = f ? f.fStatus : 'draft';
+  document.getElementById('ffNote').value = f ? (f.note||'') : '';
+  const advSel = document.getElementById('ffAdv');
+  advSel.innerHTML = '<option value="">Unassigned</option>' + cols.map(c => '<option value="'+c+'"'+(f&&f.assignedTo===c?' selected':'')+'>'+c+'</option>').join('');
+  document.getElementById('filingOverlay').classList.add('on');
+}
+function closeFilingModal() { document.getElementById('filingOverlay').classList.remove('on'); filingEditId=null; }
+function saveFilingModal() {
+  const parties = document.getElementById('ffParties').value.trim();
+  if(!parties) { alert('Please enter party names.'); return; }
+  const item = {
+    id: filingEditId || (Date.now()+'-'+Math.random().toString(36).substr(2,5)),
+    parties, fType: document.getElementById('ffType').value,
+    assignedTo: document.getElementById('ffAdv').value,
+    deadline: document.getElementById('ffDeadline').value,
+    fStatus: document.getElementById('ffStatus').value,
+    note: document.getElementById('ffNote').value.trim()
+  };
+  if(filingEditId) { const i=filingItems.findIndex(x=>x.id===filingEditId); if(i>=0) filingItems[i]=item; }
+  else filingItems.push(item);
+  renderFilings(); saveFilingsToSupabase(); closeFilingModal();
+}
+
+
 </script>
+<!-- MISC MODAL -->
+<div class="overlay" id="miscOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="miscMTitle">Add Task</span>
+      <button class="modal-close" onclick="closeMiscModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label>Task Title</label><input id="mfTitle" placeholder="Draft reply to notice…"/></div>
+      <div class="field-group"><label>Assigned To</label><select id="mfAdv"><option value="">Unassigned</option></select></div>
+      <div class="field-row">
+        <div class="field-group"><label>Priority</label>
+          <select id="mfPriority"><option value="normal">Normal</option><option value="urgent">Urgent</option></select>
+        </div>
+        <div class="field-group"><label>Status</label>
+          <select id="mfStatus"><option value="pending">Pending</option><option value="progress">In Progress</option><option value="done">Done</option></select>
+        </div>
+      </div>
+      <div class="field-group"><label>Notes</label><textarea id="mfNote" placeholder="Details…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeMiscModal()">Cancel</button>
+      <button class="btn-solid-m" onclick="saveMiscModal()">Save Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- FILING MODAL -->
+<div class="overlay" id="filingOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="filingMTitle">Add Filing</span>
+      <button class="modal-close" onclick="closeFilingModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group"><label>Parties</label><input id="ffParties" placeholder="Sharma Vs State"/></div>
+      <div class="field-row">
+        <div class="field-group"><label>Matter Type</label>
+          <select id="ffType"><option>Civil</option><option>Criminal</option><option>Family</option><option>Revenue</option><option>Labour</option><option>Other</option></select>
+        </div>
+        <div class="field-group"><label>Assigned To</label><select id="ffAdv"><option value="">Unassigned</option></select></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>By / Before Date</label><input type="date" id="ffDeadline"/></div>
+        <div class="field-group"><label>Status</label>
+          <select id="ffStatus"><option value="draft">Draft</option><option value="ready">Ready to File</option><option value="filed">Filed</option><option value="registered">Registered</option></select>
+        </div>
+      </div>
+      <div class="field-group"><label>Notes</label><textarea id="ffNote" placeholder="Details, documents needed…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeFilingModal()">Cancel</button>
+      <button class="btn-solid-m" onclick="saveFilingModal()">Save Filing</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
