@@ -1650,9 +1650,8 @@ const SS = [
   {k:'pending',   l:'Pending'},
   {k:'attended',  l:'Attended'},
   {k:'arguments', l:'For Arguments Later'},
-  {k:'completed', l:'Completed'},
 ];
-const SC  = {pending:'#7a4f10',attended:'#1e4d35',arguments:'#3d1a5c',completed:'#1e4d35'};
+const SC  = {pending:'#7a4f10',attended:'#1e4d35',arguments:'#3d1a5c'};
 const SS2 = {
   pending:  {bg:'#fdf4e3',c:'#7a4f10',b:'#d4a84a'},
   attended: {bg:'#edf5f0',c:'#1e4d35',b:'#a8ccb8'},
@@ -1932,7 +1931,7 @@ function renderHero(){
     <div class="dstat pend"><span class="dstat-n a" id="dn-pending">${cnt.pending}</span><span class="dstat-l">Pending</span></div>
     <div class="dstat att"><span class="dstat-n bl" id="dn-attended">${cnt.attended}</span><span class="dstat-l">Attended</span></div>
     <div class="dstat args"><span class="dstat-n p" id="dn-arguments">${cnt.arguments}</span><span class="dstat-l">Arguments</span></div>
-    <div class="dstat comp"><span class="dstat-n g" id="dn-completed">${cnt.completed}</span><span class="dstat-l">Completed</span></div>
+
     ${urg?`<div class="dstat urg"><span class="dstat-n r" id="dn-urgent">${urg}</span><span class="dstat-l">Urgent</span></div>`:''}`;
   // sub line
   document.getElementById('heroSub').textContent=`${cases.filter(c=>c.assignedTo.length).length} of ${cases.length} cases assigned`;
@@ -2182,7 +2181,7 @@ function buildEODHtml(){
     sn++;
     var bg = sn % 2 === 0 ? '#f7f5f0' : '#ffffff';
     var statusLabel = (SS.find(function(s){ return s.k===c.status; })||{l:c.status}).l;
-    var statusColors = {pending:'#7a4f10',attended:'#1e3d5c',arguments:'#3d1a5c',completed:'#1e4d35'};
+    var statusColors = {pending:'#7a4f10',attended:'#1e3d5c',arguments:'#3d1a5c'};
     var statusCol = statusColors[c.status]||'#333';
     var ts = (c.statusTime && c.status!=='pending') ? '  ' + fmtTime(c.statusTime) : '';
     var urgMark = c.urgent ? '  [URGENT]' : '';
