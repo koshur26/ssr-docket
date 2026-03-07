@@ -488,6 +488,16 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 }
 .done-task { border-left-color: #2d6a4f !important; background: #f0f7f4 !important; }
 
+
+/* stronger overdue red for filings */
+.filing-card.overdue {
+  border-left: 3px solid #c0392b !important;
+  background: #fff5f5 !important;
+}
+.filing-card.overdue .filing-title { color: #c0392b; }
+.filing-card.filed { opacity: .75; border-left-color: #2d6a4f !important; background: #f0f7f4 !important; }
+.filing-card.filed .filing-title { text-decoration: line-through; color: var(--muted); }
+
 </style>
 </head>
 <body>
@@ -1175,6 +1185,15 @@ function saveAndCollapse(id, btn){
   }, 800);
 }
 
+function toggleFiledSection(){
+  const body = document.getElementById('filedBody');
+  const icon = document.getElementById('filedToggleIcon');
+  if(!body) return;
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  if(icon) icon.textContent = isHidden ? '▾' : '▸';
+}
+
 function toggleCompletedSection(){
   const body = document.getElementById('compBody');
   const icon = document.getElementById('compToggleIcon');
@@ -1650,6 +1669,21 @@ function updateActionRow() {
 // ── SUPABASE MISC ─────────────────────────────────────────
 const SB_ALL = 'https://ddqlncebxfuairwsajsp.supabase.co/rest/v1/docket';
 
+async function cleanupFiledFilings(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const cutoff = new Date(today); cutoff.setDate(cutoff.getDate()-10);
+  let changed = false;
+  filingItems = filingItems.filter(f => {
+    if(f.fStatus !== 'filed' || !f.filedOn) return true;
+    const p = f.filedOn.split('-');
+    if(p.length !== 3) return true;
+    const d = new Date(+p[2], +p[1]-1, +p[0]);
+    if(d < cutoff){ changed = true; return false; }
+    return true;
+  });
+  if(changed) await saveFilingsToSupabase();
+}
+
 async function cleanupCompletedMisc(){
   const today = new Date(); today.setHours(0,0,0,0);
   const cutoff = new Date(today); cutoff.setDate(cutoff.getDate()-10);
@@ -1693,6 +1727,7 @@ async function loadFilingsFromSupabase() {
     const res = await fetch(SB_ALL + '?date=eq.__filings__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     const rows = await res.json();
     filingItems = rows.length ? (rows[0].cases || []) : [];
+    await cleanupFiledFilings();
     if(currentTab === 'filings') renderFilings();
   } catch(e) {}
 }
@@ -1853,27 +1888,47 @@ function renderFilings() {
   if(countEl) countEl.textContent = '— ' + filingItems.length + (filingItems.length!==1?' filings':' filing');
   const draft = filingItems.filter(f=>f.fStatus==='draft').length;
   const ready = filingItems.filter(f=>f.fStatus==='ready').length;
-  const filed = filingItems.filter(f=>f.fStatus==='filed'||f.fStatus==='registered').length;
+  const filedCount = filingItems.filter(f=>f.fStatus==='filed').length;
   const overdue = filingItems.filter(f=>isOverdue(f)).length;
   const statsEl = document.getElementById('filingStats');
   if(statsEl) statsEl.innerHTML =
     '<div class="mstat"><span class="mstat-n">'+draft+'</span><span class="mstat-l">Draft</span></div>'+
     '<div class="mstat"><span class="mstat-n">'+ready+'</span><span class="mstat-l">Ready</span></div>'+
-    '<div class="mstat"><span class="mstat-n">'+filed+'</span><span class="mstat-l">Filed</span></div>'+
+    '<div class="mstat"><span class="mstat-n">'+filedCount+'</span><span class="mstat-l">Filed</span></div>'+
     (overdue?'<div class="mstat" style="border-color:#e08080"><span class="mstat-n" style="color:var(--urg)">'+overdue+'</span><span class="mstat-l">Overdue</span></div>':'');
   if(!filingItems.length) {
     wrap.innerHTML = '<div class="empty"><div class="ei">📁</div><h3>No filings yet</h3><p>Add fresh filings using the button below</p></div>';
     return;
   }
-  const sorted = [...filingItems].sort((a,b) => {
-    const aF = a.fStatus==='filed'||a.fStatus==='registered';
-    const bF = b.fStatus==='filed'||b.fStatus==='registered';
-    if(aF&&!bF) return 1; if(bF&&!aF) return -1;
-    if(!a.deadline&&!b.deadline) return 0;
+  const active = filingItems.filter(f => f.fStatus !== 'filed').sort((a,b) => {
+    const aOD = isOverdue(a) ? 0 : 1;
+    const bOD = isOverdue(b) ? 0 : 1;
+    if(aOD !== bOD) return aOD - bOD; // overdue first
+    if(!a.deadline && !b.deadline) return 0;
     if(!a.deadline) return 1; if(!b.deadline) return -1;
-    return new Date(a.deadline)-new Date(b.deadline);
+    return new Date(a.deadline) - new Date(b.deadline);
   });
-  wrap.innerHTML = sorted.map(f => filingCardHtml(f)).join('');
+  const filed = filingItems.filter(f => f.fStatus === 'filed').sort((a,b) => {
+    return (b.filedOn||'') > (a.filedOn||'') ? 1 : -1;
+  });
+  let html = '';
+  if(active.length){
+    html += active.map(f => filingCardHtml(f)).join('');
+  } else {
+    html += '<div class="empty" style="padding:1.5rem 0"><div class="ei">✅</div><h3>All filings done</h3></div>';
+  }
+  if(filed.length){
+    html += '<div class="misc-completed-section" id="filedSection">';
+    html += '<div class="misc-completed-header" onclick="toggleFiledSection()">'+
+      '<span>Filed ('+filed.length+')</span>'+
+      '<span class="misc-comp-toggle" id="filedToggleIcon">▸</span>'+
+    '</div>';
+    html += '<div class="misc-completed-body" id="filedBody" style="display:none">'+
+      filed.map(f => filingCardHtml(f)).join('')+
+    '</div>';
+    html += '</div>';
+  }
+  wrap.innerHTML = html;
 }
 
 function isOverdue(f) {
@@ -1893,10 +1948,10 @@ function deadlineBadge(f) {
 
 function filingCardHtml(f) {
   const id = f.id;
-  const isFiled = f.fStatus==='filed'||f.fStatus==='registered';
+  const isFiled = f.fStatus==='filed';
   const statusLabels = {draft:'Draft', ready:'Ready to File', filed:'Filed', registered:'Registered'};
   const advPill = f.assignedTo ? '<span class="cc-adv-pill">\u{1F464} '+f.assignedTo+'</span>' : '';
-  const stbtns = ['draft','ready','filed','registered'].map(function(s){
+  const stbtns = ['draft','ready','filed'].map(function(s){
     return '<button class="stbtn '+(f.fStatus===s?'on-attended':'')+'" data-id="'+id+'" data-s="'+s+'" onclick="setFilingStatus(this.dataset.id,this.dataset.s);event.stopPropagation()">'+(statusLabels[s]||s)+'</button>';
   }).join('');
   const advbtns = cols.map(function(col){
@@ -1905,7 +1960,8 @@ function filingCardHtml(f) {
   return '<div class="filing-card '+(isOverdue(f)?'overdue':isFiled?'filed':'')+'" id="fc-'+id+'">'+
     '<div class="filing-summary" data-id="'+id+'" onclick="toggleFiling(this.dataset.id)">'+
       '<div class="filing-summary-l">'+
-        '<div class="filing-title">'+f.parties+'</div>'+
+        '<div class="filing-title '+(isFiled?'misc-title-done':'')+'">'+f.parties+'</div>'+
+        (isFiled && f.filedOn ? '<div class="misc-completed-stamp">Filed on '+formatDateFromKey(f.filedOn)+'</div>' : '')+
         '<div class="filing-meta">'+
           '<span class="case-stage-lbl">'+f.fType+'</span>'+
           deadlineBadge(f)+
@@ -1932,7 +1988,19 @@ function filingCardHtml(f) {
   '</div>';
 }
 function toggleFiling(id) { document.getElementById('fc-'+id)?.classList.toggle('open'); }
-function setFilingStatus(id,s) { const f=filingItems.find(x=>x.id===id); if(f){f.fStatus=s;renderFilings();saveFilingsToSupabase();} }
+function setFilingStatus(id,s) {
+  const f=filingItems.find(x=>x.id===id);
+  if(f){
+    f.fStatus=s;
+    if(s==='filed' && !f.filedOn){
+      f.filedOn = getDateKey(0);
+    } else if(s!=='filed'){
+      f.filedOn = null;
+    }
+    renderFilings();
+    saveFilingsToSupabase();
+  }
+}
 function setFilingAdv(id,a) { const f=filingItems.find(x=>x.id===id); if(f){f.assignedTo=(f.assignedTo===a?'':a);renderFilings();saveFilingsToSupabase();} }
 function setFilingNote(id,v) { const f=filingItems.find(x=>x.id===id); if(f) f.note=v; }
 function setFilingDeadline(id,v) { const f=filingItems.find(x=>x.id===id); if(f){f.deadline=v;renderFilings();saveFilingsToSupabase();} }
