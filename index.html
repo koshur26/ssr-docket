@@ -466,6 +466,28 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 }
 .da-btn.da-save:hover { background: #1e4d35; border-color: #1e4d35; }
 
+
+/* ── MISC COMPLETED SECTION ── */
+.misc-completed-section { margin-top: 1.5rem; }
+.misc-completed-header {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  padding: .5rem .25rem; border-top: 1.5px solid var(--line);
+  cursor: pointer; user-select: none;
+}
+.misc-completed-header:hover { color: var(--ink2); }
+.misc-comp-toggle { font-size: .8rem; }
+.misc-completed-body { margin-top: .5rem; }
+.done-task { opacity: .75; }
+.done-task .misc-title { text-decoration: line-through; color: var(--muted); }
+.misc-title-done { text-decoration: line-through; color: var(--muted) !important; }
+.misc-completed-stamp {
+  font-size: .7rem; color: #2d6a4f; font-style: italic;
+  margin-top: .15rem; margin-bottom: .15rem;
+}
+.done-task { border-left-color: #2d6a4f !important; background: #f0f7f4 !important; }
+
 </style>
 </head>
 <body>
@@ -1153,6 +1175,24 @@ function saveAndCollapse(id, btn){
   }, 800);
 }
 
+function toggleCompletedSection(){
+  const body = document.getElementById('compBody');
+  const icon = document.getElementById('compToggleIcon');
+  if(!body) return;
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  if(icon) icon.textContent = isHidden ? '▾' : '▸';
+}
+
+function formatDateFromKey(key){
+  // key is DD-MM-YYYY, return like "7 Mar 2026"
+  if(!key) return '';
+  const p = key.split('-');
+  if(p.length !== 3) return key;
+  const d = new Date(+p[2], +p[1]-1, +p[0]);
+  return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+}
+
 function goToToday(){
   viewOffset = 0;
   importOffset = 0;
@@ -1610,11 +1650,27 @@ function updateActionRow() {
 // ── SUPABASE MISC ─────────────────────────────────────────
 const SB_ALL = 'https://ddqlncebxfuairwsajsp.supabase.co/rest/v1/docket';
 
+async function cleanupCompletedMisc(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const cutoff = new Date(today); cutoff.setDate(cutoff.getDate()-10);
+  let changed = false;
+  miscItems = miscItems.filter(m => {
+    if(m.mStatus !== 'done' || !m.completedOn) return true;
+    const p = m.completedOn.split('-');
+    if(p.length !== 3) return true;
+    const d = new Date(+p[2], +p[1]-1, +p[0]);
+    if(d < cutoff){ changed = true; return false; }
+    return true;
+  });
+  if(changed) await saveMiscToSupabase();
+}
+
 async function loadMiscFromSupabase() {
   try {
     const res = await fetch(SB_ALL + '?date=eq.__misc__', {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     const rows = await res.json();
     miscItems = rows.length ? (rows[0].cases || []) : [];
+    await cleanupCompletedMisc();
     if(currentTab === 'misc') renderMisc();
   } catch(e) {}
 }
@@ -1670,14 +1726,34 @@ function renderMisc() {
     wrap.innerHTML = '<div class="empty"><div class="ei">📋</div><h3>No tasks yet</h3><p>Add miscellaneous work using the button below</p></div>';
     return;
   }
-  const sorted = [...miscItems].sort((a,b) => {
+  const active = miscItems.filter(m => m.mStatus !== 'done').sort((a,b) => {
     if(a.priority==='urgent' && b.priority!=='urgent') return -1;
     if(b.priority==='urgent' && a.priority!=='urgent') return 1;
-    if(a.mStatus==='done' && b.mStatus!=='done') return 1;
-    if(b.mStatus==='done' && a.mStatus!=='done') return -1;
     return 0;
   });
-  wrap.innerHTML = sorted.map(m => miscCardHtml(m)).join('');
+  const completed = miscItems.filter(m => m.mStatus === 'done').sort((a,b) => {
+    // most recently completed first
+    return (b.completedOn||'') > (a.completedOn||'') ? 1 : -1;
+  });
+  let html = '';
+  if(active.length){
+    html += active.map(m => miscCardHtml(m)).join('');
+  } else {
+    html += '<div class="empty" style="padding:1.5rem 0"><div class="ei">✅</div><h3>All tasks completed</h3></div>';
+  }
+  if(completed.length){
+    const compId = 'compSection';
+    html += '<div class="misc-completed-section" id="'+compId+'">';
+    html += '<div class="misc-completed-header" onclick="toggleCompletedSection()">'+
+      '<span>Completed ('+completed.length+')</span>'+
+      '<span class="misc-comp-toggle" id="compToggleIcon">▾</span>'+
+    '</div>';
+    html += '<div class="misc-completed-body" id="compBody">'+
+      completed.map(m => miscCardHtml(m)).join('')+
+    '</div>';
+    html += '</div>';
+  }
+  wrap.innerHTML = html;
 }
 
 function miscCardHtml(m) {
@@ -1698,7 +1774,8 @@ function miscCardHtml(m) {
   return '<div class="misc-card '+(m.priority==='urgent'?'urgent-task':m.mStatus==='done'?'done-task':'')+'" id="mc-'+id+'">'+
     '<div class="misc-summary" data-id="'+id+'" onclick="toggleMisc(this.dataset.id)">'+
       '<div class="misc-summary-l">'+
-        '<div class="misc-title">'+m.title+'</div>'+
+        '<div class="misc-title '+(m.mStatus==='done'?'misc-title-done':'')+'">'+m.title+'</div>'+
+        (m.mStatus==='done' && m.completedOn ? '<div class="misc-completed-stamp">Completed on '+formatDateFromKey(m.completedOn)+'</div>' : '')+
         '<div class="misc-meta">'+
           '<span class="misc-badge '+(statusMap[m.mStatus]||'mb-pending')+'">'+(statusLabel[m.mStatus]||'Pending')+'</span>'+
           (m.priority==='urgent'?'<span class="misc-badge mb-urgent">Urgent</span>':'')+
@@ -1722,7 +1799,19 @@ function miscCardHtml(m) {
   '</div>';
 }
 function toggleMisc(id) { document.getElementById('mc-'+id)?.classList.toggle('open'); }
-function setMiscStatus(id,s) { const m=miscItems.find(x=>x.id===id); if(m){m.mStatus=s;renderMisc();saveMiscToSupabase();} }
+function setMiscStatus(id,s) {
+  const m=miscItems.find(x=>x.id===id);
+  if(m){
+    m.mStatus=s;
+    if(s==='done' && !m.completedOn){
+      m.completedOn = getDateKey(0); // today's date DD-MM-YYYY
+    } else if(s!=='done'){
+      m.completedOn = null;
+    }
+    renderMisc();
+    saveMiscToSupabase();
+  }
+}
 function setMiscAdv(id,a) { const m=miscItems.find(x=>x.id===id); if(m){m.assignedTo=(m.assignedTo===a?'':a);renderMisc();saveMiscToSupabase();} }
 function setMiscNote(id,v) { const m=miscItems.find(x=>x.id===id); if(m) m.note=v; }
 function setMiscPriority(id,p) { const m=miscItems.find(x=>x.id===id); if(m){m.priority=p;renderMisc();saveMiscToSupabase();} }
