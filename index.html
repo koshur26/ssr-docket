@@ -754,7 +754,7 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
     <div class="eod-modal-hdr">
       <span class="eod-modal-title">End-of-Day Report</span>
       <div style="display:flex;gap:.5rem">
-        <button class="btn-ghost" onclick="printEOD()">🖨 Print</button>
+        <button class="btn-ghost" onclick="printEOD()">⬇ Download PDF</button>
         <button class="mc" onclick="document.getElementById('eodOverlay').classList.remove('on')">Close</button>
       </div>
     </div>
@@ -1662,10 +1662,20 @@ function buildEODHtml(){
 
 function printEOD(){
   var html = buildEODHtml();
+  // Build filename: "07-Mar-2026 EoD - SSR & Associates"
+  var viewedDate = new Date();
+  viewedDate.setDate(viewedDate.getDate() + viewOffset);
+  var day = String(viewedDate.getDate()).padStart(2,'0');
+  var mon = viewedDate.toLocaleDateString('en-IN',{month:'short'});
+  var yr  = viewedDate.getFullYear();
+  var fname = day+'-'+mon+'-'+yr+' EoD Report - SSR & Associates';
   var w = window.open('','_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EOD Report</title><style>@page{size:A4 portrait;margin:14mm 12mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Georgia,serif;font-size:10pt;color:#1a1814;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{border-collapse:collapse}tr{page-break-inside:avoid}</style></head><body>'+html+'</body></html>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+fname+'</title><style>@page{size:A4 portrait;margin:14mm 12mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Georgia,serif;font-size:10pt;color:#1a1814;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{border-collapse:collapse}tr{page-break-inside:avoid}</style></head><body>'+html+'</body></html>');
   w.document.close();
-  w.onload = function(){ w.focus(); w.print(); };
+  w.onload = function(){
+    w.focus();
+    w.print();
+  };
 }
 
 document.addEventListener('DOMContentLoaded',function(){document.getElementById('eodOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');});});
