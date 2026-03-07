@@ -1746,9 +1746,9 @@ function renderMisc() {
     html += '<div class="misc-completed-section" id="'+compId+'">';
     html += '<div class="misc-completed-header" onclick="toggleCompletedSection()">'+
       '<span>Completed ('+completed.length+')</span>'+
-      '<span class="misc-comp-toggle" id="compToggleIcon">▾</span>'+
+      '<span class="misc-comp-toggle" id="compToggleIcon">▸</span>'+
     '</div>';
-    html += '<div class="misc-completed-body" id="compBody">'+
+    html += '<div class="misc-completed-body" id="compBody" style="display:none">'+
       completed.map(m => miscCardHtml(m)).join('')+
     '</div>';
     html += '</div>';
