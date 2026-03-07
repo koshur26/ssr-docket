@@ -518,6 +518,33 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 }
 .btn-secondary:hover { border-color: var(--ink2); color: var(--ink); }
 
+
+/* ── NATURE PILLS ── */
+.nature-pills { display:flex; align-items:center; gap:.3rem; }
+.nature-label { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-right:.2rem; }
+.nature-pill {
+  font-size:.72rem; font-weight:500; padding:.2rem .55rem;
+  border-radius: 20px; border: 1.5px solid var(--line);
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all .15s;
+  font-family: 'Jost', sans-serif;
+}
+.nature-pill:hover { border-color: var(--ink2); color: var(--ink); }
+.nature-pill.on-nature { border-color: #2d6a4f; background: #eaf3ee; color: #2d6a4f; font-weight: 600; }
+.nature-pill[data-n="imp"].on-nature { border-color: #b8860b; background: #fdf8ec; color: #b8860b; }
+.nature-pill[data-n="very-imp"].on-nature { border-color: #c0392b; background: #fdf0ee; color: #c0392b; }
+
+/* ── NATURE BADGE (collapsed card) ── */
+.nature-badge {
+  display: inline-block;
+  font-size: .6rem; font-weight: 700;
+  letter-spacing: .05em; text-transform: uppercase;
+  padding: .1rem .35rem; border-radius: 3px;
+  vertical-align: middle; margin-left: .2rem;
+}
+.nb-imp { background: #fdf8ec; color: #b8860b; border: 1px solid #e8d5a0; }
+.nb-very-imp { background: #fdf0ee; color: #c0392b; border: 1px solid #f0bdb8; }
+
 </style>
 </head>
 <body>
@@ -962,7 +989,7 @@ function doImport(){
   const ek=new Set(cases.map(c=>caseKey(c)));let added=0;
   lines.forEach(line=>{
     const p=line.split('|').map(x=>x.trim());
-    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,_ts:0,statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''};
+    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:0,statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''};
     const k=caseKey(nc);if(!ek.has(k)){cases.push(nc);ek.add(k);added++;}
   });
   document.getElementById('pasteArea').value='';
@@ -1423,6 +1450,12 @@ function cardHtml(c){
     '<div class="detail-actions">'+
     '<button class="da-btn da-save" id="saveBtn-'+c.id+'" data-id="'+c.id+'" onclick="saveAndCollapse(this.dataset.id,this);event.stopPropagation()">💾 Save</button>'+
     '<div class="da-right">'+
+    '<div class="nature-pills">'+
+      '<span class="nature-label">Nature:</span>'+
+      '<button class="nature-pill '+((!c.nature||c.nature==='normal')?'on-nature':'')+'" data-id="'+c.id+'" data-n="normal" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Normal</button>'+
+      '<button class="nature-pill '+(c.nature==='imp'?'on-nature':'')+'" data-id="'+c.id+'" data-n="imp" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Imp</button>'+
+      '<button class="nature-pill '+(c.nature==='very-imp'?'on-nature':'')+'" data-id="'+c.id+'" data-n="very-imp" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Very Imp</button>'+
+    '</div>'+
     '<button class="da-btn urg '+(c.urgent?'urg-on':'')+'" data-id="'+c.id+'" onclick="toggleUrg(this.dataset.id);event.stopPropagation()">🚨 '+(c.urgent?'Remove urgent':'Mark urgent')+'</button>'+
     '<button class="da-btn" data-id="'+c.id+'" onclick="openEdit(this.dataset.id);event.stopPropagation()">✏️ Edit</button>'+
     '<button class="da-btn del" data-id="'+c.id+'" onclick="reqDel(this.dataset.id);event.stopPropagation()">🗑 Delete</button>'+
@@ -1435,6 +1468,7 @@ function cardHtml(c){
         <div class="case-meta">
           ${c.stage?`<span class="case-stage-lbl">${c.stage}</span>`:''}
           ${c.serialNo?`<span class="serial-badge">${c.serialType||'Civil'} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
+          ${c.nature==='very-imp'?'<span class="nature-badge nb-very-imp">Very Imp</span>':c.nature==='imp'?'<span class="nature-badge nb-imp">Imp</span>':''}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
           ${c.assignedTo&&c.assignedTo.length?`<span class="cc-adv-pill">👤 ${c.assignedTo.join(', ')}</span>`:''}
           ${c.note?`<span class="cc-note-pill">📝 ${c.note.length>60?c.note.substring(0,60)+'…':c.note}</span>`:''}
@@ -1501,6 +1535,26 @@ function toggleA(id,n){
 }
 function setNote(id,v){const c=cases.find(x=>x.id===id);if(c){c.note=v;c._ts=Date.now();}}
 function setSerialNo(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialNo=v;c._ts=Date.now();}}
+function setNature(id,v){
+  const cas = cases.find(x=>x.id===id);
+  if(cas){
+    cas.nature = v;
+    cas._ts = Date.now();
+    queueSave();
+    // Update nature pills in-place
+    document.querySelectorAll('.nature-pill[data-id="'+id+'"]').forEach(function(btn){
+      btn.classList.toggle('on-nature', btn.dataset.n === v);
+    });
+    // Update badge on collapsed card
+    const badge = document.querySelector('.card[data-id="'+id+'"] .nature-badge');
+    if(badge){
+      if(v==='very-imp'){ badge.textContent='Very Imp'; badge.style.display='inline'; badge.className='nature-badge nb-very-imp'; }
+      else if(v==='imp'){ badge.textContent='Imp'; badge.style.display='inline'; badge.className='nature-badge nb-imp'; }
+      else { badge.style.display='none'; }
+    }
+  }
+}
+
 function setSerialType(id,v){
   const c=cases.find(x=>x.id===id);
   if(c){
@@ -1559,7 +1613,7 @@ function saveModal(){
     const c=cases.find(x=>x.id===editId);
     if(c){c.courtName=ct||c.courtName;c.caseNum=document.getElementById('fCaseNum').value.trim();c.parties=p||c.parties;c.stage=document.getElementById('fStage').value.trim();c.dateStr=document.getElementById('fDate').value.trim();c.note=document.getElementById('fNote').value.trim();c._ts=Date.now();}
   } else {
-    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,_ts:Date.now(),statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''});
+    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:Date.now(),statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''});
   }
   render();saveToSupabase();closeModal();
 }
@@ -1568,6 +1622,81 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('miscOverlay').addEventListener('click',function(e){if(e.target===this)closeMiscModal();});
   document.getElementById('filingOverlay').addEventListener('click',function(e){if(e.target===this)closeFilingModal();});
 });
+
+function openCauseList(){
+  var w = window.open('','_blank');
+  var viewedDate = new Date();
+  viewedDate.setDate(viewedDate.getDate() + viewOffset);
+  var day = String(viewedDate.getDate()).padStart(2,'0');
+  var mon = viewedDate.toLocaleDateString('en-IN',{month:'short'});
+  var yr  = viewedDate.getFullYear();
+  var fname = day+'-'+mon+'-'+yr+' Cause List - SSR & Associates';
+  var html = buildCauseListHtml(viewedDate);
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+fname+'</title><style>@page{size:A4 portrait;margin:14mm 12mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Georgia,serif;font-size:10pt;color:#1a1814;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{border-collapse:collapse}tr{page-break-inside:avoid}</style></head><body>'+html+'</body></html>');
+  w.document.close();
+  w.onload = function(){ w.focus(); w.print(); };
+}
+
+function buildCauseListHtml(viewedDate){
+  var dateStr = viewedDate.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var natureLabel = function(n){ return n==='very-imp'?'Very Imp':n==='imp'?'Imp':'Normal'; };
+  var natureColor = function(n){ return n==='very-imp'?'#c0392b':n==='imp'?'#b8860b':'#555'; };
+
+  // Sort: very-imp first, imp second, normal last; then by court
+  var sorted = [...cases].sort(function(a,b){
+    var order = {'very-imp':0,'imp':1,'normal':2};
+    var ao = order[a.nature]!==undefined?order[a.nature]:2;
+    var bo = order[b.nature]!==undefined?order[b.nature]:2;
+    if(ao!==bo) return ao-bo;
+    return (a.courtName||'').localeCompare(b.courtName||'');
+  });
+
+  var sn = 0;
+  var rows = '';
+  sorted.forEach(function(cas){
+    sn++;
+    var bg = sn%2===0?'#f7f5f0':'#ffffff';
+    rows += '<tr style="background:'+bg+'">';
+    rows += '<td style="text-align:center;color:#aaa;font-size:8pt;border:1pt solid #e0ddd6;padding:5pt 4pt">'+sn+'</td>';
+    rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.courtName+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;color:#333">'+(cas.caseNum||'—')+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(cas.stage||'')+'</span></td>';
+    rows += '<td style="font-weight:bold;font-size:10pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.parties+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.assignedTo.join(', ')||'—')+'</td>';
+    rows += '<td style="font-size:8.5pt;font-weight:600;color:'+natureColor(cas.nature)+';border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center">'+natureLabel(cas.nature)+'</td>';
+    rows += '<td style="font-size:8pt;color:#555;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.note||'—')+'</td>';
+    rows += '</tr>';
+  });
+
+  var html = '';
+  html += '<div style="font-family:Georgia,serif;font-size:10pt;color:#1a1814;line-height:1.5">';
+  html += '<table style="width:100%;border-collapse:collapse;margin-bottom:10pt">';
+  html += '<tr><td style="vertical-align:top">';
+  html += '<div style="font-size:17pt;font-weight:bold;letter-spacing:.02em">Syed Sibtain Razvi &amp; Associates</div>';
+  html += '<div style="font-size:8pt;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-top:2pt">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; Srinagar, J&amp;K</div>';
+  html += '</td><td style="text-align:right;vertical-align:top">';
+  html += '<div style="font-size:12pt;font-weight:bold">Cause List</div>';
+  html += '<div style="font-size:8.5pt;color:#555;margin-top:2pt">'+dateStr+'</div>';
+  html += '</td></tr></table>';
+  html += '<div style="border-top:2pt solid #1a1814;margin-bottom:10pt"></div>';
+  html += '<div style="font-size:9pt;color:#444;margin-bottom:12pt"><strong>Total Cases:</strong> <strong>'+cases.length+'</strong></div>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:14pt">';
+  html += '<thead><tr style="background:#f0ede6">';
+  html += '<th style="padding:5pt 4pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;width:4%;text-align:center">#</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:15%">Court</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:13%">Case No.</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:25%">Parties</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:12%">Advocate</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:center;width:9%">Nature</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:22%">Note</th>';
+  html += '</tr></thead>';
+  html += '<tbody>'+rows+'</tbody></table>';
+  html += '<div style="border-top:1pt solid #ccc;padding-top:7pt;font-size:8pt;color:#999;display:flex;justify-content:space-between">';
+  html += '<span>Syed Sibtain Razvi &amp; Associates &nbsp;&middot;&nbsp; For Internal Use Only</span>';
+  html += '<span>'+dateStr+'</span>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
 
 function openEOD(){
   document.getElementById('eodContent').innerHTML = buildEODHtml();
@@ -1706,6 +1835,7 @@ function updateActionRow() {
   if(currentTab === 'docket') {
     ba.style.display = cases.length > 0 ? 'block' : 'none';
     row.innerHTML = '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
+      '<button class="fa-btn" onclick="openCauseList()">📋 Cause List</button>' +
       '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
       '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
   } else if(currentTab === 'misc') {
