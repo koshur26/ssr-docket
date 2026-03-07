@@ -533,16 +533,16 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .nature-select-imp { border-color: #b8860b !important; color: #b8860b !important; background: #fdf8ec !important; font-weight: 600 !important; }
 .nature-select-very-imp { border-color: #c0392b !important; color: #c0392b !important; background: #fdf0ee !important; font-weight: 600 !important; }
 
-/* ── NATURE BADGE (collapsed card) ── */
-.nature-badge {
+/* ── NATURE DOT (collapsed card) ── */
+.nature-dot {
   display: inline-block;
-  font-size: .6rem; font-weight: 700;
-  letter-spacing: .05em; text-transform: uppercase;
-  padding: .1rem .35rem; border-radius: 3px;
-  vertical-align: middle; margin-left: .2rem;
+  font-size: .55rem;
+  vertical-align: middle;
+  margin-left: .25rem;
+  line-height: 1;
 }
-.nb-imp { background: #fdf8ec; color: #b8860b; border: 1px solid #e8d5a0; }
-.nb-very-imp { background: #fdf0ee; color: #c0392b; border: 1px solid #f0bdb8; }
+.nd-imp { color: #b8860b; }
+.nd-very-imp { color: #c0392b; }
 
 </style>
 </head>
@@ -1464,9 +1464,9 @@ function cardHtml(c){
       <div class="case-summary-l">
         <div class="case-parties">${c.parties}${c.urgent?' <span class="urg-lbl">🚨</span>':''}</div>
         <div class="case-meta">
-          ${c.stage?`<span class="case-stage-lbl">${c.stage}</span>`:''}
+
           ${c.serialNo?`<span class="serial-badge">${c.serialType||'Civil'} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
-          ${c.nature==='very-imp'?'<span class="nature-badge nb-very-imp">Very Imp</span>':c.nature==='imp'?'<span class="nature-badge nb-imp">Imp</span>':''}
+          ${c.nature==='very-imp'?'<span class="nature-dot nd-very-imp">●</span>':c.nature==='imp'?'<span class="nature-dot nd-imp">●</span>':''}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
           ${c.assignedTo&&c.assignedTo.length?`<span class="cc-adv-pill">👤 ${c.assignedTo.join(', ')}</span>`:''}
           ${c.note?`<span class="cc-note-pill">📝 ${c.note.length>60?c.note.substring(0,60)+'…':c.note}</span>`:''}
@@ -1542,12 +1542,12 @@ function setNature(id,v){
     // Update select styling in-place
     var sel = document.querySelector('.nature-select[data-id="'+id+'"]');
     if(sel){ sel.className = 'nature-select nature-select-'+v; sel.value = v; }
-    // Update badge on collapsed card
-    const badge = document.querySelector('.card[data-id="'+id+'"] .nature-badge');
-    if(badge){
-      if(v==='very-imp'){ badge.textContent='Very Imp'; badge.style.display='inline'; badge.className='nature-badge nb-very-imp'; }
-      else if(v==='imp'){ badge.textContent='Imp'; badge.style.display='inline'; badge.className='nature-badge nb-imp'; }
-      else { badge.style.display='none'; }
+    // Update dot on collapsed card
+    const dot = document.querySelector('.card[data-id="'+id+'"] .nature-dot');
+    if(dot){
+      if(v==='very-imp'){ dot.style.display='inline'; dot.className='nature-dot nd-very-imp'; }
+      else if(v==='imp'){ dot.style.display='inline'; dot.className='nature-dot nd-imp'; }
+      else { dot.style.display='none'; }
     }
   }
 }
