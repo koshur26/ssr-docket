@@ -453,8 +453,19 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .hero-today-btn:hover { background: var(--amber); color: #fff; }
 
 /* detail-actions save button */
-.detail-actions { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
-.da-right { display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
+.detail-actions {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.5rem; flex-wrap:wrap; padding-top:.4rem;
+  border-top:1px solid var(--faint2);
+}
+.da-left { display:flex; align-items:center; gap:.4rem; flex: 0 0 auto; }
+.da-right { display:flex; align-items:center; gap:.3rem; flex: 0 0 auto; flex-wrap:nowrap; }
+@media (max-width: 520px) {
+  .detail-actions { justify-content:space-between; }
+  .da-btn { font-size:.71rem; padding:.22rem .45rem; }
+  .da-btn.da-save { padding:.28rem .75rem; }
+  .nature-select { font-size:.71rem; padding:.2rem .35rem; }
+}
 .da-btn.da-save {
   font-weight: 600;
   color: var(--paper);
@@ -1447,16 +1458,18 @@ function cardHtml(c){
   const tsLine=c.statusTime&&c.status!=='pending'?`<div class="status-ts">⏱ ${SS.find(s=>s.k===c.status)?.l||c.status} at ${fmtTime(c.statusTime)}</div>`:`<div class="status-ts"></div>`;
   const detailActions = isReadOnly ? '' :
     '<div class="detail-actions">'+
-    '<button class="da-btn da-save" id="saveBtn-'+c.id+'" data-id="'+c.id+'" onclick="saveAndCollapse(this.dataset.id,this);event.stopPropagation()">💾 Save</button>'+
+    '<div class="da-left">'+
+      '<button class="da-btn da-save" id="saveBtn-'+c.id+'" data-id="'+c.id+'" onclick="saveAndCollapse(this.dataset.id,this);event.stopPropagation()">💾 Save</button>'+
+      '<select class="nature-select nature-select-'+( c.nature||'normal')+'" data-id="'+c.id+'" onchange="setNature(this.dataset.id,this.value);event.stopPropagation()" onclick="event.stopPropagation()">'+
+        '<option value="normal" '+((!c.nature||c.nature==='normal')?'selected':'')+'>Normal</option>'+
+        '<option value="imp" '+(c.nature==='imp'?'selected':'')+'>Imp</option>'+
+        '<option value="very-imp" '+(c.nature==='very-imp'?'selected':'')+'>Very Imp</option>'+
+      '</select>'+
+    '</div>'+
     '<div class="da-right">'+
-    '<select class="nature-select nature-select-'+( c.nature||'normal')+'" data-id="'+c.id+'" onchange="setNature(this.dataset.id,this.value);event.stopPropagation()" onclick="event.stopPropagation()">'+
-      '<option value="normal" '+((!c.nature||c.nature==='normal')?'selected':'')+'>Normal</option>'+
-      '<option value="imp" '+(c.nature==='imp'?'selected':'')+'>Imp</option>'+
-      '<option value="very-imp" '+(c.nature==='very-imp'?'selected':'')+'>Very Imp</option>'+
-    '</select>'+
-    '<button class="da-btn urg '+(c.urgent?'urg-on':'')+'" data-id="'+c.id+'" onclick="toggleUrg(this.dataset.id);event.stopPropagation()">🚨 '+(c.urgent?'Remove urgent':'Mark urgent')+'</button>'+
-    '<button class="da-btn" data-id="'+c.id+'" onclick="openEdit(this.dataset.id);event.stopPropagation()">✏️ Edit</button>'+
-    '<button class="da-btn del" data-id="'+c.id+'" onclick="reqDel(this.dataset.id);event.stopPropagation()">🗑 Delete</button>'+
+      '<button class="da-btn urg '+(c.urgent?'urg-on':'')+'" data-id="'+c.id+'" onclick="toggleUrg(this.dataset.id);event.stopPropagation()">🚨 '+(c.urgent?'Remove urgent':'Mark urgent')+'</button>'+
+      '<button class="da-btn" data-id="'+c.id+'" onclick="openEdit(this.dataset.id);event.stopPropagation()">✏️ Edit</button>'+
+      '<button class="da-btn del" data-id="'+c.id+'" onclick="reqDel(this.dataset.id);event.stopPropagation()">🗑 Delete</button>'+
     '</div>'+
     '</div>';
   return `<div class="case-card ${c.urgent?'urgent':''} ${c.status==='completed'?'completed':''} ${c.status==='attended'?'attended':''}" id="cc-${c.id}">
