@@ -451,6 +451,21 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   white-space: nowrap; font-family: 'Jost', sans-serif;
 }
 .hero-today-btn:hover { background: var(--amber); color: #fff; }
+
+/* detail-actions save button */
+.detail-actions { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+.da-right { display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
+.da-btn.da-save {
+  font-weight: 600;
+  color: var(--paper);
+  background: #2d6a4f;
+  border-color: #2d6a4f;
+  padding: .3rem .9rem;
+  letter-spacing: .03em;
+  transition: all .2s;
+}
+.da-btn.da-save:hover { background: #1e4d35; border-color: #1e4d35; }
+
 </style>
 </head>
 <body>
@@ -1115,6 +1130,29 @@ function showDatePicker(){
   dp.addEventListener('blur', function(){ setTimeout(hide,200); }, {once:true});
 }
 
+function saveAndCollapse(id, btn){
+  // Flash "Saved ✓" then collapse
+  const origText = btn.innerHTML;
+  btn.innerHTML = '✓ Saved';
+  btn.style.background = 'var(--green,#2d6a4f)';
+  btn.style.color = '#fff';
+  btn.style.borderColor = 'var(--green,#2d6a4f)';
+  saveToSupabase();
+  setTimeout(function(){
+    // Collapse the card
+    const card = document.querySelector('.card[data-id="'+id+'"]');
+    if(card){
+      card.classList.remove('open');
+      const det = card.querySelector('.card-detail');
+      if(det) det.style.display='none';
+    }
+    btn.innerHTML = origText;
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 800);
+}
+
 function goToToday(){
   viewOffset = 0;
   importOffset = 0;
@@ -1283,9 +1321,12 @@ function cardHtml(c){
   const tsLine=c.statusTime&&c.status!=='pending'?`<div class="status-ts">⏱ ${SS.find(s=>s.k===c.status)?.l||c.status} at ${fmtTime(c.statusTime)}</div>`:`<div class="status-ts"></div>`;
   const detailActions = isReadOnly ? '' :
     '<div class="detail-actions">'+
+    '<button class="da-btn da-save" id="saveBtn-'+c.id+'" data-id="'+c.id+'" onclick="saveAndCollapse(this.dataset.id,this);event.stopPropagation()">💾 Save</button>'+
+    '<div class="da-right">'+
     '<button class="da-btn urg '+(c.urgent?'urg-on':'')+'" data-id="'+c.id+'" onclick="toggleUrg(this.dataset.id);event.stopPropagation()">🚨 '+(c.urgent?'Remove urgent':'Mark urgent')+'</button>'+
     '<button class="da-btn" data-id="'+c.id+'" onclick="openEdit(this.dataset.id);event.stopPropagation()">✏️ Edit</button>'+
     '<button class="da-btn del" data-id="'+c.id+'" onclick="reqDel(this.dataset.id);event.stopPropagation()">🗑 Delete</button>'+
+    '</div>'+
     '</div>';
   return `<div class="case-card ${c.urgent?'urgent':''} ${c.status==='completed'?'completed':''} ${c.status==='attended'?'attended':''}" id="cc-${c.id}">
     <div class="case-summary" onclick="toggleCard('${c.id}')">
@@ -1360,7 +1401,17 @@ function toggleA(id,n){
 }
 function setNote(id,v){const c=cases.find(x=>x.id===id);if(c){c.note=v;c._ts=Date.now();}}
 function setSerialNo(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialNo=v;c._ts=Date.now();}}
-function setSerialType(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialType=v;c._ts=Date.now();render();queueSave();}}
+function setSerialType(id,v){
+  const c=cases.find(x=>x.id===id);
+  if(c){
+    c.serialType=v;
+    c._ts=Date.now();
+    queueSave();
+    // Update the serial badge pill in-place without re-rendering
+    const badge=document.querySelector('.card[data-id="'+id+'"] .serial-badge');
+    if(badge) badge.textContent=(v||'Civil')+' '+(c.serialNo||'')+(c.serialTotal?'/'+c.serialTotal:'');
+  }
+}
 function setSerialTotal(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialTotal=v;c._ts=Date.now();}}
 function toggleUrg(id){
   const c=cases.find(x=>x.id===id);if(!c)return;
