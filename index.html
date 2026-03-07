@@ -519,20 +519,19 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .btn-secondary:hover { border-color: var(--ink2); color: var(--ink); }
 
 
-/* ── NATURE PILLS ── */
-.nature-pills { display:flex; align-items:center; gap:.3rem; }
-.nature-label { font-size:.68rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-right:.2rem; }
-.nature-pill {
-  font-size:.72rem; font-weight:500; padding:.2rem .55rem;
-  border-radius: 20px; border: 1.5px solid var(--line);
-  background: transparent; color: var(--muted);
-  cursor: pointer; transition: all .15s;
-  font-family: 'Jost', sans-serif;
+/* ── NATURE SELECT ── */
+.nature-select {
+  font-size: .72rem; font-weight: 500;
+  padding: .22rem .5rem;
+  border-radius: 6px; border: 1.5px solid var(--line);
+  background: var(--paper); color: var(--muted);
+  cursor: pointer; font-family: 'Jost', sans-serif;
+  outline: none; transition: all .15s;
+  appearance: auto;
 }
-.nature-pill:hover { border-color: var(--ink2); color: var(--ink); }
-.nature-pill.on-nature { border-color: #2d6a4f; background: #eaf3ee; color: #2d6a4f; font-weight: 600; }
-.nature-pill[data-n="imp"].on-nature { border-color: #b8860b; background: #fdf8ec; color: #b8860b; }
-.nature-pill[data-n="very-imp"].on-nature { border-color: #c0392b; background: #fdf0ee; color: #c0392b; }
+.nature-select:hover, .nature-select:focus { border-color: var(--ink2); color: var(--ink); }
+.nature-select-imp { border-color: #b8860b !important; color: #b8860b !important; background: #fdf8ec !important; font-weight: 600 !important; }
+.nature-select-very-imp { border-color: #c0392b !important; color: #c0392b !important; background: #fdf0ee !important; font-weight: 600 !important; }
 
 /* ── NATURE BADGE (collapsed card) ── */
 .nature-badge {
@@ -1450,12 +1449,11 @@ function cardHtml(c){
     '<div class="detail-actions">'+
     '<button class="da-btn da-save" id="saveBtn-'+c.id+'" data-id="'+c.id+'" onclick="saveAndCollapse(this.dataset.id,this);event.stopPropagation()">💾 Save</button>'+
     '<div class="da-right">'+
-    '<div class="nature-pills">'+
-      '<span class="nature-label">Nature:</span>'+
-      '<button class="nature-pill '+((!c.nature||c.nature==='normal')?'on-nature':'')+'" data-id="'+c.id+'" data-n="normal" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Normal</button>'+
-      '<button class="nature-pill '+(c.nature==='imp'?'on-nature':'')+'" data-id="'+c.id+'" data-n="imp" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Imp</button>'+
-      '<button class="nature-pill '+(c.nature==='very-imp'?'on-nature':'')+'" data-id="'+c.id+'" data-n="very-imp" onclick="setNature(this.dataset.id,this.dataset.n);event.stopPropagation()">Very Imp</button>'+
-    '</div>'+
+    '<select class="nature-select nature-select-'+( c.nature||'normal')+'" data-id="'+c.id+'" onchange="setNature(this.dataset.id,this.value);event.stopPropagation()" onclick="event.stopPropagation()">'+
+      '<option value="normal" '+((!c.nature||c.nature==='normal')?'selected':'')+'>Normal</option>'+
+      '<option value="imp" '+(c.nature==='imp'?'selected':'')+'>Imp</option>'+
+      '<option value="very-imp" '+(c.nature==='very-imp'?'selected':'')+'>Very Imp</option>'+
+    '</select>'+
     '<button class="da-btn urg '+(c.urgent?'urg-on':'')+'" data-id="'+c.id+'" onclick="toggleUrg(this.dataset.id);event.stopPropagation()">🚨 '+(c.urgent?'Remove urgent':'Mark urgent')+'</button>'+
     '<button class="da-btn" data-id="'+c.id+'" onclick="openEdit(this.dataset.id);event.stopPropagation()">✏️ Edit</button>'+
     '<button class="da-btn del" data-id="'+c.id+'" onclick="reqDel(this.dataset.id);event.stopPropagation()">🗑 Delete</button>'+
@@ -1541,10 +1539,9 @@ function setNature(id,v){
     cas.nature = v;
     cas._ts = Date.now();
     queueSave();
-    // Update nature pills in-place
-    document.querySelectorAll('.nature-pill[data-id="'+id+'"]').forEach(function(btn){
-      btn.classList.toggle('on-nature', btn.dataset.n === v);
-    });
+    // Update select styling in-place
+    var sel = document.querySelector('.nature-select[data-id="'+id+'"]');
+    if(sel){ sel.className = 'nature-select nature-select-'+v; sel.value = v; }
     // Update badge on collapsed card
     const badge = document.querySelector('.card[data-id="'+id+'"] .nature-badge');
     if(badge){
@@ -1658,8 +1655,9 @@ function buildCauseListHtml(viewedDate){
     var bg = sn%2===0?'#f7f5f0':'#ffffff';
     rows += '<tr style="background:'+bg+'">';
     rows += '<td style="text-align:center;color:#aaa;font-size:8pt;border:1pt solid #e0ddd6;padding:5pt 4pt">'+sn+'</td>';
-    rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.courtName+'</td>';
-    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;color:#333">'+(cas.caseNum||'—')+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(cas.stage||'')+'</span></td>';
+    rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.courtName+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(cas.stage||'')+'</span></td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;color:#555">'+(cas.serialType||'Civil')+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;font-weight:600">'+(cas.serialNo||'—')+'</td>';
     rows += '<td style="font-weight:bold;font-size:10pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.parties+'</td>';
     rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.assignedTo.join(', ')||'—')+'</td>';
     rows += '<td style="font-size:8.5pt;font-weight:600;color:'+natureColor(cas.nature)+';border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center">'+natureLabel(cas.nature)+'</td>';
@@ -1681,13 +1679,14 @@ function buildCauseListHtml(viewedDate){
   html += '<div style="font-size:9pt;color:#444;margin-bottom:12pt"><strong>Total Cases:</strong> <strong>'+cases.length+'</strong></div>';
   html += '<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:14pt">';
   html += '<thead><tr style="background:#f0ede6">';
-  html += '<th style="padding:5pt 4pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;width:4%;text-align:center">#</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:15%">Court</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:13%">Case No.</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:25%">Parties</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:12%">Advocate</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:center;width:9%">Nature</th>';
-  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:22%">Note</th>';
+  html += '<th style="padding:5pt 4pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;width:3%;text-align:center">#</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:14%">Court</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:center;width:7%">Type</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:center;width:6%">S. No.</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:24%">Parties</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:11%">Advocate</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:center;width:8%">Nature</th>';
+  html += '<th style="padding:5pt 7pt;border:1pt solid #ccc;font-size:7.5pt;text-transform:uppercase;letter-spacing:.06em;color:#666;text-align:left;width:27%">Note</th>';
   html += '</tr></thead>';
   html += '<tbody>'+rows+'</tbody></table>';
   html += '<div style="border-top:1pt solid #ccc;padding-top:7pt;font-size:8pt;color:#999;display:flex;justify-content:space-between">';
