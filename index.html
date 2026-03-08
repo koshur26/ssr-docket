@@ -999,7 +999,7 @@ function doImport(){
   const ek=new Set(cases.map(c=>caseKey(c)));let added=0;
   lines.forEach(line=>{
     const p=line.split('|').map(x=>x.trim());
-    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:0,statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''};
+    const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:0,statusTime:null,serialNo:'',serialType:'',serialTotal:''};
     const k=caseKey(nc);if(!ek.has(k)){cases.push(nc);ek.add(k);added++;}
   });
   document.getElementById('pasteArea').value='';
@@ -1478,7 +1478,7 @@ function cardHtml(c){
         <div class="case-parties">${c.parties}${c.urgent?' <span class="urg-lbl">🚨</span>':''}</div>
         <div class="case-meta">
 
-          ${c.serialNo?`<span class="serial-badge">${c.serialType||'Civil'} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
+          ${c.serialNo?`<span class="serial-badge">${c.serialType?c.serialType+' ':''} ${c.serialNo}${c.serialTotal?'/'+c.serialTotal:''}</span>`:`<span class="serial-add" onclick="toggleCard('${c.id}');event.stopPropagation()">+ S.No.</span>`}
           ${c.nature==='very-imp'?'<span class="nature-dot nd-very-imp">●</span>':c.nature==='imp'?'<span class="nature-dot nd-imp">●</span>':''}
           ${c.dateStr?`<span class="case-num-lbl">📅 ${c.dateStr}</span>`:''}
           ${c.assignedTo&&c.assignedTo.length?`<span class="cc-adv-pill">👤 ${c.assignedTo.join(', ')}</span>`:''}
@@ -1510,8 +1510,9 @@ function cardHtml(c){
           <div class="serial-field">
             <label>Type</label>
             <select onchange="setSerialType('${c.id}',this.value)" onclick="event.stopPropagation()">
-              <option ${(!c.serialType||c.serialType==='Civil')?'selected':''}>Civil</option>
-              <option ${c.serialType==='Criminal'?'selected':''}>Criminal</option>
+              <option value="" ${(!c.serialType)?'selected':''} disabled>— Type —</option>
+              <option value="Civil" ${c.serialType==='Civil'?'selected':''}>Civil</option>
+              <option value="Criminal" ${c.serialType==='Criminal'?'selected':''}>Criminal</option>
             </select>
           </div>
           <div class="serial-field">
@@ -1623,7 +1624,7 @@ function saveModal(){
     const c=cases.find(x=>x.id===editId);
     if(c){c.courtName=ct||c.courtName;c.caseNum=document.getElementById('fCaseNum').value.trim();c.parties=p||c.parties;c.stage=document.getElementById('fStage').value.trim();c.dateStr=document.getElementById('fDate').value.trim();c.note=document.getElementById('fNote').value.trim();c._ts=Date.now();}
   } else {
-    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:Date.now(),statusTime:null,serialNo:'',serialType:'Civil',serialTotal:''});
+    cases.push({id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:ct||'Unknown Court',caseNum:document.getElementById('fCaseNum').value.trim(),parties:p||'—',stage:document.getElementById('fStage').value.trim(),dateStr:document.getElementById('fDate').value.trim(),status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',_ts:Date.now(),statusTime:null,serialNo:'',serialType:'',serialTotal:''});
   }
   render();saveToSupabase();closeModal();
 }
@@ -1669,7 +1670,7 @@ function buildCauseListHtml(viewedDate){
     rows += '<tr style="background:'+bg+'">';
     rows += '<td style="text-align:center;color:#aaa;font-size:8pt;border:1pt solid #e0ddd6;padding:5pt 4pt">'+sn+'</td>';
     rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.courtName+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(cas.stage||'')+'</span></td>';
-    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;color:#555">'+(cas.serialType||'Civil')+'</td>';
+    rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;color:#555">'+(cas.serialType||'—')+'</td>';
     rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;font-weight:600">'+(cas.serialNo||'—')+'</td>';
     rows += '<td style="font-weight:bold;font-size:10pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.parties+'</td>';
     rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.assignedTo.join(', ')||'—')+'</td>';
