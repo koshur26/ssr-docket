@@ -510,6 +510,12 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .filing-card.filed .filing-title { text-decoration: line-through; color: var(--muted); }
 
 
+.btn-confirm {
+  padding: .5rem 1.25rem; border-radius: 8px; border: none;
+  background: #2d6a4f; color: #fff; font-size: .9rem;
+  font-weight: 600; cursor: pointer; transition: background .15s;
+}
+.btn-confirm:hover { background: #235840; }
 .btn-danger {
   background: #c0392b; color: #fff;
   border: none; border-radius: 6px;
@@ -1256,11 +1262,21 @@ function saveAndCollapse(id, btn){
   }, 800);
 }
 
-function showDeleteConfirm(msg, onConfirm){
+function showDeleteConfirm(msg, onConfirm, opts){
   const overlay = document.getElementById('deleteConfirmOverlay');
   const msgEl = document.getElementById('deleteConfirmMsg');
   if(!overlay || !msgEl) return;
   msgEl.textContent = msg;
+  // Apply custom icon, title, button label if provided
+  const icon = opts&&opts.icon ? opts.icon : '🗑';
+  const title = opts&&opts.title ? opts.title : 'Delete?';
+  const btnLabel = opts&&opts.btn ? opts.btn : 'Delete';
+  const btnClass = opts&&opts.btnClass ? opts.btnClass : 'btn-danger';
+  document.getElementById('deleteConfirmIcon').textContent = icon;
+  document.getElementById('deleteConfirmTitle').textContent = title;
+  const confirmBtn = document.getElementById('deleteConfirmBtn');
+  confirmBtn.textContent = btnLabel;
+  confirmBtn.className = btnClass;
   overlay.classList.add('on');
   // Store callback
   overlay._onConfirm = onConfirm;
@@ -1605,10 +1621,10 @@ function setSerialType(id,v){
 }
 function setSerialTotal(id,v){const c=cases.find(x=>x.id===id);if(c){c.serialTotal=v;c._ts=Date.now();}}
 function toggleDontAttend(id){
-  showDeleteConfirm("Mark this case as Don’t Attend? It will move to the bottom of the docket.",function(){
+  showDeleteConfirm("Mark this case as Don’t Attend? It will be moved to the bottom of the docket.",function(){
     const cas=cases.find(x=>x.id===id);
     if(cas){cas.dontAttend=true;cas._ts=Date.now();render();queueSave();}
-  });
+  },{icon:'🚫',title:"Don’t Attend?",btn:"Confirm",btnClass:"btn-confirm"});
 }
 function restoreDontAttend(id){
   const cas=cases.find(x=>x.id===id);
@@ -2352,12 +2368,12 @@ function saveFilingModal() {
 <!-- Delete Confirm Modal -->
 <div class="overlay" id="deleteConfirmOverlay" onclick="if(event.target===this)closeDeleteConfirm()">
   <div class="modal" style="max-width:380px;text-align:center;padding:2rem">
-    <div style="font-size:2rem;margin-bottom:.75rem">🗑</div>
-    <div style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;font-family:'Cormorant Garamond',serif">Delete?</div>
+    <div id="deleteConfirmIcon" style="font-size:2rem;margin-bottom:.75rem">🗑</div>
+    <div id="deleteConfirmTitle" style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;font-family:'Cormorant Garamond',serif">Delete?</div>
     <p id="deleteConfirmMsg" style="font-size:.88rem;color:var(--muted);margin-bottom:1.75rem;line-height:1.5"></p>
     <div style="display:flex;gap:.75rem;justify-content:center">
       <button class="btn-secondary" onclick="closeDeleteConfirm()">Cancel</button>
-      <button class="btn-danger" onclick="confirmDelete()">Delete</button>
+      <button id="deleteConfirmBtn" class="btn-danger" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
