@@ -12,6 +12,36 @@
 </head>
 <body>
 
+<!-- ── LOGIN OVERLAY ── -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo-wrap">
+      <img src="SSR_Logo_Circle.png" alt="SSR Logo" class="login-logo">
+    </div>
+    <div class="login-firm">Syed Sibtain Razvi <span class="login-amp">&amp;</span> Associates</div>
+    <div class="login-sub">Advocates &amp; Legal Consultants &nbsp;&middot;&nbsp; Srinagar, J&amp;K</div>
+    <div class="login-divider"></div>
+    <div class="login-title">Daily Docket</div>
+    <div class="login-hint">Enter your access password to continue</div>
+    <div class="login-field-wrap">
+      <input
+        type="password"
+        id="loginPwInput"
+        class="login-input"
+        placeholder="Password"
+        onkeydown="if(event.key==='Enter')submitLogin()"
+        autocomplete="current-password"
+      >
+      <button class="login-btn" onclick="submitLogin()">
+        <span id="loginBtnText">Enter</span>
+      </button>
+    </div>
+    <div id="loginError" class="login-error"></div>
+    <div class="login-footer">Internal Use Only</div>
+  </div>
+</div>
+
+
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-main">

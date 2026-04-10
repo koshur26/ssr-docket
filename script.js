@@ -1,3 +1,47 @@
+// ── LOGIN ──────────────────────────────────────────────────
+const LOGIN_KEY = 'ssr_docket_auth';
+const LOGIN_PW  = 'SSR';
+
+function checkLogin() {
+  const overlay = document.getElementById('loginOverlay');
+  if (!overlay) return;
+  if (localStorage.getItem(LOGIN_KEY) === 'granted') {
+    overlay.classList.add('hidden');
+  }
+  // else: overlay stays visible, blocking the app
+}
+
+function submitLogin() {
+  const input = document.getElementById('loginPwInput');
+  const errEl = document.getElementById('loginError');
+  const pw    = input.value.trim();
+
+  if (pw === LOGIN_PW) {
+    localStorage.setItem(LOGIN_KEY, 'granted');
+    const overlay = document.getElementById('loginOverlay');
+    overlay.style.transition = 'opacity .4s ease';
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.classList.add('hidden'), 420);
+    errEl.textContent = '';
+  } else {
+    errEl.textContent = 'Incorrect password. Please try again.';
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(() => input.classList.remove('error'), 400);
+    input.focus();
+  }
+}
+
+// Run check immediately
+(function() {
+  // Wait for DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkLogin);
+  } else {
+    checkLogin();
+  }
+})();
+
 
 
 const SB_URL  = 'https://ddqlncebxfuairwsajsp.supabase.co';
