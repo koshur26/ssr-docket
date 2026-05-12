@@ -1577,4 +1577,3 @@ function saveFilingModal() {
     }
   }, {passive: true});
 })();
-
