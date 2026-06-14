@@ -898,8 +898,10 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('filingOverlay').addEventListener('click',function(e){if(e.target===this)closeFilingModal();});
 });
 
-function openCauseList(){
-  var w = window.open('','_blank');
+async function openCauseList(){
+  // Save any pending changes first, then reload latest data before generating
+  await saveToSupabase();
+  await loadFromSupabase(true);
   var viewedDate = new Date();
   viewedDate.setDate(viewedDate.getDate() + viewOffset);
   var day = String(viewedDate.getDate()).padStart(2,'0');
@@ -907,6 +909,7 @@ function openCauseList(){
   var yr  = viewedDate.getFullYear();
   var fname = day+'-'+mon+'-'+yr+' Cause List - SSR & Associates';
   var html = buildCauseListHtml(viewedDate);
+  var w = window.open('','_blank');
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+fname+'</title><style>@page{size:A4 portrait;margin:14mm 12mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:Georgia,serif;font-size:10pt;color:#1a1814;-webkit-print-color-adjust:exact;print-color-adjust:exact}table{border-collapse:collapse}tr{page-break-inside:avoid}</style></head><body>'+html+'</body></html>');
   w.document.close();
   w.onload = function(){ w.focus(); w.print(); };
@@ -993,7 +996,9 @@ function buildCauseListHtml(viewedDate){
   return html;
 }
 
-function openEOD(){
+async function openEOD(){
+  await saveToSupabase();
+  await loadFromSupabase(true);
   document.getElementById('eodContent').innerHTML = buildEODHtml();
   document.getElementById('eodOverlay').classList.add('on');
 }
@@ -1577,3 +1582,4 @@ function saveFilingModal() {
     }
   }, {passive: true});
 })();
+
