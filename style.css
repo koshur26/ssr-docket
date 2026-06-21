@@ -72,10 +72,36 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   top: 62px;
   left: 0; right: 0;
   z-index: 90;
-  display: flex; gap: .35rem;
+  display: flex; gap: .35rem; align-items: center;
   overflow-x: auto; scrollbar-width: none;
   transition: transform .3s ease, opacity .3s ease;
   will-change: transform;
+}
+.tab-search-btn {
+  flex-shrink: 0; height: 36px;
+  padding: 0 .9rem;
+  border-radius: 20px;
+  font-size: .78rem; font-weight: 500;
+  font-family: 'Jost', sans-serif;
+  letter-spacing: .03em;
+  cursor: pointer; transition: all .18s;
+  border: 1.5px dashed var(--gold-dim);
+  background: transparent; color: var(--forest);
+  margin-left: auto;
+  display: flex; align-items: center; gap: .4rem;
+}
+.tab-search-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+.search-icon-svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--forest); }
+.tab-search-btn:hover .search-icon-svg { color: var(--gold); }
+.search-btn-label { white-space: nowrap; }
+
+@media (max-width: 480px) {
+  .tab-search-btn {
+    width: 36px; height: 36px;
+    padding: 0; border-radius: 50%;
+    justify-content: center;
+  }
+  .search-btn-label { display: none; }
 }
 .tabs-nav.hidden {
   transform: translateY(-200%);
@@ -741,4 +767,162 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 @media (max-width: 420px) {
   .login-card { padding: 2rem 1.25rem 1.5rem; }
   .login-logo { width: 76px; height: 76px; }
+}
+
+/* ── SEARCH ── */
+.search-modal { max-width: 600px; width: 100%; background: var(--cream); border: 1px solid var(--gold-dim); }
+.search-modal .modal-hdr {
+  background: var(--forest);
+  border-radius: var(--r) var(--r) 0 0;
+}
+.search-modal .modal-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--gold-lt);
+}
+.search-modal .modal-close {
+  color: var(--gold-lt);
+}
+.search-input {
+  width: 100%;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  padding: .75rem 1rem;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s;
+}
+.search-input:focus { border-color: var(--forest); }
+.search-status {
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .04em;
+  color: var(--muted);
+  margin: .7rem 0 .5rem;
+  min-height: 1rem;
+}
+.search-results {
+  max-height: 50vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.search-result-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .75rem .9rem;
+  background: var(--paper);
+  cursor: pointer;
+  transition: all .15s;
+}
+.search-result-card:hover { border-color: var(--gold); box-shadow: var(--shadow-sm); background: var(--parchment); }
+.search-result-parties {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+.search-result-court {
+  font-family: 'Cinzel', serif;
+  font-size: .62rem;
+  color: var(--forest);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: .4rem;
+  opacity: .75;
+}
+.search-result-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-result-count {
+  font-family: 'Jost', sans-serif;
+  font-size: .72rem;
+  color: var(--forest);
+  font-weight: 600;
+}
+.search-result-arrow {
+  font-family: 'Cinzel', serif;
+  font-size: .65rem;
+  letter-spacing: .04em;
+  color: var(--gold);
+  font-weight: 500;
+}
+.search-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--muted);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-style: italic;
+}
+
+/* ── HISTORY VIEW ── */
+.search-history-back {
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .05em;
+  color: var(--forest);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+.search-history-back:hover { text-decoration: underline; color: var(--gold); }
+.search-history-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+.search-history-court {
+  font-family: 'Cinzel', serif;
+  font-size: .65rem;
+  color: var(--forest);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 1.2rem;
+  opacity: .75;
+}
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+.history-entry {
+  border-left: 2.5px solid var(--gold);
+  padding: .6rem .9rem;
+  background: var(--parchment);
+  border-radius: 0 8px 8px 0;
+}
+.history-entry-date {
+  font-family: 'Cinzel', serif;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .03em;
+  color: var(--forest);
+  margin-bottom: .2rem;
+}
+.history-entry-status {
+  display: inline-block;
+  font-family: 'Jost', sans-serif;
+  font-size: .65rem;
+  font-weight: 600;
+  padding: .12rem .55rem;
+  border-radius: 10px;
+  margin-left: .5rem;
+}
+.history-entry-note {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: .95rem;
+  color: var(--ink2);
+  margin-top: .35rem;
 }
