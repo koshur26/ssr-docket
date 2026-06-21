@@ -1,3 +1,165 @@
+// ── SEARCH ────────────────────────────────────────────────
+let searchAllCases = null;   // cached flattened cases across all days
+let searchDebounceTimer = null;
+let currentHistoryKey = null;
+
+function getCaseSearchKey(c){
+  return ((c.parties||'') + '|' + (c.courtName||'')).toLowerCase().trim();
+}
+
+async function openSearch(){
+  document.getElementById('searchOverlay').classList.add('on');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '';
+  document.getElementById('searchHistory').style.display = 'none';
+  document.getElementById('searchResults').style.display = 'block';
+  document.getElementById('searchInput').style.display = 'block';
+  document.getElementById('searchInput').focus();
+
+  if(searchAllCases === null){
+    document.getElementById('searchStatus').textContent = 'Loading case history…';
+    await fetchAllCasesForSearch();
+  }
+  document.getElementById('searchStatus').textContent = searchAllCases.length + ' cases indexed across last 90 days. Type to search.';
+}
+
+function closeSearch(){
+  document.getElementById('searchOverlay').classList.remove('on');
+}
+
+async function fetchAllCasesForSearch(){
+  try{
+    const res = await fetch(SB_BASE+'?select=date,cases&order=date.desc&limit=90', {
+      headers: {'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
+    });
+    if(!res.ok) throw new Error('Failed to load history');
+    const rows = await res.json();
+    const flat = [];
+    rows.forEach(function(row){
+      (row.cases||[]).forEach(function(c){
+        flat.push(Object.assign({}, c, {_date: row.date}));
+      });
+    });
+    searchAllCases = flat;
+  } catch(e){
+    searchAllCases = [];
+    document.getElementById('searchStatus').textContent = 'Could not load case history: ' + e.message;
+  }
+}
+
+function onSearchInput(){
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(runSearch, 300);
+}
+
+function runSearch(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('searchResults');
+  const statusEl = document.getElementById('searchStatus');
+
+  if(!q){
+    resultsEl.innerHTML = '';
+    statusEl.textContent = (searchAllCases?searchAllCases.length:0) + ' cases indexed across last 90 days. Type to search.';
+    return;
+  }
+
+  const matches = (searchAllCases||[]).filter(function(c){
+    return (c.parties||'').toLowerCase().includes(q) ||
+           (c.caseNum||'').toLowerCase().includes(q);
+  });
+
+  // Group by case key
+  const groups = {};
+  matches.forEach(function(c){
+    const key = getCaseSearchKey(c);
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  });
+
+  const groupKeys = Object.keys(groups);
+  if(groupKeys.length === 0){
+    resultsEl.innerHTML = '<div class="search-empty">No matching cases found.</div>';
+    statusEl.textContent = '0 results';
+    return;
+  }
+
+  // Sort groups by most recent date
+  const parseDate = function(d){
+    const parts = (d||'').split('-');
+    if(parts.length!==3) return 0;
+    return new Date(parts[2], parts[1]-1, parts[0]).getTime();
+  };
+  groupKeys.sort(function(a,b){
+    const aMax = Math.max.apply(null, groups[a].map(function(c){return parseDate(c._date);}));
+    const bMax = Math.max.apply(null, groups[b].map(function(c){return parseDate(c._date);}));
+    return bMax - aMax;
+  });
+
+  statusEl.textContent = groupKeys.length + ' case' + (groupKeys.length>1?'s':'') + ' found';
+
+  resultsEl.innerHTML = groupKeys.map(function(key){
+    const entries = groups[key];
+    const sample = entries[0];
+    const count = entries.length;
+    return '<div class="search-result-card" onclick="showCaseHistory(\''+key.replace(/'/g,"\\'")+'\')">' +
+      '<div class="search-result-parties">'+sample.parties+'</div>' +
+      '<div class="search-result-court">'+(sample.courtName||'Unknown Court')+'</div>' +
+      '<div class="search-result-meta">' +
+        '<span class="search-result-count">Appeared on '+count+' date'+(count>1?'s':'')+'</span>' +
+        '<span class="search-result-arrow">View History →</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function showCaseHistory(key){
+  currentHistoryKey = key;
+  const entries = (searchAllCases||[]).filter(function(c){ return getCaseSearchKey(c) === key; });
+  if(entries.length === 0) return;
+
+  const parseDate = function(d){
+    const parts = (d||'').split('-');
+    if(parts.length!==3) return 0;
+    return new Date(parts[2], parts[1]-1, parts[0]).getTime();
+  };
+  entries.sort(function(a,b){ return parseDate(b._date) - parseDate(a._date); });
+
+  const sample = entries[0];
+  const statusColors = {pending:'#9a7820', attended:'#1a3a2a', arguments:'#6b5a1f'};
+  const statusBg = {pending:'#fdf4e3', attended:'#dceee0', arguments:'#f3ecd8'};
+
+  let html = '<span class="search-history-back" onclick="backToSearchResults()">← Back to results</span>';
+  html += '<div class="search-history-title">'+sample.parties+'</div>';
+  html += '<div class="search-history-court">'+(sample.courtName||'Unknown Court')+'</div>';
+  html += '<div class="history-timeline">';
+  entries.forEach(function(c){
+    const st = c.status || 'pending';
+    const stLabel = st==='attended'?'Attended':st==='arguments'?'For Arguments':'Pending';
+    html += '<div class="history-entry">';
+    html += '<div class="history-entry-date">📅 '+c._date+
+      '<span class="history-entry-status" style="color:'+(statusColors[st]||'#888')+';background:'+(statusBg[st]||'#eee')+'">'+stLabel+'</span>'+
+      '</div>';
+    if(c.note){
+      html += '<div class="history-entry-note">'+c.note+'</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+
+  document.getElementById('searchHistory').innerHTML = html;
+  document.getElementById('searchHistory').style.display = 'block';
+  document.getElementById('searchResults').style.display = 'none';
+  document.getElementById('searchInput').style.display = 'none';
+  document.getElementById('searchStatus').style.display = 'none';
+}
+
+function backToSearchResults(){
+  document.getElementById('searchHistory').style.display = 'none';
+  document.getElementById('searchResults').style.display = 'block';
+  document.getElementById('searchInput').style.display = 'block';
+  document.getElementById('searchStatus').style.display = 'block';
+}
+
 // ── LOGIN ──────────────────────────────────────────────────
 const LOGIN_KEY = 'ssr_docket_auth';
 const LOGIN_PW  = 'SSR';
@@ -1582,4 +1744,3 @@ function saveFilingModal() {
     }
   }, {passive: true});
 })();
-
