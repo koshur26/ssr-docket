@@ -72,37 +72,38 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   top: 62px;
   left: 0; right: 0;
   z-index: 90;
-  display: flex; gap: .35rem; align-items: center;
-  overflow-x: auto; scrollbar-width: none;
+  display: flex; flex-direction: column; gap: .45rem;
   transition: transform .3s ease, opacity .3s ease;
   will-change: transform;
 }
-.tab-search-btn {
-  flex-shrink: 0; height: 36px;
-  padding: 0 .9rem;
-  border-radius: 20px;
-  font-size: .78rem; font-weight: 500;
-  font-family: 'Jost', sans-serif;
-  letter-spacing: .03em;
-  cursor: pointer; transition: all .18s;
-  border: 1.5px dashed var(--gold-dim);
-  background: transparent; color: var(--forest);
-  margin-left: auto;
-  display: flex; align-items: center; gap: .4rem;
+.tabs-row {
+  display: flex; gap: .35rem;
+  overflow-x: auto; scrollbar-width: none;
 }
-.tab-search-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
-.search-icon-svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--forest); }
-.tab-search-btn:hover .search-icon-svg { color: var(--gold); }
-.search-btn-label { white-space: nowrap; }
+.tabs-row::-webkit-scrollbar { display: none; }
+.tabs-row-search {
+  display: none;
+  justify-content: center;
+}
+.search-pill {
+  border-style: dashed !important;
+  border-color: var(--gold-dim) !important;
+  color: var(--forest) !important;
+}
+.search-pill:hover { border-color: var(--gold) !important; background: rgba(201,168,76,0.08); }
 
-@media (max-width: 480px) {
-  .tab-search-btn {
-    width: 36px; height: 36px;
-    padding: 0; border-radius: 50%;
-    justify-content: center;
-  }
-  .search-btn-label { display: none; }
+/* On desktop/tablet: show search inline at end of main tab row */
+@media (min-width: 481px) {
+  .tabs-row { flex: 1; }
+  .tabs-row-search { display: flex; flex-shrink: 0; }
+  .tabs-nav { flex-direction: row; align-items: center; }
 }
+
+/* On mobile: tabs in row 1, search centered in row 2 */
+@media (max-width: 480px) {
+  .tabs-row-search { display: flex; }
+}
+
 .tabs-nav.hidden {
   transform: translateY(-200%);
   opacity: 0;
@@ -613,6 +614,7 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 
 
 
+
 /* ════════════════════════════════════════
    LOGIN OVERLAY
    ════════════════════════════════════════ */
@@ -925,4 +927,16 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   font-size: .95rem;
   color: var(--ink2);
   margin-top: .35rem;
+}
+
+@media (max-width: 480px) {
+  .search-modal { max-width: 100%; }
+  .modal-body { padding: 1rem; gap: .65rem; }
+  .search-input { font-size: .95rem; padding: .65rem .85rem; }
+  .search-result-card { padding: .65rem .75rem; }
+  .search-result-parties { font-size: 1rem; }
+  .search-result-court { font-size: .58rem; }
+  .search-history-title { font-size: 1.2rem; }
+  .history-entry { padding: .5rem .75rem; }
+  .history-entry-note { font-size: .88rem; }
 }
