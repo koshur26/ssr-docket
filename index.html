@@ -74,6 +74,13 @@
   <button class="tab-btn active" onclick="switchTab('docket',this)">⚖️ Today's Docket</button>
   <button class="tab-btn" onclick="switchTab('misc',this)">📋 Misc. Work</button>
   <button class="tab-btn" onclick="switchTab('filings',this)">📁 Fresh Filings</button>
+  <button class="tab-search-btn" onclick="openSearch()" title="Search cases">
+    <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="15.3" y1="15.3" x2="20" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <span class="search-btn-label">Search</span>
+  </button>
 </div>
 
 <!-- DATE NAV (docket only) -->
@@ -301,6 +308,22 @@
     <input class="pw-in" id="pwIn" type="password" placeholder="••••••••" maxlength="10"/>
     <div class="pw-err" id="pwErr"></div>
     <button class="pw-btn" onclick="confirmPw()">Confirm</button>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="overlay" id="searchOverlay">
+  <div class="modal search-modal">
+    <div class="modal-hdr">
+      <span class="modal-title">🔍 Search Cases</span>
+      <button class="modal-close" onclick="closeSearch()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by party name or case number…" oninput="onSearchInput()" autocomplete="off">
+      <div id="searchStatus" class="search-status"></div>
+      <div id="searchResults" class="search-results"></div>
+      <div id="searchHistory" class="search-history" style="display:none"></div>
+    </div>
   </div>
 </div>
 
