@@ -77,12 +77,15 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   will-change: transform;
 }
 .tabs-row {
-  display: flex; gap: .35rem;
+  display: flex; flex-wrap: nowrap; gap: .35rem;
+  width: 100%;
+  min-width: 0;
   overflow-x: auto; scrollbar-width: none;
 }
 .tabs-row::-webkit-scrollbar { display: none; }
 .tabs-row-search {
   display: none;
+  width: 100%;
   justify-content: center;
 }
 .search-pill {
@@ -94,8 +97,8 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 
 /* On desktop/tablet: show search inline at end of main tab row */
 @media (min-width: 481px) {
-  .tabs-row { flex: 1; }
-  .tabs-row-search { display: flex; flex-shrink: 0; }
+  .tabs-row { flex: 1; width: auto; }
+  .tabs-row-search { display: flex; flex-shrink: 0; width: auto; }
   .tabs-nav { flex-direction: row; align-items: center; }
 }
 
