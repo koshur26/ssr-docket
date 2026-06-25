@@ -1079,16 +1079,22 @@ async function openCauseList(){
 
 function buildCauseListHtml(viewedDate){
   var dateStr = viewedDate.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  var natureLabel = function(n){ return n==='very-imp'?'Very Imp':n==='imp'?'Imp':'Normal'; };
-  var natureColor = function(n){ return n==='very-imp'?'#c0392b':n==='imp'?'#b8860b':'#555'; };
+  var natureLabel = function(cas){
+    if(cas.urgent) return '🚨 Urgent';
+    return cas.nature==='very-imp'?'Very Imp':cas.nature==='imp'?'Imp':'Normal';
+  };
+  var natureColor = function(cas){
+    if(cas.urgent) return '#c0392b';
+    return cas.nature==='very-imp'?'#c0392b':cas.nature==='imp'?'#b8860b':'#555';
+  };
 
   // Sort: very-imp first, imp second, normal last; then by court
   var activeCL=cases.filter(function(c){return !c.dontAttend;});
   var daCL=cases.filter(function(c){return c.dontAttend;});
   var sorted=[...activeCL].sort(function(a,b){
     var order = {'very-imp':0,'imp':1,'normal':2};
-    var ao = order[a.nature]!==undefined?order[a.nature]:2;
-    var bo = order[b.nature]!==undefined?order[b.nature]:2;
+    var ao = a.urgent ? -1 : (order[a.nature]!==undefined?order[a.nature]:2);
+    var bo = b.urgent ? -1 : (order[b.nature]!==undefined?order[b.nature]:2);
     if(ao!==bo) return ao-bo;
     return (a.courtName||'').localeCompare(b.courtName||'');
   });
@@ -1097,7 +1103,7 @@ function buildCauseListHtml(viewedDate){
   var rows = '';
   sorted.forEach(function(cas){
     sn++;
-    var bg = sn%2===0?'#f7f5f0':'#ffffff';
+    var bg = cas.urgent ? '#fdf0ee' : (sn%2===0?'#f7f5f0':'#ffffff');
     rows += '<tr style="background:'+bg+'">';
     rows += '<td style="text-align:center;color:#aaa;font-size:8pt;border:1pt solid #e0ddd6;padding:5pt 4pt">'+sn+'</td>';
     rows += '<td style="font-size:9pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.courtName+'<br><span style="font-size:7.5pt;color:#888;text-transform:uppercase;letter-spacing:.04em">'+(cas.stage||'')+'</span></td>';
@@ -1105,7 +1111,7 @@ function buildCauseListHtml(viewedDate){
     rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center;font-weight:600">'+(cas.serialNo||'—')+'</td>';
     rows += '<td style="font-weight:bold;font-size:10pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+cas.parties+'</td>';
     rows += '<td style="font-size:8.5pt;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.assignedTo.join(', ')||'—')+'</td>';
-    rows += '<td style="font-size:8.5pt;font-weight:600;color:'+natureColor(cas.nature)+';border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center">'+natureLabel(cas.nature)+'</td>';
+    rows += '<td style="font-size:8.5pt;font-weight:600;color:'+natureColor(cas)+';border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top;text-align:center">'+natureLabel(cas)+'</td>';
     rows += '<td style="font-size:8pt;color:#555;border:1pt solid #e0ddd6;padding:5pt 7pt;vertical-align:top">'+(cas.note||'—')+'</td>';
     rows += '</tr>';
   });
