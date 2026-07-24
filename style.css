@@ -1002,16 +1002,10 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   letter-spacing: .04em;
   margin-top: .1rem;
 }
-.firm-strip:hover .firm-strip-url {
-  text-decoration: underline;
-}
+.firm-strip:hover .firm-strip-url { text-decoration: underline; }
 
 @media (max-width: 480px) {
-  .firm-strip {
-    margin: 1.5rem .75rem .75rem;
-    padding: .85rem 1rem;
-    gap: .75rem;
-  }
+  .firm-strip { margin: 1.5rem .75rem .75rem; padding: .85rem 1rem; gap: .75rem; }
   .firm-strip-logo { width: 42px; height: 42px; }
   .firm-strip-name { font-size: .82rem; }
 }

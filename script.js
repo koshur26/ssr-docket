@@ -29,7 +29,7 @@ function closeSearch(){
 
 async function fetchAllCasesForSearch(){
   try{
-    const res = await fetch(SB_BASE+'?select=date,cases&order=date.desc&limit=90', {
+    const res = await fetch(SB_BASE+'?select=date,cases&order=date.desc&limit=365', {
       headers: {'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}
     });
     if(!res.ok) throw new Error('Failed to load history');
@@ -756,7 +756,7 @@ async function cleanupOldDates(){
   try{
     const res = await fetch(SB_BASE, {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     const rows = await res.json();
-    const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-90); cutoff.setHours(0,0,0,0);
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-365); cutoff.setHours(0,0,0,0);
     for(const row of rows){
       if(!row.date || row.date.startsWith('__')) continue;
       const p = row.date.split('-');
