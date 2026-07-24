@@ -943,3 +943,75 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .history-entry { padding: .5rem .75rem; }
   .history-entry-note { font-size: .88rem; }
 }
+
+/* ── FIRM SIGNATURE STRIP ── */
+.firm-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 780px;
+  margin: 2rem auto .75rem;
+  padding: 1rem 1.5rem;
+  background: var(--forest);
+  border-radius: 12px;
+  border: 1px solid var(--gold-dim);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+}
+.firm-strip:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+.firm-strip-logo {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(201,168,76,0.4);
+  flex-shrink: 0;
+}
+.firm-strip-text {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.firm-strip-name {
+  font-family: 'Cinzel', serif;
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--gold-lt);
+  letter-spacing: .05em;
+  line-height: 1.2;
+}
+.firm-strip-amp {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--gold);
+}
+.firm-strip-sub {
+  font-family: 'Jost', sans-serif;
+  font-size: .65rem;
+  color: rgba(201,168,76,0.5);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.firm-strip-url {
+  font-family: 'Jost', sans-serif;
+  font-size: .72rem;
+  color: var(--gold);
+  letter-spacing: .04em;
+  margin-top: .1rem;
+}
+.firm-strip:hover .firm-strip-url {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .firm-strip {
+    margin: 1.5rem .75rem .75rem;
+    padding: .85rem 1rem;
+    gap: .75rem;
+  }
+  .firm-strip-logo { width: 42px; height: 42px; }
+  .firm-strip-name { font-size: .82rem; }
+}
