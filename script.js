@@ -20,7 +20,7 @@ async function openSearch(){
     document.getElementById('searchStatus').textContent = 'Loading case history…';
     await fetchAllCasesForSearch();
   }
-  document.getElementById('searchStatus').textContent = searchAllCases.length + ' cases indexed across last 90 days. Type to search.';
+  document.getElementById('searchStatus').textContent = searchAllCases.length + ' cases indexed across last 365 days. Type to search.';
 }
 
 function closeSearch(){
