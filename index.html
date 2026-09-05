@@ -335,6 +335,24 @@
   </div>
 </div>
 
+<!-- NEXT DATE MODAL -->
+<div class="overlay" id="nextDateOverlay" onclick="if(event.target===this)skipNextDate()">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <div class="modal-hdr" style="background:var(--forest)">
+      <span class="modal-title" style="font-family:'Cinzel',serif;color:var(--gold-lt);letter-spacing:.06em">Next Hearing Date</span>
+      <button class="modal-close" style="color:var(--gold-lt)" onclick="skipNextDate()">✕</button>
+    </div>
+    <div class="modal-body" style="gap:.75rem">
+      <p style="font-family:'EB Garamond',Georgia,serif;font-size:1rem;color:var(--muted);font-style:italic">When is this case next listed?</p>
+      <input type="date" id="nextDateInput" class="next-date-input">
+      <div style="display:flex;gap:.75rem;justify-content:center;margin-top:.5rem">
+        <button class="btn-secondary" onclick="skipNextDate()">Skip</button>
+        <button class="btn-confirm" onclick="confirmNextDate()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 
 
