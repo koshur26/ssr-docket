@@ -1009,3 +1009,19 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .firm-strip-logo { width: 42px; height: 42px; }
   .firm-strip-name { font-size: .82rem; }
 }
+
+/* ── NEXT DATE PICKER ── */
+.next-date-input {
+  width: 100%;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  padding: .7rem 1rem;
+  border: 1.5px solid var(--gold-dim);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s;
+  cursor: pointer;
+}
+.next-date-input:focus { border-color: var(--forest); }
