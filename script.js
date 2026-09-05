@@ -955,6 +955,47 @@ function setSt(id,s){
   const c=cases.find(x=>x.id===id);if(!c)return;
   c.status=s;c.statusTime=s!=='pending'?Date.now():null;c._ts=Date.now();
   render();queueSave();
+  if(s==='attended') showNextDatePicker(id);
+}
+
+function showNextDatePicker(id){
+  const overlay = document.getElementById('nextDateOverlay');
+  const input   = document.getElementById('nextDateInput');
+  if(!overlay || !input) return;
+  // Set min date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  input.min = tomorrow.toISOString().split('T')[0];
+  input.value = '';
+  overlay._caseId = id;
+  overlay.classList.add('on');
+  setTimeout(()=>input.focus(), 100);
+}
+
+function confirmNextDate(){
+  const overlay = document.getElementById('nextDateOverlay');
+  const input   = document.getElementById('nextDateInput');
+  const id      = overlay._caseId;
+  if(!id) return;
+  const val = input.value;
+  if(val){
+    const d = new Date(val);
+    const dateLabel = d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const prefix = 'Put Up On: '+dateLabel;
+    const cas = cases.find(x=>x.id===id);
+    if(cas){
+      cas.note = cas.note ? prefix+' | '+cas.note : prefix;
+      cas._ts = Date.now();
+      queueSave();
+      render();
+    }
+  }
+  overlay.classList.remove('on');
+}
+
+function skipNextDate(){
+  const overlay = document.getElementById('nextDateOverlay');
+  if(overlay) overlay.classList.remove('on');
 }
 function toggleA(id,n){
   const c=cases.find(x=>x.id===id);if(!c)return;
