@@ -211,7 +211,7 @@ const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const SB_BASE = `${SB_URL}/rest/v1/docket`;
 const SB_HDR  = {'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'};
 
-const ADVOCATES    = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. Showkat','Adv. Tuyyab','Adv. Rutba','Adv. / Intern 1','Adv. / Intern 2'];
+const ADVOCATES    = ['Adv. Sibtain','Adv. Rizwan','Adv. Tehjud','Adv. Tuyyab','Adv. Rutba','Adv. Sayedain','Adv. Showkat','Adv. / Intern 1','Adv. / Intern 2'];
 const COURT_COLORS = ['cc-0','cc-1','cc-2','cc-3','cc-4','cc-5','cc-6','cc-7'];
 const SS = [
   {k:'pending',   l:'Pending'},
