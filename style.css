@@ -1088,3 +1088,41 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .history-banner { flex-wrap: wrap; gap: .4rem; }
   .history-banner-msg { font-size: .88rem; }
 }
+
+/* ── ACTION BAR DROPDOWNS ── */
+.fa-cl-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.fa-cl-menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  min-width: 200px;
+  z-index: 300;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.fa-cl-menu.open { display: block; }
+.fa-cl-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: .65rem 1rem;
+  font-family: 'Jost', sans-serif;
+  font-size: .82rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .12s;
+  white-space: nowrap;
+}
+.fa-cl-item:hover { background: var(--faint2); }
+.fa-cl-item + .fa-cl-item { border-top: 1px solid var(--faint2); }
