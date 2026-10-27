@@ -86,6 +86,14 @@
 
 <div class="page">
   <div class="sync-bar" id="syncBar"><div class="sdot"></div><span id="syncMsg"></span></div>
+
+  <!-- HISTORY BANNER -->
+  <div id="historyBanner" style="display:none" class="history-banner">
+    <span class="history-banner-icon">🗂</span>
+    <span id="historyBannerMsg" class="history-banner-msg"></span>
+    <button class="history-banner-btn" onclick="importFromHistoryBanner()">Import</button>
+    <button class="history-banner-dismiss" onclick="dismissHistoryBanner()" title="Dismiss">✕</button>
+  </div>
   <div id="dateMismatchBanner"></div>
 
   <!-- ── DOCKET TAB ── -->
@@ -331,6 +339,24 @@
       <div id="searchStatus" class="search-status"></div>
       <div id="searchResults" class="search-results"></div>
       <div id="searchHistory" class="search-history" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="overlay" id="importModalOverlay" onclick="if(event.target===this)closeImportModal()">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-hdr" style="background:var(--forest)">
+      <span class="modal-title" style="font-family:'Cinzel',serif;color:var(--gold-lt);letter-spacing:.06em">Import Cases</span>
+      <button class="modal-close" style="color:var(--gold-lt)" onclick="closeImportModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="import-fmt">
+        <span class="fmt-label">Format</span>
+        <span class="fmt-code">Court &nbsp;|&nbsp; Case No. &nbsp;|&nbsp; Parties &nbsp;|&nbsp; Stage &nbsp;|&nbsp; Date</span>
+      </div>
+      <textarea class="paste-area" id="pasteAreaModal" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 6 Mar 2026" style="min-height:180px"></textarea>
+      <button class="import-btn" onclick="requestImportModal()">Import Cases</button>
     </div>
   </div>
 </div>
