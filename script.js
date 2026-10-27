@@ -264,6 +264,7 @@ function setSaveBtn(state){
   loadMiscFromSupabase();
   cleanupOldDates();
   loadFilingsFromSupabase();
+  checkHistoryBanner();
 })();
 
 async function loadFromSupabase(silent){
@@ -385,6 +386,127 @@ document.addEventListener('DOMContentLoaded',function(){document.getElementById(
 });});
 
 function requestImport(){showPw(()=>doImport(),'Import Cases','Enter the access password to import today\'s cases.');}
+
+// ── HISTORY IMPORT ──
+async function fetchHistoryCasesForToday(){
+  const todayKey = getDateKey(0);
+  try {
+    const res = await fetch(SB_BASE+'?select=date,cases&order=date.desc&limit=365',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    if(!res.ok) return [];
+    const rows = await res.json();
+    const found = [];
+    rows.forEach(function(row){
+      if(!row.cases) return;
+      row.cases.forEach(function(c){
+        if(c.nextDate === todayKey) found.push(c);
+      });
+    });
+    return found;
+  } catch(e){ return []; }
+}
+
+async function checkHistoryBanner(){
+  // Only show on actual today (viewOffset===0)
+  if(viewOffset !== 0) return;
+  const todayKey = getDateKey(0);
+  const dismissKey = 'ssr_banner_dismissed_'+todayKey;
+  if(localStorage.getItem(dismissKey)) return;
+  const historyCases = await fetchHistoryCasesForToday();
+  if(historyCases.length === 0) return;
+  const banner = document.getElementById('historyBanner');
+  const msg    = document.getElementById('historyBannerMsg');
+  if(!banner || !msg) return;
+  banner._historyCases = historyCases;
+  msg.textContent = historyCases.length+' case'+(historyCases.length>1?'s':'')+' from previous hearings are listed for today.';
+  banner.style.display = 'flex';
+}
+
+function dismissHistoryBanner(){
+  const todayKey = getDateKey(0);
+  localStorage.setItem('ssr_banner_dismissed_'+todayKey, '1');
+  const banner = document.getElementById('historyBanner');
+  if(banner) banner.style.display = 'none';
+}
+
+function importFromHistoryBanner(){
+  const banner = document.getElementById('historyBanner');
+  const historyCases = banner ? banner._historyCases : [];
+  if(!historyCases || !historyCases.length) return;
+  showPw(function(){
+    doImportFromHistory(historyCases);
+    dismissHistoryBanner();
+  },'Import from History','Enter the access password to import cases from previous hearings.');
+}
+
+function doImportFromHistory(historyCases){
+  const todayKey = getDateKey(0);
+  // Deduplicate - skip if case with same parties+court already on today's docket
+  const existing = new Set(cases.map(function(c){ return (c.parties+'|'+c.courtName).toLowerCase(); }));
+  let added = 0;
+  historyCases.forEach(function(c){
+    const key = ((c.parties||'')+'|'+(c.courtName||'')).toLowerCase();
+    if(existing.has(key)) return;
+    existing.add(key);
+    cases.push({
+      id: Date.now()+'-'+Math.random().toString(36).slice(2),
+      courtName: c.courtName||'',
+      caseNum:   c.caseNum||'',
+      stage:     c.stage||'',
+      parties:   c.parties||'',
+      dateStr:   todayKey.split('-').reverse().join('-'),
+      assignedTo: c.assignedTo||[],
+      status:    'pending',
+      statusTime: null,
+      note:      '',
+      urgent:    false,
+      nature:    c.nature||'normal',
+      dontAttend:false,
+      serialType:c.serialType||'',
+      serialNo:  c.serialNo||'',
+      serialTotal:c.serialTotal||'',
+      nextDate:  '',
+      _ts:       Date.now()
+    });
+    added++;
+  });
+  if(added > 0){ render(); queueSave(); showSync(added+' case'+(added>1?'s':'')+' imported',''); }
+  else { showSync('No new cases to import (already on docket)',''); }
+}
+
+function openImportModal(){
+  document.getElementById('importModalOverlay').classList.add('on');
+  document.getElementById('pasteAreaModal').value='';
+}
+
+function closeImportModal(){
+  document.getElementById('importModalOverlay').classList.remove('on');
+}
+
+function requestImportModal(){
+  showPw(()=>doImportModal(),'Import Cases','Enter the access password to import cases.');
+}
+
+function doImportModal(){
+  // Move paste content to main paste area and trigger doImport
+  const modalArea = document.getElementById('pasteAreaModal');
+  const mainArea  = document.getElementById('pasteArea');
+  if(mainArea) mainArea.value = modalArea.value;
+  closeImportModal();
+  doImport();
+}
+
+function openImportMenu(e){
+  e.stopPropagation();
+  const m = document.getElementById('importMenu');
+  if(m) m.classList.toggle('open');
+}
+function closeImportMenu(){
+  const m = document.getElementById('importMenu');
+  if(m) m.classList.remove('open');
+}
+document.addEventListener('click', function(){ closeImportMenu(); });
 function doImport(){
   const raw=document.getElementById('pasteArea').value.trim();
   if(!raw){alert('Please paste the case text first.');return;}
@@ -700,6 +822,7 @@ function goToToday(){
   cases = [];
   updateDateNav();
   loadFromSupabase(false);
+  checkHistoryBanner();
 }
 
 function goDate(dir){
@@ -982,9 +1105,15 @@ function confirmNextDate(){
     const d = new Date(val);
     const dateLabel = d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
     const prefix = 'Put Up On: '+dateLabel;
+    // Store as DD-MM-YYYY for reliable date matching
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yyyy = d.getFullYear();
+    const nextDateKey = dd+'-'+mm+'-'+yyyy;
     const cas = cases.find(x=>x.id===id);
     if(cas){
       cas.note = cas.note ? prefix+' | '+cas.note : prefix;
+      cas.nextDate = nextDateKey;
       cas._ts = Date.now();
       queueSave();
       render();
@@ -1368,9 +1497,11 @@ function updateActionRow() {
   if(!row || !ba) return;
   if(currentTab === 'docket') {
     ba.style.display = cases.length > 0 ? 'block' : 'none';
-    row.innerHTML = '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
-      '<button class="fa-btn" onclick="openCauseList()">📋 Cause List</button>' +
+    row.innerHTML =
+      '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
+      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="toggleCLMenu(event)">📋 Cause List ▾</button><div class="fa-cl-menu" id="clMenu"><button class="fa-cl-item" onclick="openCauseList();closeCLMenu()">📋 Regular Cause List</button><button class="fa-cl-item" onclick="openAdvCauseList&&openAdvCauseList();closeCLMenu()">👤 Advocate-wise List</button></div></div>' +
       '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
+      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)">🗂 Import ▾</button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="importFromHistoryBanner();closeImportMenu()">🗂 Import from History</button></div></div>' +
       '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
   } else if(currentTab === 'misc') {
     ba.style.display = 'block';
