@@ -450,24 +450,24 @@ function doImportFromHistory(historyCases){
     if(existing.has(key)) return;
     existing.add(key);
     cases.push({
-      id: Date.now()+'-'+Math.random().toString(36).slice(2),
-      courtName: c.courtName||'',
-      caseNum:   c.caseNum||'',
-      stage:     c.stage||'',
-      parties:   c.parties||'',
-      dateStr:   todayKey.split('-').reverse().join('-'),
-      assignedTo: c.assignedTo||[],
-      status:    'pending',
+      id:         Date.now()+'-'+Math.random().toString(36).slice(2),
+      courtName:  c.courtName||'',
+      caseNum:    c.caseNum||'',
+      stage:      c.stage||'',
+      parties:    c.parties||'',
+      dateStr:    todayKey.split('-').reverse().join('-'),
+      assignedTo: [],
+      status:     'pending',
       statusTime: null,
-      note:      '',
-      urgent:    false,
-      nature:    c.nature||'normal',
-      dontAttend:false,
-      serialType:c.serialType||'',
-      serialNo:  c.serialNo||'',
-      serialTotal:c.serialTotal||'',
-      nextDate:  '',
-      _ts:       Date.now()
+      note:       '',
+      urgent:     false,
+      nature:     'normal',
+      dontAttend: false,
+      serialType: '',
+      serialNo:   '',
+      serialTotal:'',
+      nextDate:   '',
+      _ts:        Date.now()
     });
     added++;
   });
