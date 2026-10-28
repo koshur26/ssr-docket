@@ -1499,7 +1499,7 @@ function updateActionRow() {
     ba.style.display = cases.length > 0 ? 'block' : 'none';
     row.innerHTML =
       '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
-      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="toggleCLMenu(event)">📋 Cause List ▾</button><div class="fa-cl-menu" id="clMenu"><button class="fa-cl-item" onclick="openCauseList();closeCLMenu()">📋 Regular Cause List</button><button class="fa-cl-item" onclick="openAdvCauseList&&openAdvCauseList();closeCLMenu()">👤 Advocate-wise List</button></div></div>' +
+      '<button class="fa-btn" onclick="openCauseList()">📋 Cause List</button>' +
       '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
       '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)">🗂 Import ▾</button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="importFromHistoryBanner();closeImportMenu()">🗂 Import from History</button></div></div>' +
       '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
