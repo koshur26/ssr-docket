@@ -388,91 +388,191 @@ document.addEventListener('DOMContentLoaded',function(){document.getElementById(
 function requestImport(){showPw(()=>doImport(),'Import Cases','Enter the access password to import today\'s cases.');}
 
 // ── HISTORY IMPORT ──
-async function fetchHistoryCasesForToday(){
-  const todayKey = getDateKey(0);
+// ── HISTORY IMPORT ────────────────────────────────────────
+// Two cases are "the same" when court + party names match. Case number and stage
+// change from hearing to hearing, so they are deliberately not used here.
+function looseCaseKey(c){
+  const n = s => (s||'').toLowerCase().replace(/\s+/g,' ').trim();
+  return n(c.courtName)+'|'+n(c.parties);
+}
+
+function plural(n, word){ return n+' '+word+(n===1?'':'s'); }
+
+function showInfo(icon, title, msg){
+  document.getElementById('infoIcon').textContent = icon;
+  document.getElementById('infoTitle').textContent = title;
+  document.getElementById('infoMsg').textContent = msg;
+  document.getElementById('infoOverlay').classList.add('on');
+}
+function closeInfo(){
+  document.getElementById('infoOverlay').classList.remove('on');
+}
+
+// Returns the cases that were "put up" for dateKey, or null if history could not be read.
+async function fetchHistoryCasesForDate(dateKey){
   try {
     const res = await fetch(SB_BASE+'?select=date,cases&order=date.desc&limit=365',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
     });
-    if(!res.ok) return [];
+    if(!res.ok) return null;
     const rows = await res.json();
     const found = [];
     rows.forEach(function(row){
-      if(!row.cases) return;
+      if(!row.date || row.date.startsWith('__') || row.date === dateKey) return;
+      if(!Array.isArray(row.cases)) return;
       row.cases.forEach(function(c){
-        if(c.nextDate === todayKey) found.push(c);
+        if(c && c.nextDate === dateKey && c.status === 'attended') found.push(c);
       });
     });
     return found;
-  } catch(e){ return []; }
+  } catch(e){ return null; }
+}
+
+// Splits history cases into ones to add and ones already present in existingCases.
+function splitHistoryCases(list, existingCases){
+  const onDocket = new Set(existingCases.map(looseCaseKey));
+  const seen = new Set();
+  const fresh = [];
+  let dup = 0, total = 0;
+  list.forEach(function(c){
+    const k = looseCaseKey(c);
+    if(seen.has(k)) return;          // same case repeated inside history itself
+    seen.add(k); total++;
+    if(onDocket.has(k)) dup++; else fresh.push(c);
+  });
+  return {fresh:fresh, dup:dup, total:total};
+}
+
+// Only court, case number, stage and party names carry over. Everything else starts fresh.
+function makeHistoryCase(c, dateKey){
+  return {
+    id: Date.now()+'-'+Math.random().toString(36).substr(2,5),
+    courtName: c.courtName||'Unknown Court',
+    caseNum: c.caseNum||'',
+    stage: c.stage||'',
+    parties: c.parties||'—',
+    dateStr: dateKey,
+    status: 'pending',
+    assignedTo: [],
+    note: '',
+    urgent: false,
+    nature: 'normal',
+    dontAttend: false,
+    serialNo: '', serialType: '', serialTotal: '',
+    nextDate: '',
+    fromHistory: true,
+    statusTime: null,
+    _ts: Date.now()
+  };
 }
 
 async function checkHistoryBanner(){
-  // Only show on actual today (viewOffset===0)
-  if(viewOffset !== 0) return;
-  const todayKey = getDateKey(0);
-  const dismissKey = 'ssr_banner_dismissed_'+todayKey;
-  if(localStorage.getItem(dismissKey)) return;
-  const historyCases = await fetchHistoryCasesForToday();
-  if(historyCases.length === 0) return;
   const banner = document.getElementById('historyBanner');
-  const msg    = document.getElementById('historyBannerMsg');
-  if(!banner || !msg) return;
-  banner._historyCases = historyCases;
-  msg.textContent = historyCases.length+' case'+(historyCases.length>1?'s':'')+' from previous hearings are listed for today.';
+  if(!banner) return;
+  // Banner belongs to the real "today" only
+  if(viewOffset !== 0){ banner.style.display = 'none'; return; }
+  const todayKey = getDateKey(0);
+  if(localStorage.getItem('ssr_banner_dismissed_'+todayKey)){ banner.style.display = 'none'; return; }
+  const list = await fetchHistoryCasesForDate(todayKey);
+  if(list === null || viewOffset !== 0) return;
+  const fresh = splitHistoryCases(list, cases).fresh;
+  if(fresh.length === 0){ banner.style.display = 'none'; return; }
+  document.getElementById('historyBannerMsg').textContent =
+    plural(fresh.length,'case')+' from previous hearings '+(fresh.length===1?'is':'are')+' listed for today.';
   banner.style.display = 'flex';
 }
 
 function dismissHistoryBanner(){
-  const todayKey = getDateKey(0);
-  localStorage.setItem('ssr_banner_dismissed_'+todayKey, '1');
+  localStorage.setItem('ssr_banner_dismissed_'+getDateKey(0), '1');
   const banner = document.getElementById('historyBanner');
   if(banner) banner.style.display = 'none';
 }
 
-function importFromHistoryBanner(){
-  const banner = document.getElementById('historyBanner');
-  const historyCases = banner ? banner._historyCases : [];
-  if(!historyCases || !historyCases.length) return;
-  showPw(function(){
-    doImportFromHistory(historyCases);
-    dismissHistoryBanner();
-  },'Import from History','Enter the access password to import cases from previous hearings.');
+// Entry point for the banner, the Import menu and the empty-day import card.
+// offset = which day to import into (defaults to the day being viewed).
+function requestHistoryImport(offset){
+  const off = (typeof offset === 'number') ? offset : viewOffset;
+  if(off < 0){
+    showInfo('🔒','Past date','Cases cannot be imported into a past date.');
+    return;
+  }
+  const dateKey = getDateKey(off);
+  showPw(function(){ runHistoryImport(off, dateKey); },
+    'Import from History',
+    'Enter the access password to import cases listed for '+formatDateFromKey(dateKey)+'.');
 }
 
-function doImportFromHistory(historyCases){
-  const todayKey = getDateKey(0);
-  // Deduplicate - skip if case with same parties+court already on today's docket
-  const existing = new Set(cases.map(function(c){ return (c.parties+'|'+c.courtName).toLowerCase(); }));
-  let added = 0;
-  historyCases.forEach(function(c){
-    const key = ((c.parties||'')+'|'+(c.courtName||'')).toLowerCase();
-    if(existing.has(key)) return;
-    existing.add(key);
-    cases.push({
-      id:         Date.now()+'-'+Math.random().toString(36).slice(2),
-      courtName:  c.courtName||'',
-      caseNum:    c.caseNum||'',
-      stage:      c.stage||'',
-      parties:    c.parties||'',
-      dateStr:    todayKey.split('-').reverse().join('-'),
-      assignedTo: [],
-      status:     'pending',
-      statusTime: null,
-      note:       '',
-      urgent:     false,
-      nature:     'normal',
-      dontAttend: false,
-      serialType: '',
-      serialNo:   '',
-      serialTotal:'',
-      nextDate:   '',
-      _ts:        Date.now()
-    });
-    added++;
-  });
-  if(added > 0){ render(); queueSave(); showSync(added+' case'+(added>1?'s':'')+' imported',''); }
-  else { showSync('No new cases to import (already on docket)',''); }
+async function runHistoryImport(off, dateKey){
+  const label = formatDateFromKey(dateKey);
+  const local = (off === viewOffset);
+  showSync('Checking history…','loading');
+
+  const list = await fetchHistoryCasesForDate(dateKey);
+  if(list === null){
+    showSync('','');
+    showInfo('⚠️','Could not read history','Please check your connection and try again.');
+    return;
+  }
+  if(local && getDateKey(viewOffset) !== dateKey){
+    showSync('','');
+    showInfo('📅','Date changed','You moved to another date while history was loading. Please try again.');
+    return;
+  }
+
+  // Which cases are already on the target day?
+  let existing = cases, remoteRow = null;
+  if(!local){
+    try {
+      const chk = await fetch(SB_BASE+'?date=eq.'+dateKey,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      const rows = await chk.json();
+      remoteRow = rows.length ? rows[0] : null;
+      existing = remoteRow ? (remoteRow.cases||[]) : [];
+    } catch(e){
+      showSync('','');
+      showInfo('⚠️','Could not read that day','Please check your connection and try again.');
+      return;
+    }
+  }
+
+  const sp = splitHistoryCases(list, existing);
+  if(sp.total === 0){
+    showSync('','');
+    showInfo('🗂','No cases found','No cases in history are listed for '+label+'.');
+    return;
+  }
+  if(sp.fresh.length === 0){
+    showSync('','');
+    showInfo('🗂','Nothing new to import',
+      plural(sp.total,'case')+' listed for '+label+' '+(sp.total===1?'is':'are')+' already on the docket, so '+(sp.total===1?'it was':'they were')+' skipped as '+(sp.total===1?'a duplicate':'duplicates')+'.');
+    if(dateKey === getDateKey(0)) dismissHistoryBanner();
+    return;
+  }
+
+  const newCases = sp.fresh.map(function(c){ return makeHistoryCase(c, dateKey); });
+  if(local){
+    newCases.forEach(function(nc){ cases.push(nc); });
+    render();
+    queueSave();
+    showSync('','');
+  } else {
+    try {
+      const merged = existing.concat(newCases);
+      const res = remoteRow
+        ? await fetch(SB_BASE+'?date=eq.'+dateKey,{method:'PATCH',headers:SB_HDR,body:JSON.stringify({cases:merged})})
+        : await fetch(SB_BASE,{method:'POST',headers:{...SB_HDR,'Prefer':'return=minimal'},body:JSON.stringify({date:dateKey,cases:merged})});
+      if(!res.ok) throw new Error(await res.text());
+      showSync('','');
+    } catch(e){
+      showSync('','');
+      showInfo('⚠️','Import failed','Could not save the cases: '+e.message);
+      return;
+    }
+  }
+
+  let msg = plural(newCases.length,'case')+' imported from history for '+label+'.';
+  if(sp.dup) msg += ' '+plural(sp.dup,'case')+' skipped as '+(sp.dup===1?'a duplicate':'duplicates')+' (already on the docket).';
+  showInfo('✅','Imported from history', msg);
+  if(dateKey === getDateKey(0)) dismissHistoryBanner();
 }
 
 function openImportModal(){
@@ -513,10 +613,11 @@ function doImport(){
   const lines=raw.split('\n').map(l=>l.trim()).filter(l=>l&&l.includes('|'));
   if(!lines.length){alert('No valid cases found.');return;}
   const ek=new Set(cases.map(c=>caseKey(c)));let added=0;
+  const histKeys=importOffset===viewOffset?new Set(cases.filter(c=>c.fromHistory).map(looseCaseKey)):new Set();
   lines.forEach(line=>{
     const p=line.split('|').map(x=>x.trim());
     const nc={id:Date.now()+'-'+Math.random().toString(36).substr(2,5),courtName:p[0]||'Unknown Court',caseNum:p[1]||'',parties:p[2]||'—',stage:p[3]||'',dateStr:p[4]||'',status:'pending',assignedTo:[],note:'',urgent:false,nature:'normal',dontAttend:false,_ts:0,statusTime:null,serialNo:'',serialType:'',serialTotal:''};
-    const k=caseKey(nc);if(!ek.has(k)){cases.push(nc);ek.add(k);added++;}
+    const k=caseKey(nc);if(!ek.has(k)&&!histKeys.has(looseCaseKey(nc))){cases.push(nc);ek.add(k);added++;}
   });
   document.getElementById('pasteArea').value='';
 
@@ -715,6 +816,8 @@ function updateDateNav(){
   if(db) db.textContent = formatDateFull(viewOffset);
   const ro = document.getElementById('readonlyBadge');
   if(ro) ro.style.display = isReadOnly ? 'block' : 'none';
+  const hb = document.getElementById('historyBanner');
+  if(hb && viewOffset !== 0) hb.style.display = 'none';
   const ey = document.getElementById('docketEyebrow');
   if(ey){
     const dTitle = viewOffset===0?"Today's Docket":viewOffset===1?"Tomorrow's Docket":viewOffset===-1?"Yesterday's Docket":formatDateFull(viewOffset);
@@ -821,8 +924,7 @@ function goToToday(){
   importOffset = 0;
   cases = [];
   updateDateNav();
-  loadFromSupabase(false);
-  checkHistoryBanner();
+  loadFromSupabase(false).then(function(){ if(viewOffset===0) checkHistoryBanner(); });
 }
 
 function goDate(dir){
@@ -832,7 +934,7 @@ function goDate(dir){
   if(viewOffset >= 0 && viewOffset <= 2) importOffset = viewOffset;
   else importOffset = 0;
   updateDateNav();
-  loadFromSupabase(false);
+  loadFromSupabase(false).then(function(){ if(viewOffset===0) checkHistoryBanner(); });
 }
 
 function goToDate(val){
@@ -846,7 +948,7 @@ function goToDate(val){
   if(viewOffset >= 0 && viewOffset <= 2) importOffset = viewOffset;
   else importOffset = 0;
   updateDateNav();
-  loadFromSupabase(false);
+  loadFromSupabase(false).then(function(){ if(viewOffset===0) checkHistoryBanner(); });
 }
 
 function buildImportDateRow(){
@@ -1501,7 +1603,7 @@ function updateActionRow() {
       '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
       '<button class="fa-btn" onclick="openCauseList()">📋 Cause List</button>' +
       '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
-      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)">🗂 Import ▾</button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="importFromHistoryBanner();closeImportMenu()">🗂 Import from History</button></div></div>' +
+      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)">🗂 Import ▾</button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="requestHistoryImport();closeImportMenu()">🗂 Import from History</button></div></div>' +
       '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
   } else if(currentTab === 'misc') {
     ba.style.display = 'block';
