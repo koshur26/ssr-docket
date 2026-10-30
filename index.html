@@ -91,7 +91,7 @@
   <div id="historyBanner" style="display:none" class="history-banner">
     <span class="history-banner-icon">🗂</span>
     <span id="historyBannerMsg" class="history-banner-msg"></span>
-    <button class="history-banner-btn" onclick="importFromHistoryBanner()">Import</button>
+    <button class="history-banner-btn" onclick="requestHistoryImport()">Import</button>
     <button class="history-banner-dismiss" onclick="dismissHistoryBanner()" title="Dismiss">✕</button>
   </div>
   <div id="dateMismatchBanner"></div>
@@ -159,6 +159,7 @@
         <div class="import-date-row" id="importDateRow"></div>
         <textarea class="paste-area" id="pasteArea" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 6 Mar 2026"></textarea>
         <button class="import-btn" onclick="requestImport()">Import Cases</button>
+        <button class="import-btn import-btn-alt" onclick="requestHistoryImport(importOffset)">🗂 Import from History</button>
       </div>
     </div>
 
@@ -358,6 +359,16 @@
       <textarea class="paste-area" id="pasteAreaModal" placeholder="City Magistrate Srinagar | CS/123/2024 | Sharma Vs State | Arguments | 6 Mar 2026" style="min-height:180px"></textarea>
       <button class="import-btn" onclick="requestImportModal()">Import Cases</button>
     </div>
+  </div>
+</div>
+
+<!-- INFO / RESULT MODAL -->
+<div class="overlay" id="infoOverlay" onclick="if(event.target===this)closeInfo()">
+  <div class="modal" style="max-width:380px;text-align:center;padding:2rem">
+    <div id="infoIcon" style="font-size:2rem;margin-bottom:.75rem">🗂</div>
+    <div id="infoTitle" style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem;font-family:'Cormorant Garamond',serif"></div>
+    <p id="infoMsg" style="font-size:.9rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.5"></p>
+    <button class="btn-confirm" onclick="closeInfo()">OK</button>
   </div>
 </div>
 
