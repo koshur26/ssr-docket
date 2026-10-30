@@ -1126,3 +1126,11 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 }
 .fa-cl-item:hover { background: var(--faint2); }
 .fa-cl-item + .fa-cl-item { border-top: 1px solid var(--faint2); }
+
+/* ── IMPORT CARD: HISTORY BUTTON ── */
+.import-btn-alt {
+  background: var(--paper);
+  color: var(--forest);
+  border-top: 1px solid var(--line);
+}
+.import-btn-alt:hover { background: var(--faint2); opacity: 1; }
