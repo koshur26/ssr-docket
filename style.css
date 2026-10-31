@@ -1137,3 +1137,23 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 
 /* ── PASSWORD PROMPT ALWAYS ON TOP ── */
 #pwOverlay { z-index: 400; }
+
+/* ── ACTION BAR: five equal-width buttons ── */
+.fa-btn { display:flex; align-items:center; justify-content:center; gap:.35rem; }
+.fa-cl-wrap { display:flex; }
+.fa-cl-wrap > .fa-btn { flex:1 1 auto; width:100%; }
+
+.f-action-row.docket-actions { flex-wrap:wrap; justify-content:center; gap:.4rem; }
+/* phones: 3 per row, every button the same size, second row centred */
+.docket-actions > .fa-btn,
+.docket-actions > .fa-cl-wrap { flex:0 0 calc((100% - .8rem) / 3); min-width:0; }
+.docket-actions .fa-btn { padding:0 .4rem; }
+/* wider screens: all five on one row */
+@media (min-width:560px) {
+  .docket-actions > .fa-btn,
+  .docket-actions > .fa-cl-wrap { flex:0 0 calc((100% - 1.6rem) / 5); }
+}
+
+/* drop-down arrow on Import */
+.fa-caret { width:11px; height:8px; flex-shrink:0; transition:transform .2s ease; }
+.fa-cl-wrap.menu-open .fa-caret { transform:rotate(180deg); }
