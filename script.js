@@ -608,11 +608,17 @@ function doImportModal(){
 function openImportMenu(e){
   e.stopPropagation();
   const m = document.getElementById('importMenu');
-  if(m) m.classList.toggle('open');
+  if(m){
+    m.classList.toggle('open');
+    if(m.parentElement) m.parentElement.classList.toggle('menu-open', m.classList.contains('open'));
+  }
 }
 function closeImportMenu(){
   const m = document.getElementById('importMenu');
-  if(m) m.classList.remove('open');
+  if(m){
+    m.classList.remove('open');
+    if(m.parentElement) m.parentElement.classList.remove('menu-open');
+  }
 }
 document.addEventListener('click', function(){ closeImportMenu(); });
 function doImport(){
@@ -1605,13 +1611,14 @@ function updateActionRow() {
   const row = document.getElementById('actionRow');
   const ba = document.getElementById('bottomActions');
   if(!row || !ba) return;
+  row.className = 'f-action-row' + (currentTab === 'docket' ? ' docket-actions' : '');
   if(currentTab === 'docket') {
     ba.style.display = cases.length > 0 ? 'block' : 'none';
     row.innerHTML =
       '<button class="fa-btn" onclick="openEOD()">EOD Report</button>' +
       '<button class="fa-btn" onclick="openCauseList()">📋 Cause List</button>' +
       '<button class="fa-btn danger" onclick="requestReset()">↺ Reset</button>' +
-      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)">🗂 Import ▾</button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="requestHistoryImport();closeImportMenu()">🗂 Import from History</button></div></div>' +
+      '<div class="fa-cl-wrap"><button class="fa-btn" onclick="openImportMenu(event)" aria-haspopup="true">🗂 Import<svg class="fa-caret" viewBox="0 0 12 8" aria-hidden="true"><path d="M1.5 1.75 6 6.25l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="fa-cl-menu" id="importMenu"><button class="fa-cl-item" onclick="openImportModal();closeImportMenu()">📋 Paste Cause List</button><button class="fa-cl-item" onclick="requestHistoryImport();closeImportMenu()">🗂 Import from History</button></div></div>' +
       '<button class="fa-btn primary" onclick="openAdd()">+ Case</button>';
   } else if(currentTab === 'misc') {
     ba.style.display = 'block';
