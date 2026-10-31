@@ -585,6 +585,14 @@ function closeImportModal(){
 }
 
 function requestImportModal(){
+  // Check the pasted text first, so a password is never asked for an empty paste
+  const raw = document.getElementById('pasteAreaModal').value.trim();
+  if(!raw){ alert('Please paste the case text first.'); return; }
+  const hasCases = raw.split('\n').some(l => l.trim() && l.includes('|'));
+  if(!hasCases){ alert('No valid cases found.'); return; }
+  // Close the paste dialog so the password prompt is visible.
+  // The pasted text stays in the box and is picked up after the password is accepted.
+  closeImportModal();
   showPw(()=>doImportModal(),'Import Cases','Enter the access password to import cases.');
 }
 
